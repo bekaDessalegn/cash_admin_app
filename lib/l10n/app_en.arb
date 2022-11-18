@@ -1,0 +1,42 @@
+{
+    "language": "English",
+    "@language": {
+      "description": "The current Language"
+    },
+    "hello": "Hello",
+    "@hello": {
+      "description": "A program greetings"
+    },
+    "admin": "Admin",
+    "@admin": {
+      "description": "Admin"
+    },
+    "sign_in_request": "Please sign in to your account",
+    "@sign_in_request": {
+      "description": "Asking the user to sign in"
+    },
+    "username": "Username",
+    "@username": {
+      "description": "Username"
+    },
+    "password": "Password",
+    "@password": {
+      "description": "Password"
+    },
+    "forgot_password": "Forgot your password?",
+    "@forgot_password": {
+      "description": "Forgot password"
+    },
+    "enter_password": "Enter your password",
+    "@enter_password": {
+      "description": "Enter password"
+    },
+    "enter_your": "Enter your",
+    "@enter_your": {
+      "description": "Enter your"
+    },
+    "login": "Login",
+    "@login": {
+      "description": "Login"
+    }
+}

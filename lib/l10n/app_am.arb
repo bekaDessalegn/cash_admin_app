@@ -1,0 +1,12 @@
+{
+    "language": "አማርኛ",
+    "hello": "ሰላም",
+    "admin": "አስተዳዳሪ",
+    "sign_in_request": "እባክዎ ወደ መለያዎ ይግቡ",
+    "username": "የመጠቀሚያ ስም",
+    "password": "የይለፍ ቃል",
+    "forgot_password": "የይለፍ ቃል ረሳሁ",
+    "enter_password": "የይለፍ ቃልዎን ያስገቡ",
+    "enter_your": "የእርስዎን ያስገቡ",
+    "login": "ግባ"
+}
