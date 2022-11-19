@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/profile/data/datasources/local/profile_local_datasource.dart';
 import 'package:cash_admin_app/features/profile/data/models/admin.dart';
-import 'package:cash_admin_app/features/profile/data/models/settings.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  ProfileLocalDb profileLocalDb = ProfileLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -40,17 +41,43 @@ class ProfileDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        Admin admin;
-
-        admin = Admin(
-            id: data["userId"],
-            username: data["username"],
-            email: data["email"] ?? "Null",
-            settings: Settings.fromJson(data["settings"]));
+        // Admin admin;
+        //
+        // admin = Admin(
+        //     id: data["userId"],
+        //     username: data["username"],
+        //     email: data["email"] ?? "Null",
+        //     commissionRate: data["settings"]["commissionRate"]);
 
         await setCommissionRate(
             commissionRate: data["settings"]["commissionRate"]);
         await authService.setEmail(email: data["email"] ?? "Null");
+
+        print(data);
+
+        print("Admin recieved from remote");
+        print(data);
+        print(data["userId"]);
+        print(data["settings"]["commissionRate"]);
+
+        await profileLocalDb.addAdmin(Admin(
+            id: data["userId"],
+            username: data["username"],
+            email: data["email"] ?? "Null",
+            commissionRate: data["settings"]["commissionRate"]));
+
+        final updated = await profileLocalDb.updateAdmin(data["userId"], Admin(
+            id: data["userId"],
+            username: data["username"],
+            email: data["email"] ?? "Null",
+            commissionRate: data["settings"]["commissionRate"]).toJson());
+
+        print("Is it updated");
+        print(updated);
+
+        final admin = await profileLocalDb.getAdmin();
+        print("This is the local DB");
+        print(admin.toJson());
 
         return admin;
       } else if (data["message"] == "Not_Authorized") {

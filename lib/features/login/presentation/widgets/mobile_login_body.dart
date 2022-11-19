@@ -41,6 +41,7 @@ class _MobileLoginBodyState extends State<MobileLoginBody> {
             buildErrorLayout(context: context, message: state.errorType);
           }
           else if(state is LoginPassedState){
+            print("passed");
             _prefs.createCache("passed").whenComplete(() {
               authService.login();
               final admin = BlocProvider.of<ProfileBloc>(context);
@@ -51,6 +52,7 @@ class _MobileLoginBodyState extends State<MobileLoginBody> {
         },
         builder: (_, state){
           if(state is LoginLoadingState){
+            print("Loading");
             return buildInitialInput(context: context, isLoading: true);
           }
           else{
@@ -110,7 +112,7 @@ class _MobileLoginBodyState extends State<MobileLoginBody> {
               Center(
                 child: TextButton(
                     onPressed: () {
-                      context.go(APP_PAGE.forgotPassword.toPath);
+                      context.push(APP_PAGE.forgotPassword.toPath);
                     },
                     child: normalText(value: AppLocalizations.of(context)!.forgot_password, size: defaultFontSize, color: primaryColor)),
               ),

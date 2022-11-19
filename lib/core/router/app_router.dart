@@ -11,7 +11,7 @@ import 'package:cash_admin_app/features/login/presentation/screens/forgot_passwo
 import 'package:cash_admin_app/features/login/presentation/screens/login_screen.dart';
 import 'package:cash_admin_app/features/orders/presentation/screens/order_details_screen.dart';
 import 'package:cash_admin_app/features/orders/presentation/screens/orders_screen.dart';
-import 'package:cash_admin_app/features/products/data/datasources/products_datasource.dart';
+import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/presentation/screens/add_product.dart';
 import 'package:cash_admin_app/features/products/presentation/screens/categories_screen.dart';
 import 'package:cash_admin_app/features/products/presentation/screens/edit_product.dart';

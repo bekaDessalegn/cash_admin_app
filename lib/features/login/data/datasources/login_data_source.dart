@@ -33,6 +33,8 @@ class LoginDataSource{
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
 
+        print("The login data");
+        print(data);
         await authService.setAccessToken(accessToken: data["accessToken"]);
         await authService.setRefreshToken(refreshToken: data["refreshToken"]);
         await authService.setEmail(email: data["admin"]["email"] ?? "Null");

@@ -1,16 +1,21 @@
-import 'package:cash_admin_app/features/profile/data/models/settings.dart';
-
 class Admin {
-  final String id;
-  final String username;
-  final String email;
-  final Settings settings;
+  final String? id;
+  final String? username;
+  final String? email;
+  final num? commissionRate;
 
-  Admin({required this.id, required this.username, required this.email, required this.settings});
+  Admin({required this.id, required this.username, required this.email, required this.commissionRate});
 
   factory Admin.fromJson(Map<String, dynamic> json) => Admin(
-      id: json["userId"],
+      id: json["userId"] ?? json["id"],
       username: json["username"],
-      email: json["email"],
-      settings: json["settings"]);
+      email: json["email"] ?? "Null",
+      commissionRate: json["commissionRate"]);
+
+  Map<String, dynamic> toJson() => {
+    "id" : id,
+    "username" : username,
+    "email" : email,
+    "commissionRate" : commissionRate,
+  };
 }

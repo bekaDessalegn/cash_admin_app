@@ -32,7 +32,7 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
 
-  double value = 0;
+  num value = 0;
 
   @override
   void initState() {
@@ -81,7 +81,10 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   Widget buildInitialInput({required Admin admin}) {
     final appService = Provider.of<AppService>(context, listen: true);
-
+    print(admin.id);
+    print(admin.commissionRate);
+    print(admin.username);
+    print(admin.email);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,13 +126,13 @@ class _ProfileBodyState extends State<ProfileBody> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: appService.isEditUsername
                   ? changeUsernameTextFormField(
-                  context: context, username: admin.username)
+                  context: context, username: admin.username!)
                   : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: normalText(
-                        value: admin.username,
+                        value: admin.username!,
                         size: 17,
                         color: onBackgroundColor),
                   ),
@@ -158,7 +161,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                 children: [
                   Flexible(
                     child: normalText(
-                        value: admin.email, size: 17, color: onBackgroundColor),
+                        value: admin.email!, size: 17, color: onBackgroundColor),
                   ),
                   IconButton(
                       onPressed: () {
@@ -190,7 +193,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                 children: [
                   boldText(value: "Commission", size: 17, color: blackColor),
                   normalText(
-                      value: "${admin.settings.commisionRate}" + "%",
+                      value: "${admin.commissionRate}" + "%",
                       size: 17,
                       color: blackColor)
                 ],
@@ -209,7 +212,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                 max: 100,
                 divisions: 100,
                 label: value.round().toString(),
-                value: value,
+                value: value.toDouble(),
                 onChangeEnd: (value) {
                   final changeCommissionRate =
                   BlocProvider.of<ProfileBloc>(context);

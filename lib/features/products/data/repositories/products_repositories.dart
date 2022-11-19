@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cash_admin_app/features/products/data/datasources/products_datasource.dart';
+import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 

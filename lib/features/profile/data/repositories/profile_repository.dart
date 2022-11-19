@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cash_admin_app/features/profile/data/datasources/profile_datasource.dart';
+import 'package:cash_admin_app/features/profile/data/datasources/remote/profile_datasource.dart';
 import 'package:cash_admin_app/features/profile/data/models/admin.dart';
 
 class ProfileRepository{

@@ -9,7 +9,7 @@ import 'package:cash_admin_app/features/common_widgets/product_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
 import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
-import 'package:cash_admin_app/features/products/data/datasources/products_datasource.dart';
+import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:cash_admin_app/features/products/data/models/selectedCategory.dart';

@@ -23,7 +23,7 @@ import 'package:cash_admin_app/features/orders/data/datasources/orders_datasourc
 import 'package:cash_admin_app/features/orders/data/models/selected_affiliate.dart';
 import 'package:cash_admin_app/features/orders/data/repositories/orders_repository.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_bloc.dart';
-import 'package:cash_admin_app/features/products/data/datasources/products_datasource.dart';
+import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/selectedCategory.dart';
 import 'package:cash_admin_app/features/products/data/models/selected_product.dart';
 import 'package:cash_admin_app/features/products/data/repositories/products_repositories.dart';
@@ -31,7 +31,7 @@ import 'package:cash_admin_app/features/products/presentation/blocs/categories/c
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/post_categories_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/product_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_bloc.dart';
-import 'package:cash_admin_app/features/profile/data/datasources/profile_datasource.dart';
+import 'package:cash_admin_app/features/profile/data/datasources/remote/profile_datasource.dart';
 import 'package:cash_admin_app/features/profile/data/repositories/profile_repository.dart';
 import 'package:cash_admin_app/features/profile/presentation/blocs/edit_password_bloc.dart';
 import 'package:cash_admin_app/features/profile/presentation/blocs/profile_bloc.dart';

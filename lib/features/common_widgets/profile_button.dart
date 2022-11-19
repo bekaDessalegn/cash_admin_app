@@ -1,5 +1,6 @@
 import 'package:cash_admin_app/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:cash_admin_app/features/profile/presentation/blocs/profile_event.dart';
+import 'package:cash_admin_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -14,7 +15,8 @@ class ProfileButton extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
         iconSize: 30,
         onPressed: () {
-          context.go("/profile");
+          context.push("/profile");
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
         },
         icon: Iconify(
           Bx.user,
