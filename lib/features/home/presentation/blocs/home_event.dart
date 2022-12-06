@@ -25,7 +25,3 @@ class PutHowToAffiliateWithUsWebContentEvent extends StaticWebContentEvent {
   String howToAffiliateWithUs;
   PutHowToAffiliateWithUsWebContentEvent(this.howToAffiliateWithUs);
 }
-
-abstract class VideoLinksEvent {}
-
-class GetVideoLinksEvent extends VideoLinksEvent {}

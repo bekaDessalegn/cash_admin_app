@@ -4,16 +4,17 @@ import 'package:cash_admin_app/features/profile/presentation/widgets/signout_dia
 import 'package:flutter/material.dart';
 
 Widget signoutButton(BuildContext context) {
-  return TextButton(
-      onPressed: () {
-        showDialog(
+  return GestureDetector(
+    onTap: (){
+      showDialog(
           barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return signoutDialog(
-                  context: context
-              );
-            });
-      },
-      child: normalText(value: "Sign out", size: 17, color: linkColor));
+          context: context,
+          builder: (BuildContext context) {
+            return signoutDialog(
+                context: context
+            );
+          });
+    },
+    child: normalText(value: "Sign out", size: 17, color: linkColor),
+  );
 }

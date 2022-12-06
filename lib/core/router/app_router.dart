@@ -5,6 +5,7 @@ import 'package:cash_admin_app/core/services/app_service.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/screens/affiliate_details.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/screens/affiliate_screen.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/screens/transaction_by.dart';
+import 'package:cash_admin_app/features/customize/presentation/screens/customize_screen.dart';
 import 'package:cash_admin_app/features/error_screen.dart';
 import 'package:cash_admin_app/features/home/presentation/screens/home_screen.dart';
 import 'package:cash_admin_app/features/login/presentation/screens/forgot_password_screen.dart';
@@ -149,6 +150,11 @@ class AppRouter {
           path: APP_PAGE.categories.toPath,
           name: APP_PAGE.categories.toName,
           builder: (context, state) => const CategoriesScreen(),
+        ),
+        GoRoute(
+          path: APP_PAGE.customize.toPath,
+          name: APP_PAGE.customize.toName,
+          builder: (context, state) => const CustomizeScreen(),
         ),
         GoRoute(
           path: APP_PAGE.refreshProduct.toPath,

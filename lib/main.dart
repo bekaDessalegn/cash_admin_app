@@ -12,6 +12,9 @@ import 'package:cash_admin_app/features/affiliate/data/repositories/affiliate_tr
 import 'package:cash_admin_app/features/affiliate/data/repositories/affiliates_repository.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliate_transactions/transactions_bloc.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_bloc.dart';
+import 'package:cash_admin_app/features/customize/data/datasource/customize_datasource.dart';
+import 'package:cash_admin_app/features/customize/data/repository/customize_repository.dart';
+import 'package:cash_admin_app/features/customize/presentation/blocs/customize_bloc.dart';
 import 'package:cash_admin_app/features/home/data/datasources/home_datasource.dart';
 import 'package:cash_admin_app/features/home/data/repositories/home_repository.dart';
 import 'package:cash_admin_app/features/home/presentation/blocs/home_bloc.dart';
@@ -25,7 +28,6 @@ import 'package:cash_admin_app/features/orders/data/repositories/orders_reposito
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_bloc.dart';
 import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/selectedCategory.dart';
-import 'package:cash_admin_app/features/products/data/models/selected_product.dart';
 import 'package:cash_admin_app/features/products/data/repositories/products_repositories.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/categories_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/post_categories_bloc.dart';
@@ -95,6 +97,7 @@ class _MyAppState extends State<MyApp> {
   final profileRepository = ProfileRepository(ProfileDataSource());
   final productsRepository = ProductsRepository(ProductsDataSource());
   final homeRepository = HomeRepository(HomeDataSource());
+  final customizeRepository = CustomizeRepository(CustomizeDataSource());
   final affiliateRepository = AffiliatesRepository(AffiliatesDataSource());
   final ordersRepository = OrdersRepository(OrdersDataSource());
   final transactionsRepository = TransactionsRepository(TransactionsDataSource());
@@ -116,7 +119,10 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (_) => FilterUnAnsweredBloc(homeRepository)),
         BlocProvider(create: (_) => StaticWebContentBloc(homeRepository)),
         BlocProvider(create: (_) => AnalyticsBloc(homeRepository)),
-        BlocProvider(create: (_) => VideoLinksBloc(homeRepository)..add(GetVideoLinksEvent())),
+        BlocProvider(create: (_) => CustomizeBloc(customizeRepository)),
+        BlocProvider(create: (_) => HomeContentBloc(customizeRepository)),
+        BlocProvider(create: (_) => LogoImageBloc(customizeRepository)),
+        BlocProvider(create: (_) => AboutUsContentBloc(customizeRepository)),
         BlocProvider(create: (_) => CategoriesBloc(productsRepository)),
         BlocProvider(create: (_) => PostCategoriesBloc(productsRepository)),
         BlocProvider(create: (_) => AffiliatesBloc(affiliateRepository)),
@@ -138,7 +144,6 @@ class _MyAppState extends State<MyApp> {
           Provider<AuthService>(create: (_) => authService),
           ChangeNotifierProvider(create: (context) => LocaleProvider()),
           ChangeNotifierProvider(create: (_) => SelectedCategory()),
-          ChangeNotifierProvider(create: (_) => SelectedProduct()),
           ChangeNotifierProvider(create: (_) => SelectedAffiliate()),
           ChangeNotifierProvider(create: (_) => SelectedOrder()),
         ],

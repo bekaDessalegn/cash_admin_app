@@ -8,8 +8,6 @@ import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_textformfield.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
-import 'package:cash_admin_app/features/home/presentation/blocs/home_bloc.dart';
-import 'package:cash_admin_app/features/home/presentation/blocs/home_event.dart';
 import 'package:cash_admin_app/features/products/data/models/product_image.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/categories_bloc.dart';
@@ -18,9 +16,7 @@ import 'package:cash_admin_app/features/products/presentation/blocs/categories/c
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_event.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_state.dart';
-import 'package:cash_admin_app/features/products/presentation/widgets/commission_rate_textformfield.dart';
 import 'package:cash_admin_app/features/products/presentation/widgets/description_textformfield.dart';
-import 'package:cash_admin_app/features/products/presentation/widgets/number_textformfield.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +27,7 @@ import 'package:iconify_flutter/icons/bi.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class AddProductBody extends StatefulWidget {
   double horizontalSize;
@@ -53,9 +50,9 @@ class _AddProductBodyState extends State<AddProductBody> {
   final _addProductFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController commissionController = TextEditingController();
+  var descriptionController = quill.QuillController.basic();
 
   String? contentType;
   List imageType = [];
@@ -259,8 +256,36 @@ class _AddProductBodyState extends State<AddProductBody> {
                           const SizedBox(
                             height: addProductVerticalSpacing,
                           ),
-                          descriptionTextFormField(
-                              controller: descriptionController),
+                          semiBoldText(value: "Description", size: defaultFontSize, color: onBackgroundColor),
+                          SizedBox(height: smallSpacing,),
+                          quill.QuillToolbar.basic(
+                            controller: descriptionController,
+                            toolbarIconSize: 17,
+                            showFontFamily: false,
+                            showSearchButton: false,
+                            showRedo: false,
+                            showUndo: false,
+                            showHeaderStyle: false,
+                            showDirection: false,
+                            showQuote: false,
+                            showCodeBlock: false,
+                            showIndent: true,
+                            showStrikeThrough: false,
+                            showListCheck: false,
+                            showBackgroundColorButton: false,
+                            showDividers: false,
+                            showInlineCode: false,
+                            showLink: false,
+                            showClearFormat: false,
+                          ),
+                          Container(
+                              height: 300,
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(defaultRadius),
+                                  border: Border.all(color: textInputBorderColor)
+                              ),
+                              child: quill.QuillEditor.basic(controller: descriptionController, readOnly: false)),
                           const SizedBox(
                             height: addProductVerticalSpacing,
                           ),
@@ -597,11 +622,12 @@ class _AddProductBodyState extends State<AddProductBody> {
                                     List type = contentType!.split("/");
                                     imageType = type;
                                   }
+                                  final productDesc = jsonEncode(descriptionController.document.toDelta().toJson());
                                   final products =
                                       BlocProvider.of<ProductsBloc>(context);
                                   products.add(PostProductsEvent(Products(
                                       productName: nameController.text,
-                                      description: descriptionController.text.isEmpty ? "" : descriptionController.text,
+                                      description: productDesc,
                                       mainImage: ProductImage(path: selectedWebImage.toString()),
                                       moreImages: selectedListImages,
                                       price: double.parse(priceController.text),

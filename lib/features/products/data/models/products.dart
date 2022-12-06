@@ -12,7 +12,7 @@ class Products {
   final bool? published;
   final bool? featured;
   final bool? topSeller;
-  final int? viewCount;
+  final num? viewCount;
   final String? createdAt;
   final String? updatedAt;
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
@@ -19,6 +21,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:intl/intl.dart';
 import 'package:progressive_image/progressive_image.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class ProductDetailsBody extends StatefulWidget {
   String? productId;
@@ -39,6 +42,8 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
 
   int? isPublished, isFeatured, isTopSeller;
 
+  var productDescriptionController = quill.QuillController.basic();
+
   @override
   void initState() {
     final productDetails = BlocProvider.of<SingleProductBloc>(context);
@@ -48,7 +53,15 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SingleProductBloc, SingleProductState>(
+    return BlocConsumer<SingleProductBloc, SingleProductState>(
+        listener: (_, state){
+          if(state is GetSingleProductSuccessful){
+            var productDescriptionJSON = jsonDecode(state.product.description!);
+            productDescriptionController = quill.QuillController(
+                document: quill.Document.fromJson(productDescriptionJSON),
+                selection: TextSelection.collapsed(offset: 0));
+          }
+        },
         builder: (_, state) {
       if (state is GetSingleProductSuccessful) {
         return buildInitialInput(product: state.product);
@@ -104,7 +117,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: ProgressiveImage(
-                      placeholder: AssetImage('images/default.png'),
+                      placeholder: AssetImage('images/loading.png'),
                       thumbnail:
                           NetworkImage("$baseUrl${product.mainImage!.path}"),
                       image: NetworkImage("$baseUrl${product.mainImage!.path}"),
@@ -219,13 +232,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '''${product.description}''',
-                        style: TextStyle(
-                          color: onBackgroundColor,
-                          fontSize: 16,
-                        ),
-                      ),
+                      quill.QuillEditor.basic(controller: productDescriptionController, readOnly: true),
                       Divider(
                         color: surfaceColor,
                         thickness: 1.0,

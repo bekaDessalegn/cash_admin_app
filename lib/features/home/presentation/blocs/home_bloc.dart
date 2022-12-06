@@ -109,21 +109,3 @@ class StaticWebContentBloc extends Bloc<StaticWebContentEvent, StaticWebContentS
     }
   }
 }
-
-class VideoLinksBloc extends Bloc<VideoLinksEvent, VideoLinksState> {
-  HomeRepository homeRepository;
-  VideoLinksBloc(this.homeRepository) : super(InitialVideoLinksState()){
-    on<GetVideoLinksEvent>(_onGetVideoLinksEvent);
-  }
-
-  void _onGetVideoLinksEvent(GetVideoLinksEvent event, Emitter emit) async {
-    emit(GetVideoLinksLoadingState());
-    try {
-      final videoLinks = await homeRepository.getVideoLinks();
-      emit(GetVideoLinksSuccessfulState(videoLinks));
-    } catch(e){
-      emit(GetVideoLinksFailedState("Something went wrong fetching the video link"));
-    }
-  }
-
-}

@@ -3,7 +3,7 @@ import 'package:progressive_image/progressive_image.dart';
 
 Widget mediumImage({required String urlImage}){
   return ProgressiveImage(
-    placeholder: AssetImage('images/default.png'),
+    placeholder: AssetImage('images/loading.png'),
     thumbnail: NetworkImage(urlImage),
     image: NetworkImage(urlImage),
     height: 84,

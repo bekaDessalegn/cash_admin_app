@@ -1,4 +1,5 @@
 import 'package:cash_admin_app/features/common_widgets/app_bar_logo.dart';
+import 'package:cash_admin_app/features/common_widgets/customize_button.dart';
 import 'package:cash_admin_app/features/common_widgets/profile_button.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ final appbar = PreferredSize(
         toolbarHeight: 70,
         automaticallyImplyLeading: false,
         actions: [
+          CustomizeButton(),
           ProfileButton(),
         ],
         title: AppBarLogo()

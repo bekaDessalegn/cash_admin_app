@@ -18,6 +18,7 @@ enum APP_PAGE {
   forgotPassword,
   // recoveryPassword,
   categories,
+  customize,
   refreshProduct,
   error
 }
@@ -61,6 +62,8 @@ extension AppPageExtension on APP_PAGE {
       //   return "/recovery_password";
       case APP_PAGE.categories:
         return "/categories";
+      case APP_PAGE.customize:
+        return "/customize";
       case APP_PAGE.error:
         return "/error";
       case APP_PAGE.refreshProduct:
@@ -110,6 +113,8 @@ extension AppPageExtension on APP_PAGE {
       //   return "RECOVERY_PASSWORD";
       case APP_PAGE.categories:
         return "CATEGORIES";
+      case APP_PAGE.customize:
+        return "CUSTOMIZE";
       case APP_PAGE.error:
         return "ERROR";
       case APP_PAGE.refreshProduct:

@@ -87,7 +87,8 @@ class ProfileDataSource {
         throw Exception("api");
       }
     } on SocketException {
-      throw const SocketException("network");
+      final admin = await profileLocalDb.getAdmin();
+      return admin;
     }
   }
 

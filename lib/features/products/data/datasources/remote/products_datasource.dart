@@ -6,7 +6,6 @@ import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
-import 'package:cash_admin_app/features/products/data/models/selected_product.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
@@ -15,7 +14,6 @@ Products? product_contents;
 
 class ProductsDataSource {
   AuthService authService = AuthService();
-  SelectedProduct selectedProductId = SelectedProduct();
   final _prefs = PrefService();
 
   var refreshToken;
@@ -175,10 +173,6 @@ class ProductsDataSource {
         // desktopProductId = products.map((e) => e.productId).last;
         // print("The first index is : ");
         // print(desktopProductId);
-        if(products.isNotEmpty){
-          final productId = products.map((e) => e.productId).last;
-          await selectedProductId.setProductId(productId: productId!);
-        }
         print("The first index is : ");
         print(productId);
         print(data);

@@ -83,7 +83,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
                 ) : ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: ProgressiveImage(
-                    placeholder: AssetImage('images/default.png'),
+                    placeholder: AssetImage('images/loading.png'),
                     thumbnail:
                     NetworkImage("$baseUrl${order.product.mainImage!.path}"),
                     image: NetworkImage("$baseUrl${order.product.mainImage!.path}"),

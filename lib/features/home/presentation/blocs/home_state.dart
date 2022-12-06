@@ -81,19 +81,3 @@ class PutStaticWebContentFailedState extends StaticWebContentState {
   final String errorType;
   PutStaticWebContentFailedState(this.errorType);
 }
-
-abstract class VideoLinksState {}
-
-class InitialVideoLinksState extends VideoLinksState {}
-
-class GetVideoLinksSuccessfulState extends VideoLinksState {
-  VideoLinks videoLinks;
-  GetVideoLinksSuccessfulState(this.videoLinks);
-}
-
-class GetVideoLinksLoadingState extends VideoLinksState {}
-
-class GetVideoLinksFailedState extends VideoLinksState {
-  String errorType;
-  GetVideoLinksFailedState(this.errorType);
-}

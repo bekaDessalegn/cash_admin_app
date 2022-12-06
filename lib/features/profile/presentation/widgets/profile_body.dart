@@ -240,7 +240,9 @@ class _ProfileBodyState extends State<ProfileBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               boldText(value: "Actions", size: 17, color: blackColor),
+              SizedBox(height: 10,),
               changePasswordButton(context: context),
+              SizedBox(height: 10,),
               signoutButton(context),
             ],
           ),

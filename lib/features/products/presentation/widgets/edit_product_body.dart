@@ -30,6 +30,7 @@ import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multiselect/multiselect.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class EditProductBody extends StatefulWidget {
   double horizontalSize;
@@ -56,9 +57,9 @@ class _EditProductBodyState extends State<EditProductBody> {
   final _addProductFormKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController commissionController = TextEditingController();
+  var descriptionController = quill.QuillController.basic();
 
   String? contentType;
   List imageType = [];
@@ -169,7 +170,10 @@ class _EditProductBodyState extends State<EditProductBody> {
       nameController.text = product.productName;
       priceController.text = product.price.toString();
       commissionController.text = product.commission.toString();
-      descriptionController.text = product.description??"";
+      var descriptionJSON = jsonDecode(product.description!);
+      descriptionController = quill.QuillController(
+          document: quill.Document.fromJson(descriptionJSON),
+          selection: TextSelection.collapsed(offset: 0));
       for (var categories in product.categories!){
         selectedCategories.add(categories.toString());
       }
@@ -296,8 +300,36 @@ class _EditProductBodyState extends State<EditProductBody> {
                       SizedBox(
                         height: addProductVerticalSpacing,
                       ),
-                      descriptionTextFormField(
-                          controller: descriptionController),
+                      semiBoldText(value: "Description", size: defaultFontSize, color: onBackgroundColor),
+                      SizedBox(height: smallSpacing,),
+                      quill.QuillToolbar.basic(
+                        controller: descriptionController,
+                        toolbarIconSize: 17,
+                        showFontFamily: false,
+                        showSearchButton: false,
+                        showRedo: false,
+                        showUndo: false,
+                        showHeaderStyle: false,
+                        showDirection: false,
+                        showQuote: false,
+                        showCodeBlock: false,
+                        showIndent: true,
+                        showStrikeThrough: false,
+                        showListCheck: false,
+                        showBackgroundColorButton: false,
+                        showDividers: false,
+                        showInlineCode: false,
+                        showLink: false,
+                        showClearFormat: false,
+                      ),
+                      Container(
+                          height: 300,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(defaultRadius),
+                              border: Border.all(color: textInputBorderColor)
+                          ),
+                          child: quill.QuillEditor.basic(controller: descriptionController, readOnly: false)),
                       SizedBox(
                         height: addProductVerticalSpacing,
                       ),
@@ -675,12 +707,13 @@ class _EditProductBodyState extends State<EditProductBody> {
                                 imageType = type;
                               }
                               print(imageType);
+                              final productDesc = jsonEncode(descriptionController.document.toDelta().toJson());
                               final products =
                               BlocProvider.of<ProductsBloc>(context);
                               products.add(PatchProductEvent(Products(
                                 productId: product.productId,
                                   productName: nameController.text,
-                                  description: descriptionController.text.isEmpty ? "" : descriptionController.text,
+                                  description: productDesc,
                                   mainImage: ProductImage(path: selectedWebImage.toString()),
                                   moreImages: selectedListImages,
                                   price: double.parse(priceController.text),
