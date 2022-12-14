@@ -7,7 +7,6 @@ import 'package:cash_admin_app/core/services/app_service.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/features/affiliate/data/datasources/affiliates_datasource.dart';
 import 'package:cash_admin_app/features/affiliate/data/datasources/transactions_datasource.dart';
-import 'package:cash_admin_app/features/affiliate/data/models/selected_affiliate.dart';
 import 'package:cash_admin_app/features/affiliate/data/repositories/affiliate_transactions_repository.dart';
 import 'package:cash_admin_app/features/affiliate/data/repositories/affiliates_repository.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliate_transactions/transactions_bloc.dart';
@@ -23,7 +22,6 @@ import 'package:cash_admin_app/features/login/data/datasources/login_data_source
 import 'package:cash_admin_app/features/login/data/repositories/login_repository.dart';
 import 'package:cash_admin_app/features/login/presentation/blocs/login_bloc.dart';
 import 'package:cash_admin_app/features/orders/data/datasources/orders_datasource.dart';
-import 'package:cash_admin_app/features/orders/data/models/selected_affiliate.dart';
 import 'package:cash_admin_app/features/orders/data/repositories/orders_repository.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_bloc.dart';
 import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
@@ -144,8 +142,6 @@ class _MyAppState extends State<MyApp> {
           Provider<AuthService>(create: (_) => authService),
           ChangeNotifierProvider(create: (context) => LocaleProvider()),
           ChangeNotifierProvider(create: (_) => SelectedCategory()),
-          ChangeNotifierProvider(create: (_) => SelectedAffiliate()),
-          ChangeNotifierProvider(create: (_) => SelectedOrder()),
         ],
         child: Builder(
           builder: (context) {

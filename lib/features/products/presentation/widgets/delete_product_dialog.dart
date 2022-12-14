@@ -10,50 +10,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-Widget deleteProductDialog({required BuildContext context, required String? productId}){
+Widget deleteProductDialog(
+    {required BuildContext context, required String? productId}) {
   return Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<DeleteProductBloc, DeleteProductState>(listener: (_, state) {
+    child: BlocConsumer<DeleteProductBloc, DeleteProductState>(
+        listener: (_, state) {
       if (state is DeleteProductFailed) {
         Navigator.pop(context);
-        if(state.errorType == "You can not delete this product, it has orders"){
-          showDialog(context: context, builder: (BuildContext context){
-            return Dialog(
-              child: SizedBox(
-                height: 160,
-                width: MediaQuery.of(context).size.width < 500 ? double.infinity : 400,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Has orders", style: TextStyle(
-                          color: onBackgroundColor,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold
-                      ),),
-                      SizedBox(height: 10,),
-                      Text("This product can not be deleted because it has orders, please delete those orders first.", style: TextStyle(
-                          color: onBackgroundColor,
-                          fontSize: 16
-                      ),),
-                      SizedBox(height: 30,),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: TextButton(onPressed: (){
-                          Navigator.pop(context);
-                        }, child: Text("Ok", style: TextStyle(
-                            color: onBackgroundColor,
-                            fontSize: 16
-                        ),),),
+        if (state.errorType ==
+            "You can not delete this product, it has orders") {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: SizedBox(
+                    height: 205,
+                    width: MediaQuery.of(context).size.width < 500
+                        ? double.infinity
+                        : 400,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Has orders",
+                            style: TextStyle(
+                                color: onBackgroundColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "This product can not be deleted because it has orders, please delete those orders first.",
+                            style: TextStyle(
+                                color: onBackgroundColor, fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Ok",
+                                style: TextStyle(
+                                    color: onBackgroundColor, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          });
-        } else{
+                );
+              });
+        } else {
           buildErrorLayout(context: context, message: state.errorType);
         }
       } else if (state is DeleteProductSuccessful) {
@@ -63,53 +81,84 @@ Widget deleteProductDialog({required BuildContext context, required String? prod
       }
     }, builder: (_, state) {
       if (state is DeleteProductLoading) {
-        return _buildInitialInput(context: context, productId: productId, isLoading: true);
+        return _buildInitialInput(
+            context: context, productId: productId, isLoading: true);
       } else {
-        return _buildInitialInput(context: context, productId: productId, isLoading: false);
+        return _buildInitialInput(
+            context: context, productId: productId, isLoading: false);
       }
     }),
   );
 }
 
-Widget _buildInitialInput({required BuildContext context, required String? productId, required bool isLoading}){
+Widget _buildInitialInput(
+    {required BuildContext context,
+    required String? productId,
+    required bool isLoading}) {
   return SizedBox(
-    height: 160,
+    height: 175,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 400,
     child: Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10,),
-          Text("Delete product", style: TextStyle(
-              color: onBackgroundColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold
-          ),),
-          SizedBox(height: 10,),
-          isLoading ? Center(child: CircularProgressIndicator(color: primaryColor,),) :
-          Text("Are you sure you want to delete this product ?", style: TextStyle(
-              color: onBackgroundColor,
-              fontSize: 16
-          ),),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "Delete product",
+            style: TextStyle(
+                color: onBackgroundColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
+                )
+              : Text(
+                  "Are you sure you want to delete this product ?",
+                  style: TextStyle(color: onBackgroundColor, fontSize: 16),
+                ),
+          SizedBox(
+            height: 20,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: isLoading ? null : (){
-                Navigator.pop(context);
-              }, child: Text("Cancel", style: TextStyle(
-                  color: onBackgroundColor,
-                  fontSize: 16
-              ),),),
-              SizedBox(width: 10,),
-              TextButton(onPressed: isLoading ? null : (){
-                final deleteProduct = BlocProvider.of<DeleteProductBloc>(context);
-                deleteProduct.add(DeleteProductEvent(productId));
-              }, child: Text("Delete", style: TextStyle(
-                  color: dangerColor,
-                  fontSize: 16
-              ),),),
+              TextButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                      },
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: onBackgroundColor, fontSize: 16),
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              TextButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        final deleteProduct =
+                            BlocProvider.of<DeleteProductBloc>(context);
+                        deleteProduct.add(DeleteProductEvent(productId));
+                      },
+                child: Text(
+                  "Delete",
+                  style: TextStyle(color: dangerColor, fontSize: 16),
+                ),
+              ),
             ],
           )
         ],

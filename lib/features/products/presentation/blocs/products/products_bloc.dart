@@ -49,7 +49,11 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     emit(GetProductsLoading());
     try {
       final products = await productsRepository.getProductsForList(event.skipNumber);
-      emit(GetProductsSuccessful(products));
+      if(products == "Somesing"){
+        emit(SocketErrorState());
+      } else{
+        emit(GetProductsSuccessful(products));
+      }
     } on SocketException{
       emit(GetProductsFailed("Something went wrong please, try again"));
     } on Exception{

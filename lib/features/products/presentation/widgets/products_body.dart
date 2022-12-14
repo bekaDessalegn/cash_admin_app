@@ -427,6 +427,8 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
               return productsList[selectedCategoryIndex].isEmpty
                   ? Center(child: noDataBox(text: "No Products!", description: "Products will appear here."))
                   : productListView();
+            } else if(state is SocketErrorState){
+              return Center(child: Text("No internet", style: TextStyle(color: Colors.yellow),),);
             } else {
               return Center(child: Text(""),);
             }

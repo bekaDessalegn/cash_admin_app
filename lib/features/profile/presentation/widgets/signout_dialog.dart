@@ -37,7 +37,7 @@ Widget signoutDialog({required BuildContext context}){
 
 Widget _buildSignoutInput({required BuildContext context, required bool isLoading}){
   return SizedBox(
-    height: 170,
+    height: 190,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 300,
     child: Padding(
       padding: const EdgeInsets.all(10.0),
@@ -75,7 +75,9 @@ Widget _buildSignoutInput({required BuildContext context, required bool isLoadin
                   child: CircularProgressIndicator(color: primaryColor,)) : Text("Sign out", style: TextStyle(
                   color: dangerColor,
                   fontSize: 16
-              ),),),
+              ),
+              ),
+              ),
             ],
           )
         ],

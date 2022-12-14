@@ -31,7 +31,7 @@ class ProductsRepository{
     }
   }
 
-  Future<List<Products>> getProductsForList(int skipNumber) async{
+  Future getProductsForList(int skipNumber) async{
     try{
       final products = await productsDataSource.getProductsForList(skipNumber);
       return products;

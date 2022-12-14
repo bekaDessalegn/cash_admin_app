@@ -7,12 +7,10 @@ import 'package:cash_admin_app/core/services/shared_preference_service.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/children.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/parent_affiliate.dart';
-import 'package:cash_admin_app/features/affiliate/data/models/selected_affiliate.dart';
 import 'package:http/http.dart' as http;
 
 class AffiliatesDataSource{
   AuthService authService = AuthService();
-  SelectedAffiliate selectedAffiliate = SelectedAffiliate();
   final _prefs = PrefService();
 
   var refreshToken;
@@ -74,10 +72,6 @@ class AffiliatesDataSource{
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates = content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
-        if(affiliates.isNotEmpty){
-          final affiliateId = affiliates.map((e) => e.userId).last;
-          await selectedAffiliate.setAffiliateId(affiliateId: affiliateId!);
-        }
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();

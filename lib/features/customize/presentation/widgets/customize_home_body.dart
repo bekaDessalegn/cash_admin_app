@@ -34,6 +34,7 @@ import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:mime/mime.dart';
 import 'package:progressive_image/progressive_image.dart';
 
 class CustomizeHomeBody extends StatefulWidget {
@@ -88,6 +89,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
 
   var heroDescriptionController = quill.QuillController.basic();
   var whyUsDescriptionController = quill.QuillController.basic();
+  var emptyController = quill.QuillController.basic();
 
   List whatMakesUsUniqueList = [];
 
@@ -96,9 +98,12 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedWebHeroImage = webImage;
           _pickedHeroImage = selected;
+          heroContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -121,9 +126,12 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedWebWhyUsImage = webImage;
           _pickedWhyUsImage = selected;
+          whyUsContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -146,9 +154,12 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedWebWhatMakesUsUniqueImage = webImage;
           _pickedWhatMakesUsUniqueImage = selected;
+          whatMakesUsUniqueContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -172,8 +183,11 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         var selected = File(image.path);
+        var webImage = await image.readAsBytes();
         setState(() {
+          selectedWebSocialIconImage = webImage;
           _pickedSocialIconImage = selected;
+          socialIconContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -196,9 +210,12 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedWebBrandsImage = webImage;
           _pickedBrandsImage = selected;
+          brandsContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -304,6 +321,11 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(
+          height: 0,
+          child: quill.QuillEditor.basic(
+              controller: emptyController, readOnly: true),
+        ),
         BlocConsumer<CustomizeBloc, CustomizeState>(listener: (_, state) {
           if (state is PutHeroFailed) {
             buildErrorLayout(context: context, message: state.errorType);

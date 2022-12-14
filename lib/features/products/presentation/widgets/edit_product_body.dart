@@ -29,6 +29,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
@@ -60,6 +61,7 @@ class _EditProductBodyState extends State<EditProductBody> {
   TextEditingController priceController = TextEditingController();
   TextEditingController commissionController = TextEditingController();
   var descriptionController = quill.QuillController.basic();
+  var emptyController = quill.QuillController.basic();
 
   String? contentType;
   List imageType = [];
@@ -75,6 +77,7 @@ class _EditProductBodyState extends State<EditProductBody> {
 
   List<XFile>? imageFileList = [];
   List<Uint8List> selectedListImages = [];
+  final ImagePicker imagePicker = ImagePicker();
 
   int commissionRate = 0;
 
@@ -92,8 +95,11 @@ class _EditProductBodyState extends State<EditProductBody> {
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         var selected = File(image.path);
+        var selectedImage = await selected.readAsBytes();
         setState(() {
           _pickedImage = selected;
+          selectedWebImage = selectedImage;
+          contentType = lookupMimeType(image.path);
         });
       } else {
       }
@@ -118,13 +124,18 @@ class _EditProductBodyState extends State<EditProductBody> {
 
   Future<void> _pickListImages() async {
     if (!kIsWeb) {
-      final ImagePicker _picker = ImagePicker();
-      final List<XFile>? selectedImages = await _picker.pickMultiImage();
+      final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
       if (selectedImages!.isNotEmpty) {
-        imageFileList!.addAll(selectedImages);
-      } else {
-        print("No image has been picked");
+        selectedImages.map((e) => imageFileList!.add(e));
+        for (var images in selectedImages) {
+          var webImage = await images.readAsBytes();
+          selectedListImages.add(webImage);
+          List type = lookupMimeType(images.path)!.split("/");
+          listImageType.add(type);
+        }
       }
+      setState(() {
+      });
     } else if (kIsWeb) {
       final ImagePicker _picker = ImagePicker();
       final List<XFile>? selectedImages = await _picker.pickMultiImage();
@@ -301,6 +312,11 @@ class _EditProductBodyState extends State<EditProductBody> {
                         height: addProductVerticalSpacing,
                       ),
                       semiBoldText(value: "Description", size: defaultFontSize, color: onBackgroundColor),
+                      SizedBox(
+                        height: 0,
+                        child: quill.QuillEditor.basic(
+                            controller: emptyController, readOnly: true),
+                      ),
                       SizedBox(height: smallSpacing,),
                       quill.QuillToolbar.basic(
                         controller: descriptionController,

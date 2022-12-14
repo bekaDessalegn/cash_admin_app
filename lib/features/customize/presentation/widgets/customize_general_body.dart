@@ -16,6 +16,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 class CustomizeGeneralBody extends StatefulWidget {
   const CustomizeGeneralBody({Key? key}) : super(key: key);
@@ -36,9 +37,12 @@ class _CustomizeGeneralBodyState extends State<CustomizeGeneralBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedLogoImage = webImage;
           _pickedImage = selected;
+          contentType = lookupMimeType(image.path);
         });
       } else {
       }

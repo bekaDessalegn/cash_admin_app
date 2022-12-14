@@ -1,3 +1,4 @@
+import 'package:cash_admin_app/features/common_widgets/logo_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,12 +11,7 @@ class AppBarLogo extends StatelessWidget {
       onTap: (){
         context.go('/');
       },
-      child: Image.asset(
-        "images/cash_logo.png",
-        width: 120,
-        height: 50,
-        fit: BoxFit.cover,
-      ),
+      child: PlatformLogoImage(logoBorderRadius: 0, logoWidth: 120, logoHeight: 50,),
     );
   }
 }

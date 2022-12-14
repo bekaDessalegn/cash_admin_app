@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/products/data/datasources/local/products_local_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -15,13 +18,15 @@ Products? product_contents;
 class ProductsDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  ProductLocalDb productLocalDb = ProductLocalDb();
 
   var refreshToken;
   var accessToken;
 
   int limit = 9;
 
-  Future postProducts(Products products, List imageType, List listImageType) async {
+  Future postProducts(
+      Products products, List imageType, List listImageType) async {
     await getRefreshTokens().then((value) {
       refreshToken = value;
     });
@@ -47,12 +52,17 @@ class ProductsDataSource {
       req.headers.addAll(headersList);
       if (products.mainImage!.path != "[0, 0, 0, 0, 0, 0, 0, 0]") {
         req.files.add(await http.MultipartFile.fromBytes(
-            'mainImage', json.decode(products.mainImage!.path).cast<int>(), contentType: MediaType("${imageType[0]}", "${imageType[1]}"), filename: "Any_name"));
+            'mainImage', json.decode(products.mainImage!.path).cast<int>(),
+            contentType: MediaType("${imageType[0]}", "${imageType[1]}"),
+            filename: "Any_name"));
       }
       if (products.moreImages!.isNotEmpty) {
         for (var images = 0; images < products.moreImages!.length; images++) {
           req.files.add(await http.MultipartFile.fromBytes(
-              'moreImages', products.moreImages![images], contentType: MediaType("${listImageType[images][0]}", "${listImageType[images][1]}"), filename: "Any_name"));
+              'moreImages', products.moreImages![images],
+              contentType: MediaType(
+                  "${listImageType[images][0]}", "${listImageType[images][1]}"),
+              filename: "Any_name"));
         }
       }
       req.fields.addAll(body);
@@ -105,7 +115,7 @@ class ProductsDataSource {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(data);
       await authService.setAccessToken(accessToken: data["newAccessToken"]);
-    } else if(data["message"] == "Invalid_Refresh_Token") {
+    } else if (data["message"] == "Invalid_Refresh_Token") {
       _prefs.removeCache();
       authService.logOut();
     } else {
@@ -147,8 +157,7 @@ class ProductsDataSource {
     }
   }
 
-  Future<List<Products>> getProductsForList(int skipNumber) async {
-
+  Future getProductsForList(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -158,7 +167,8 @@ class ProductsDataSource {
       'Api-Key': apiKey,
       'Authorization': 'Bearer $accessToken'
     };
-    var url = Uri.parse('$baseUrl/products?select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=$limit&skip=$skipNumber');
+    var url = Uri.parse(
+        '$baseUrl/products?select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=$limit&skip=$skipNumber');
 
     try {
       var res = await http.get(url, headers: headersList);
@@ -169,19 +179,47 @@ class ProductsDataSource {
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         final List<Products> products =
-        content.map((product) => Products.fromJson(product)).toList();
-        // desktopProductId = products.map((e) => e.productId).last;
-        // print("The first index is : ");
-        // print(desktopProductId);
-        print("The first index is : ");
-        print(productId);
+            content.map((product) => Products.fromJson(product)).toList();
+
+        var data = json.decode(resBody);
+        var _imageBase64;
+
+        for (var product in data) {
+          // print("This is the image");
+          // print(product["mainImage"]["path"]);
+          if(product["mainImage"] == null){
+            // await productLocalDb.addProduct(LocalProducts(
+            //     productId: product["productId"],
+            //     productName: product["productName"],
+            //     mainImage: Uint8List(8),
+            //     price: product["price"],
+            //     published: product["published"],
+            //     featured: product["featured"],
+            //     topSeller: product["topSeller"],
+            //     viewCount: product["viewCount"]));
+          } else {
+            // http.Response imageResponse = await http
+            //     .get(Uri.parse("$baseUrl${product["mainImage"]["path"]}"));
+            // _imageBase64 = base64Encode(imageResponse.bodyBytes);
+            // await productLocalDb.addProduct(LocalProducts(
+            //     productId: product["productId"],
+            //     productName: product["productName"],
+            //     mainImage: base64Decode(_imageBase64),
+            //     price: product["price"],
+            //     published: product["published"],
+            //     featured: product["featured"],
+            //     topSeller: product["topSeller"],
+            //     viewCount: product["viewCount"]));
+          }
+          print("Has entered");
+        }
         print(data);
         return products;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");
         await getNewAccessToken();
         return await getProductsForList(skipNumber);
-      } else if(res.statusCode == 429){
+      } else if (res.statusCode == 429) {
         print("Too many requests");
         throw Exception();
       } else {
@@ -189,12 +227,13 @@ class ProductsDataSource {
         throw Exception();
       }
     } on SocketException {
-      throw Exception();
+      final localProduct = await productLocalDb.getListProducts();
+      print(localProduct[0].productName);
+      return "Somesing";
     }
   }
 
   Future<Products> getProduct(String? productId) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -209,7 +248,7 @@ class ProductsDataSource {
     print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwww");
     print(accessToken);
 
-    try{
+    try {
       var res = await http.get(url, headers: headersList);
       final resBody = res.body;
 
@@ -235,8 +274,8 @@ class ProductsDataSource {
     }
   }
 
-  Future editProduct(Products product, List imageType, List listImageType) async {
-
+  Future editProduct(
+      Products product, List imageType, List listImageType) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -250,20 +289,25 @@ class ProductsDataSource {
 
     var body = {
       'productDetails':
-      '{ "productName": "${product.productName}", "description": ${json.encode(product.description)}, "price": ${product.price}, "categories": ${json.encode(product.categories)}, "commission": ${product.commission}, "published": ${product.published}, "featured": ${product.featured}, "topSeller": ${product.topSeller} }'
+          '{ "productName": "${product.productName}", "description": ${json.encode(product.description)}, "price": ${product.price}, "categories": ${json.encode(product.categories)}, "commission": ${product.commission}, "published": ${product.published}, "featured": ${product.featured}, "topSeller": ${product.topSeller} }'
     };
 
-    try{
+    try {
       var req = http.MultipartRequest('PATCH', url);
       req.headers.addAll(headersList);
       if (product.mainImage!.path != "[0, 0, 0, 0, 0, 0, 0, 0]") {
         req.files.add(await http.MultipartFile.fromBytes(
-            'mainImage', json.decode(product.mainImage!.path).cast<int>(), contentType: MediaType("${imageType[0]}", "${imageType[1]}"), filename: "Any_name"));
+            'mainImage', json.decode(product.mainImage!.path).cast<int>(),
+            contentType: MediaType("${imageType[0]}", "${imageType[1]}"),
+            filename: "Any_name"));
       }
       if (product.moreImages!.isNotEmpty) {
         for (var images = 0; images < product.moreImages!.length; images++) {
           req.files.add(await http.MultipartFile.fromBytes(
-              'moreImages', product.moreImages![images], contentType: MediaType("${listImageType[images][0]}", "${listImageType[images][1]}"), filename: "Any_name"));
+              'moreImages', product.moreImages![images],
+              contentType: MediaType(
+                  "${listImageType[images][0]}", "${listImageType[images][1]}"),
+              filename: "Any_name"));
         }
       }
       req.fields.addAll(body);
@@ -292,7 +336,6 @@ class ProductsDataSource {
   }
 
   Future deleteProduct(String? productId) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -304,7 +347,7 @@ class ProductsDataSource {
     };
     var url = Uri.parse('$baseUrl/products/$productId');
 
-    try{
+    try {
       var res = await http.delete(url, headers: headersList);
       final resBody = res.body;
 
@@ -316,19 +359,18 @@ class ProductsDataSource {
         print("ON 401 : $data");
         await getNewAccessToken();
         return await deleteProduct(productId);
-      } else if(data["message"] == "Pending_Order") {
+      } else if (data["message"] == "Pending_Order") {
         print(data);
         throw const HttpException("404");
-      } else{
+      } else {
         throw Exception();
       }
-    } on SocketException{
+    } on SocketException {
       throw Exception();
     }
   }
 
   Future<List<Products>> searchProducts(String productName) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -338,7 +380,8 @@ class ProductsDataSource {
       'Api-Key': apiKey,
       'Authorization': 'Bearer $accessToken'
     };
-    var url = Uri.parse('$baseUrl/products?search={"productName" : "$productName"}&select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=50');
+    var url = Uri.parse(
+        '$baseUrl/products?search={"productName" : "$productName"}&select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=50');
 
     try {
       var res = await http.get(url, headers: headersList);
@@ -349,17 +392,16 @@ class ProductsDataSource {
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         final List<Products> products =
-        content.map((product) => Products.fromJson(product)).toList();
+            content.map((product) => Products.fromJson(product)).toList();
         return products;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");
         await getNewAccessToken();
         return await searchProducts(productName);
-      } else if(res.statusCode == 429){
+      } else if (res.statusCode == 429) {
         print("Too many requests");
         throw Exception();
-      }
-      else {
+      } else {
         print(data);
         throw Exception();
       }
@@ -368,8 +410,8 @@ class ProductsDataSource {
     }
   }
 
-  Future<List<Products>> filterProductsByCategory(String categoryName, int skipNumber) async {
-
+  Future<List<Products>> filterProductsByCategory(
+      String categoryName, int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -379,7 +421,8 @@ class ProductsDataSource {
       'Api-Key': apiKey,
       'Authorization': 'Bearer $accessToken'
     };
-    var url = Uri.parse('$baseUrl/products?categories=["$categoryName"]&select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=$limit&skip=$skipNumber');
+    var url = Uri.parse(
+        '$baseUrl/products?categories=["$categoryName"]&select=["productName","price","viewCount","mainImage", "commission", "categories", "featured", "published", "topSeller"]&limit=$limit&skip=$skipNumber');
 
     try {
       var res = await http.get(url, headers: headersList);
@@ -395,18 +438,18 @@ class ProductsDataSource {
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         print("aaaaaaaaaaaaaaaaaaaaa");
-        final List<Products> products = content.map((product) => Products.fromJson(product)).toList();
+        final List<Products> products =
+            content.map((product) => Products.fromJson(product)).toList();
         // print(data);
         return products;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");
         await getNewAccessToken();
         return await filterProductsByCategory(categoryName, skipNumber);
-      } else if(res.statusCode == 429){
+      } else if (res.statusCode == 429) {
         print("Too many requests");
         throw Exception();
-      }
-      else {
+      } else {
         print(data);
         print("Something Something hard");
         throw Exception();
@@ -418,7 +461,6 @@ class ProductsDataSource {
   }
 
   Future postCategories(Categories category) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -459,7 +501,6 @@ class ProductsDataSource {
   }
 
   Future<List<Categories>> getCategories() async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -499,7 +540,6 @@ class ProductsDataSource {
   }
 
   Future editCategoryName(String? categoryId, String categoryName) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -540,7 +580,6 @@ class ProductsDataSource {
   }
 
   Future deleteCategory(String? categoryId) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });

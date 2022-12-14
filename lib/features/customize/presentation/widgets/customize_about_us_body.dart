@@ -24,6 +24,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:mime/mime.dart';
 import 'package:progressive_image/progressive_image.dart';
 
 class CustomizeAboutUsBody extends StatefulWidget {
@@ -50,6 +51,7 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
   var howToAffiliateWithUsController = quill.QuillController.basic();
   TextEditingController howToAffiliateWithUsVideoLinkController =
       TextEditingController();
+  var emptyController = quill.QuillController.basic();
 
   final whoAreWeFormKey = GlobalKey<FormState>();
   final howTosFormKey = GlobalKey<FormState>();
@@ -59,9 +61,12 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedAboutUsWebImage = webImage;
           _pickedAboutUsImage = selected;
+          aboutUsContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -84,9 +89,12 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         var selected = File(image.path);
         setState(() {
+          selectedWhoAreWeWebImage = webImage;
           _pickedWhoAreWeImage = selected;
+          whoAreWeContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
@@ -169,6 +177,11 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 0,
+                    child: quill.QuillEditor.basic(
+                        controller: emptyController, readOnly: true),
+                  ),
                   SizedBox(
                     height: 30,
                   ),

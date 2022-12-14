@@ -4,12 +4,10 @@ import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
-import 'package:cash_admin_app/features/orders/data/models/selected_affiliate.dart';
 import 'package:http/http.dart' as http;
 
 class OrdersDataSource {
   AuthService authService = AuthService();
-  SelectedOrder selectedOrder = SelectedOrder();
   final _prefs = PrefService();
 
   var refreshToken;
@@ -74,14 +72,6 @@ class OrdersDataSource {
         print(data);
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
-        if(orders.isNotEmpty){
-          print("It has entered");
-          final orderId = orders.map((e) => e.orderId).last;
-          await selectedOrder.setOrderId(orderId: orderId!);
-          print("It has passed");
-        }
-        print("The first affiliate index is : ");
-        print(orderId);
         return orders;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");
@@ -122,14 +112,6 @@ class OrdersDataSource {
         print(data);
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
-        if(orders.isNotEmpty){
-          print("It has entered");
-          final orderId = orders.map((e) => e.orderId).last;
-          await selectedOrder.setOrderId(orderId: orderId!);
-          print("It has passed");
-        }
-        print("The first affiliate index is : ");
-        print(orderId);
         return orders;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");

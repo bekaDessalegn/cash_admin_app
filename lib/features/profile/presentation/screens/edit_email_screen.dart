@@ -43,42 +43,44 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<PutEmailBloc, PutEmailState>(
-          listener: (_, state){
-            if(state is PutEmailFailed){
-              buildErrorLayout(
-                  context: context,
-                  message: state.errorType);
-            }
-            else if(state is VerifyEmailFailed){
-              buildErrorLayout(
-                  context: context,
-                  message: state.errorType);
-            }
-            else if(state is VerifyEmailSuccessful){
-              authService.setEmail(email: emailController.text);
-              final admin = BlocProvider.of<ProfileBloc>(context);
-              admin.add(LoadAdminEvent());
-              context.go(APP_PAGE.profile.toPath);
-            }
-          },
-          builder: (_, state){
-            if(state is PutEmailLoading){
-              return buildInitialInput(context: context, isLoading: true);
-            }
-            else if(state is PutEmailSuccessful){
-              return buildEmailEnteredInput(context: context);
-            }
-            else if(state is VerifyEmailLoading){
-              return buildLoadingLayout();
-            }
-            else if(state is VerifyEmailFailed){
-              return buildEmailEnteredInput(context: context);
-            }
-            else{
-              return buildInitialInput(context: context, isLoading: false);
-            }
-          }),
+      body: SafeArea(
+        child: BlocConsumer<PutEmailBloc, PutEmailState>(
+            listener: (_, state){
+              if(state is PutEmailFailed){
+                buildErrorLayout(
+                    context: context,
+                    message: state.errorType);
+              }
+              else if(state is VerifyEmailFailed){
+                buildErrorLayout(
+                    context: context,
+                    message: state.errorType);
+              }
+              else if(state is VerifyEmailSuccessful){
+                authService.setEmail(email: emailController.text);
+                final admin = BlocProvider.of<ProfileBloc>(context);
+                admin.add(LoadAdminEvent());
+                context.go(APP_PAGE.profile.toPath);
+              }
+            },
+            builder: (_, state){
+              if(state is PutEmailLoading){
+                return buildInitialInput(context: context, isLoading: true);
+              }
+              else if(state is PutEmailSuccessful){
+                return buildEmailEnteredInput(context: context);
+              }
+              else if(state is VerifyEmailLoading){
+                return buildLoadingLayout();
+              }
+              else if(state is VerifyEmailFailed){
+                return buildEmailEnteredInput(context: context);
+              }
+              else{
+                return buildInitialInput(context: context, isLoading: false);
+              }
+            }),
+      ),
     );
   }
 

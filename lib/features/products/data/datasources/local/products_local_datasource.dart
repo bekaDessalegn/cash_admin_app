@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cash_admin_app/features/products/data/models/products.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,8 +20,6 @@ class ProductLocalDb {
           productName TEXT,
           mainImage BLOB,
           price REAL,
-          categories TEXT,
-          commission REAL,
           published BOOLEAN,
           featured BOOLEAN,
           topSeller BOOLEAN,
@@ -38,8 +36,6 @@ class ProductLocalDb {
           productName TEXT,
           mainImage BLOB,
           price REAL,
-          categories TEXT,
-          commission REAL,
           published BOOLEAN,
           featured BOOLEAN,
           topSeller BOOLEAN,
@@ -50,7 +46,7 @@ class ProductLocalDb {
     );
   }
 
-  Future<int> addProduct(Products product) async{ //returns number of items inserted as an integer
+  Future<int> addProduct(LocalProducts product) async{ //returns number of items inserted as an integer
     final db = await init(); //open database
 
     return db.insert("Product", product.toJson(), //toMap() function from MemoModel
@@ -79,7 +75,7 @@ class ProductLocalDb {
     return deleted;
   }
 
-  Future<Products> getProduct() async{ //returns the memos as a list (array)
+  Future<LocalProducts> getProduct() async{ //returns the memos as a list (array)
 
     final db = await init();
     final maps = await db.query("Product"); //query all the rows in a table as an array of maps
@@ -87,16 +83,16 @@ class ProductLocalDb {
     print("Recieved product data in the Local Database");
     print(maps[0]);
 
-    return Products.fromJson(maps[0]);
+    return LocalProducts.fromJson(maps[0]);
   }
 
-  Future<List<Products>> getListProducts() async {
+  Future<List<LocalProducts>> getListProducts() async {
     final db = await init();
     final maps = await db.query("Product"); //query all the rows in a table as an array of maps
 
-    List<Products> products = [];
+    List<LocalProducts> products = [];
     for(var product in maps){
-      products.add(Products.fromJson(product));
+      products.add(LocalProducts.fromJson(product));
     }
 
     print("Recieved Products data in the Local Database");

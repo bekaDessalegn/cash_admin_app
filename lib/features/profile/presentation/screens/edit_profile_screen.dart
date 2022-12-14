@@ -38,20 +38,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: BlocConsumer<EditPasswordBloc, EditPasswordState>(listener: (_, state) {
-          if (state is EditPasswordFailed) {
-            buildErrorLayout(context: context, message: state.errorType);
-          } else if (state is EditPasswordSuccessful) {
-            context.go(APP_PAGE.profile.toPath);
-          }
-        }, builder: (_, state) {
-          if (state is EditPasswordLoading) {
-            return buildInitialInput(isLoading: true);
-          } else {
-            return buildInitialInput(isLoading: false);
-          }
-        }),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: BlocConsumer<EditPasswordBloc, EditPasswordState>(listener: (_, state) {
+            if (state is EditPasswordFailed) {
+              buildErrorLayout(context: context, message: state.errorType);
+            } else if (state is EditPasswordSuccessful) {
+              context.go(APP_PAGE.profile.toPath);
+            }
+          }, builder: (_, state) {
+            if (state is EditPasswordLoading) {
+              return buildInitialInput(isLoading: true);
+            } else {
+              return buildInitialInput(isLoading: false);
+            }
+          }),
+        ),
       ),
     );
   }

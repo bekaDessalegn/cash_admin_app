@@ -34,7 +34,7 @@ Widget deleteOrderDialog({required BuildContext context, required String orderId
 
 Widget _buildDeleteOrderInput({required BuildContext context, required String orderId, required bool isLoading}){
   return SizedBox(
-    height: 150,
+    height: 170,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 300,
     child: Padding(
       padding: const EdgeInsets.all(10.0),

@@ -43,6 +43,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
   int? isPublished, isFeatured, isTopSeller;
 
   var productDescriptionController = quill.QuillController.basic();
+  var emptyController = quill.QuillController.basic();
 
   @override
   void initState() {
@@ -227,7 +228,8 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
               color: surfaceColor,
               thickness: 1.0,
             ),
-            product.description == null
+            SizedBox(height: 0, child: quill.QuillEditor.basic(controller: emptyController, readOnly: true),),
+            product.description == json.encode([{"insert":"\n"}])
                 ? SizedBox()
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,7 +399,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
                 child: boldText(
                     value: "Edit product", size: 15, color: linkColor)),
             SizedBox(
-              height: 5,
+              height: 10,
             ),
             MouseRegion(
               cursor: SystemMouseCursors.click,

@@ -25,6 +25,8 @@ class GetProductsFailed extends ProductsState {
   GetProductsFailed(this.errorType);
 }
 
+class SocketErrorState extends ProductsState {}
+
 abstract class SearchState {}
 
 class InitialSearchProductState extends SearchState {}

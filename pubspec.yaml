@@ -56,6 +56,7 @@ dependencies:
   progressive_image: ^2.0.0
   sqflite: ^2.2.0+3
   flutter_quill: ^6.1.6
+  mime: ^1.0.3
 
 dev_dependencies:
   flutter_test:

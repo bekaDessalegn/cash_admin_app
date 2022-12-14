@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 class EditSocialLinksDialog extends StatefulWidget {
 
@@ -46,9 +47,12 @@ class _EditSocialLinksDialogState extends State<EditSocialLinksDialog> {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        var webImage = await image.readAsBytes();
         setState(() {
           var selected = File(image.path);
+          selectedWebSocialLinkImage = webImage;
           _pickedSocialLinkImage = selected;
+          socialLinkContentType = lookupMimeType(image.path);
         });
       } else {}
     } else if (kIsWeb) {
