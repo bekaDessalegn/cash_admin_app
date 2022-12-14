@@ -10,12 +10,44 @@ class GetMoreOrdersEvent extends OrdersEvent {
   GetMoreOrdersEvent(this.skipNumber);
 }
 
+class FilterPendingEvent extends OrdersEvent {
+  int skipNumber;
+  FilterPendingEvent(this.skipNumber);
+}
+
+class MoreFilterPendingEvent extends OrdersEvent {
+  int skipNumber;
+  MoreFilterPendingEvent(this.skipNumber);
+}
+
+class FilterAcceptedEvent extends OrdersEvent {
+  int skipNumber;
+  FilterAcceptedEvent(this.skipNumber);
+}
+
+class MoreFilterAcceptedEvent extends OrdersEvent {
+  int skipNumber;
+  MoreFilterAcceptedEvent(this.skipNumber);
+}
+
+class FilterRejectedEvent extends OrdersEvent {
+  int skipNumber;
+  FilterRejectedEvent(this.skipNumber);
+}
+
+class MoreFilterRejectedEvent extends OrdersEvent {
+  int skipNumber;
+  MoreFilterRejectedEvent(this.skipNumber);
+}
+
 abstract class SingleOrderEvent {}
 
 class GetSingleOrderEvent extends SingleOrderEvent {
   String orderId;
   GetSingleOrderEvent(this.orderId);
 }
+
+class DeletedOrderEvent extends SingleOrderEvent {}
 
 class GetAnsweredSingleOrderEvent extends SingleOrderEvent {}
 

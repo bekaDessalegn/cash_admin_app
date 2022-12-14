@@ -10,6 +10,12 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
   AffiliatesBloc(this.affiliatesRepository) : super(InitialAffiliatesState()){
     on<GetAffiliatesEvent>(_onGetAffiliatesEvent);
     on<GetMoreAffiliatesEvent>(_onGetMoreAffiliatesEvent);
+    on<GetAffiliatesEarningFromLowToHighEvent>(_onGetAffiliatesEarningFromLowToHighEvent);
+    on<GetMoreAffiliatesEarningFromLowToHighEvent>(_onGetMoreAffiliatesEarningFromLowToHighEvent);
+    on<GetAffiliatesEarningFromHighToLowEvent>(_onGetAffiliatesEarningFromHighToLowEvent);
+    on<GetMoreAffiliatesEarningFromHighToLowEvent>(_onGetMoreAffiliatesEarningFromHighToLowEvent);
+    on<GetMostParentAffiliateEvent>(_onGetMostParentAffiliateEvent);
+    on<GetMoreMostParentAffiliateEvent>(_onGetMoreMostParentAffiliateEvent);
   }
 
   void _onGetAffiliatesEvent(GetAffiliatesEvent event, Emitter emit) async {
@@ -25,6 +31,63 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
   void _onGetMoreAffiliatesEvent(GetMoreAffiliatesEvent event, Emitter emit) async {
     try{
       final affiliates = await affiliatesRepository.getAffiliates(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetAffiliatesEarningFromLowToHighEvent(GetAffiliatesEarningFromLowToHighEvent event, Emitter emit) async {
+    emit(GetAffiliatesLoadingState());
+    try{
+      final affiliates = await affiliatesRepository.getAffiliatesFromLowToHigh(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetMoreAffiliatesEarningFromLowToHighEvent(GetMoreAffiliatesEarningFromLowToHighEvent event, Emitter emit) async {
+    try{
+      final affiliates = await affiliatesRepository.getAffiliatesFromLowToHigh(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetAffiliatesEarningFromHighToLowEvent(GetAffiliatesEarningFromHighToLowEvent event, Emitter emit) async {
+    emit(GetAffiliatesLoadingState());
+    try{
+      final affiliates = await affiliatesRepository.getAffiliatesFromHighToLow(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetMoreAffiliatesEarningFromHighToLowEvent(GetMoreAffiliatesEarningFromHighToLowEvent event, Emitter emit) async {
+    try{
+      final affiliates = await affiliatesRepository.getAffiliatesFromHighToLow(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetMostParentAffiliateEvent(GetMostParentAffiliateEvent event, Emitter emit) async {
+    emit(GetAffiliatesLoadingState());
+    try{
+      final affiliates = await affiliatesRepository.getMostParentAffiliate(event.skipNumber);
+      emit(GetAffiliatesSuccessfulState(affiliates));
+    } catch(e){
+      emit(GetAffiliatesFailedState("Something went wrong"));
+    }
+  }
+
+  void _onGetMoreMostParentAffiliateEvent(GetMoreMostParentAffiliateEvent event, Emitter emit) async {
+    try{
+      final affiliates = await affiliatesRepository.getMostParentAffiliate(event.skipNumber);
       emit(GetAffiliatesSuccessfulState(affiliates));
     } catch(e){
       emit(GetAffiliatesFailedState("Something went wrong"));

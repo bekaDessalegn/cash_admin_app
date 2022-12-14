@@ -1,5 +1,4 @@
 import 'package:cash_admin_app/core/constants.dart';
-import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_bloc.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_event.dart';
@@ -9,13 +8,11 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/no_data_box.dart';
-import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
-import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/mi.dart';
 
 class AffiliatesBody extends StatefulWidget {
@@ -39,12 +36,10 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
   int _skip = 9;
 
   String? value;
-  List<String> filter = ["Latest", "Old"];
+  List<String> filter = ["Date", "Earnings up", "Earnings down", "Most parents"];
   final affiliateSearchController = TextEditingController();
 
   void loadMore() async {
-    print("The fetched affiliates");
-    print(fetchedAffiliates.length);
     if (_hasNextPage == true &&
         _isLoadMoreRunning == false &&
         _allAffiliatesController.position.extentAfter < 300
@@ -55,11 +50,20 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
 
       _allAffiliatesIndex += 1;
       final skipNumber = _allAffiliatesIndex * _skip;
-      final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-      affiliates.add(GetMoreAffiliatesEvent(skipNumber));
+      if(value == "Earnings up"){
+        final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+        affiliates.add(GetMoreAffiliatesEarningFromLowToHighEvent(skipNumber));
+      } else if(value == "Earnings down"){
+        final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+        affiliates.add(GetMoreAffiliatesEarningFromHighToLowEvent(skipNumber));
+      } else if(value == "Most parents"){
+        final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+        affiliates.add(GetMoreMostParentAffiliateEvent(skipNumber));
+      } else{
+        final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+        affiliates.add(GetMoreAffiliatesEvent(skipNumber));
+      }
       if (fetchedAffiliates.isNotEmpty) {
-        print("adfGHJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJjjj");
-        print(_allAffiliatesIndex);
         setState(() {
 
         });
@@ -147,23 +151,35 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
                     ),
                   ),
                 ),
-                // Container(
-                //   width: 40,
-                //   margin: EdgeInsets.only(right: 10),
-                //   child: DropdownButtonHideUnderline(
-                //     child: DropdownButton<String>(
-                //       icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                //       // value: values,
-                //       isExpanded: true,
-                //       hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                //       items: filter.map(buildMenuLocation).toList(),
-                //       onChanged: (value) => setState(() {
-                //         this.value = value;
-                //         print(value);
-                //       }),
-                //     ),
-                //   ),
-                // ),
+                SizedBox(
+                  width: 100,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
+                      // value: values,
+                      isExpanded: true,
+                      hint: Center(child: Iconify(Mi.filter, size: 40, color: onBackgroundColor,)),
+                      items: filter.map(buildMenuLocation).toList(),
+                      onChanged: (value) => setState(() {
+                        _allAffiliates = [];
+                        this.value = value;
+                        if(value == "Earnings up"){
+                          final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                          affiliates.add(GetAffiliatesEarningFromLowToHighEvent(0));
+                        } else if(value == "Earnings down"){
+                          final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                          affiliates.add(GetAffiliatesEarningFromHighToLowEvent(0));
+                        } else if(value == "Most parents"){
+                          final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                          affiliates.add(GetMostParentAffiliateEvent(0));
+                        } else if(value == "Date"){
+                          final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                          affiliates.add(GetAffiliatesEvent(0));
+                        }
+                      }),
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 10,),
@@ -195,7 +211,7 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
       ),
     );
   }
-  
+
   Widget buildInitialInput() {
     return BlocConsumer<AffiliatesBloc, AffiliatesState>(builder: (_, state){
       if(state is GetAffiliatesSuccessfulState){
@@ -257,7 +273,18 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
 
   DropdownMenuItem<String> buildMenuLocation(String filter) => DropdownMenuItem(
     value: filter,
-    child: Text(
+    child: filter == "Earnings up" || filter == "Earnings down" ? Row(
+      children: [
+        Text(
+          "Earnings",
+          style: TextStyle(
+            color: onBackgroundColor,
+            fontSize: 14,
+          ),
+        ),
+        filter != "Earnings up" ? Iconify(Ic.round_arrow_downward, size: 14, color: onBackgroundColor,) : Iconify(Ic.round_arrow_upward, size: 14, color: onBackgroundColor,)
+      ],
+    ) : Text(
       filter,
       style: TextStyle(
         color: onBackgroundColor,

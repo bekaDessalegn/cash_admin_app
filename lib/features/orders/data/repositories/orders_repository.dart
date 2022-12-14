@@ -7,63 +7,78 @@ class OrdersRepository {
 
   Future<List<Orders>> getOrders(int skipNumber) async{
     try{
-      print("On the way to get orders");
       final orders = await ordersDataSource.getOrders(skipNumber);
       return orders;
     } catch(e){
-      print(e);
+      throw Exception();
+    }
+  }
+
+  Future<List<Orders>> filterPendingOrders(int skipNumber) async{
+    try{
+      final orders = await ordersDataSource.filterPendingOrders(skipNumber);
+      return orders;
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Orders>> filterAcceptedOrders(int skipNumber) async{
+    try{
+      final orders = await ordersDataSource.filterAcceptedOrders(skipNumber);
+      return orders;
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Orders>> filterRejectedOrders(int skipNumber) async{
+    try{
+      final orders = await ordersDataSource.filterRejectedOrders(skipNumber);
+      return orders;
+    } catch(e){
       throw Exception();
     }
   }
 
   Future<List<Orders>> searchOrders(String fullName, String companyName) async{
     try{
-      print("On the way to search orders");
       final orders = await ordersDataSource.searchOrders(fullName, companyName);
       return orders;
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
 
   Future<Orders> getSingleOrder(String orderId) async{
     try{
-      print("On the way to get single order");
       final order = await ordersDataSource.getSingleOrder(orderId);
       return order;
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
 
   Future acceptOrder(String orderId) async{
     try{
-      print("On the way to accept order");
       await ordersDataSource.acceptOrder(orderId);
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
 
   Future rejectOrder(String orderId) async{
     try{
-      print("On the way to reject order");
       await ordersDataSource.rejectOrder(orderId);
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
 
   Future deleteOrder(String orderId) async {
     try{
-      print("On the way to delete order");
       await ordersDataSource.deleteOrder(orderId);
     } catch(e){
-      print(e);
       throw Exception();
     }
   }

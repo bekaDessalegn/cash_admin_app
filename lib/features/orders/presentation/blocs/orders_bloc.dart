@@ -10,6 +10,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc(this.ordersRepository) : super(InitialOrdersState()){
     on<GetOrdersEvent>(_onGetOrdersEvent);
     on<GetMoreOrdersEvent>(_onGetMoreOrdersEvent);
+    on<FilterPendingEvent>(_onFilterPendingEvent);
+    on<MoreFilterPendingEvent>(_onMoreFilterPendingEvent);
+    on<FilterAcceptedEvent>(_onFilterAcceptedEvent);
+    on<MoreFilterAcceptedEvent>(_onMoreFilterAcceptedEvent);
+    on<FilterRejectedEvent>(_onFilterRejectedEvent);
+    on<MoreFilterRejectedEvent>(_onMoreFilterRejectedEvent);
   }
 
   void _onGetOrdersEvent(GetOrdersEvent event, Emitter emit) async {
@@ -31,12 +37,70 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
+  void _onFilterPendingEvent(FilterPendingEvent event, Emitter emit) async {
+    emit(GetOrdersLoadingState());
+    try{
+      final orders = await ordersRepository.filterPendingOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
+  void _onMoreFilterPendingEvent(MoreFilterPendingEvent event, Emitter emit) async {
+    try{
+      final orders = await ordersRepository.filterPendingOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
+  void _onFilterAcceptedEvent(FilterAcceptedEvent event, Emitter emit) async {
+    emit(GetOrdersLoadingState());
+    try{
+      final orders = await ordersRepository.filterAcceptedOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
+  void _onMoreFilterAcceptedEvent(MoreFilterAcceptedEvent event, Emitter emit) async {
+    try{
+      final orders = await ordersRepository.filterAcceptedOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
+  void _onFilterRejectedEvent(FilterRejectedEvent event, Emitter emit) async {
+    emit(GetOrdersLoadingState());
+    try{
+      final orders = await ordersRepository.filterRejectedOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
+  void _onMoreFilterRejectedEvent(MoreFilterRejectedEvent event, Emitter emit) async {
+    try{
+      final orders = await ordersRepository.filterRejectedOrders(event.skipNumber);
+      emit(GetOrdersSuccessfulState(orders));
+    } catch(e){
+      emit(GetOrdersFailedState("Something went wrong"));
+    }
+  }
+
 }
 
 class SingleOrderBloc extends Bloc<SingleOrderEvent, SingleOrderState>{
   OrdersRepository ordersRepository;
   SingleOrderBloc(this.ordersRepository) : super(InitialGetOrderState()){
     on<GetSingleOrderEvent>(_onGetSingleOrderEvent);
+    on<DeletedOrderEvent>(_onDeletedOrderEvent);
   }
 
   void _onGetSingleOrderEvent(GetSingleOrderEvent event, Emitter emit) async {
@@ -49,6 +113,10 @@ class SingleOrderBloc extends Bloc<SingleOrderEvent, SingleOrderState>{
     } on Exception{
       emit(GetSingleOrderFailed("Something went wrong please, try again"));
     }
+  }
+
+  void _onDeletedOrderEvent(DeletedOrderEvent event, Emitter emit) async {
+    emit(DeletedOrderState());
   }
 
 }

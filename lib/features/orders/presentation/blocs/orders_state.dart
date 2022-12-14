@@ -30,6 +30,8 @@ class GetSingleOrderFailed extends SingleOrderState {
   GetSingleOrderFailed(this.errorType);
 }
 
+class DeletedOrderState extends SingleOrderState{}
+
 class GetSingleOrderLoading extends SingleOrderState {}
 
 abstract class PatchOrderState {}

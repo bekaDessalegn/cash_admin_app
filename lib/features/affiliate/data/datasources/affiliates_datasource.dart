@@ -9,7 +9,7 @@ import 'package:cash_admin_app/features/affiliate/data/models/children.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/parent_affiliate.dart';
 import 'package:http/http.dart' as http;
 
-class AffiliatesDataSource{
+class AffiliatesDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
 
@@ -42,7 +42,7 @@ class AffiliatesDataSource{
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       await authService.setAccessToken(accessToken: data["newAccessToken"]);
-    } else if(data["message"] == "Invalid_Refresh_Token") {
+    } else if (data["message"] == "Invalid_Refresh_Token") {
       _prefs.removeCache();
       authService.logOut();
     } else {
@@ -51,7 +51,6 @@ class AffiliatesDataSource{
   }
 
   Future<List<Affiliates>> getAffiliates(int skipNumber) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -63,7 +62,7 @@ class AffiliatesDataSource{
     };
     var url = Uri.parse('$baseUrl/affiliates?limit=$limit&skip=$skipNumber');
 
-    try{
+    try {
       var res = await http.get(url, headers: headersList);
       final resBody = res.body;
 
@@ -71,17 +70,16 @@ class AffiliatesDataSource{
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
-        final List<Affiliates> affiliates = content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+        final List<Affiliates> affiliates =
+        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getAffiliates(skipNumber);
-      }
-      else {
+      } else {
         throw Exception();
       }
-    }
-    catch(e){
+    } catch (e) {
       throw Exception();
     }
   }
@@ -98,7 +96,7 @@ class AffiliatesDataSource{
     };
     var url = Uri.parse('$baseUrl/affiliates/$parentId');
 
-    try{
+    try {
       var res = await http.get(url, headers: headersList);
       final resBody = res.body;
 
@@ -110,24 +108,28 @@ class AffiliatesDataSource{
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getParentAffiliate(parentId);
-      } else if (data["message"] == "User_Not_Found"){
+      } else if (data["message"] == "User_Not_Found") {
         return ParentAffiliate(userId: "0", fullName: "Deleted Affiliate");
-      }
-      else {
+      } else {
         throw Exception();
       }
-    } catch(e){
+    } catch (e) {
       throw Exception();
     }
   }
 
   Future<List<Affiliates>> searchAffiliates(String affiliateName) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey,
       'Authorization': 'Bearer $accessToken'
     };
-    var url = Uri.parse('$baseUrl/affiliates?search={"fullName":"$affiliateName"}');
+    var url =
+    Uri.parse('$baseUrl/affiliates?search={"fullName":"$affiliateName"}');
 
     try {
       var res = await http.get(url, headers: headersList);
@@ -143,10 +145,9 @@ class AffiliatesDataSource{
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await searchAffiliates(affiliateName);
-      } else if(res.statusCode == 429){
+      } else if (res.statusCode == 429) {
         throw Exception();
-      }
-      else {
+      } else {
         throw Exception();
       }
     } on SocketException {
@@ -166,7 +167,7 @@ class AffiliatesDataSource{
     };
     var url = Uri.parse('$baseUrl/affiliates/$userId');
 
-    try{
+    try {
       var res = await http.get(url, headers: headersList);
       final resBody = res.body;
 
@@ -178,17 +179,15 @@ class AffiliatesDataSource{
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getAffiliate(userId);
-      }
-      else {
+      } else {
         throw Exception();
       }
-    } catch(e){
+    } catch (e) {
       throw Exception();
     }
   }
 
   Future<List<Children>> getChildren(String userId) async {
-
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -200,7 +199,7 @@ class AffiliatesDataSource{
     };
     var url = Uri.parse('$baseUrl/affiliates/$userId/children');
 
-    try{
+    try {
       var res = await http.get(url, headers: headersList);
       final resBody = res.body;
 
@@ -208,18 +207,122 @@ class AffiliatesDataSource{
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
-        List<Children> children = content.map((child) => Children.fromJson(child)).toList();
+        List<Children> children =
+        content.map((child) => Children.fromJson(child)).toList();
         return children;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getChildren(userId);
-      }
-      else {
+      } else {
         throw Exception();
       }
-    } catch(e){
+    } catch (e) {
       throw Exception();
     }
   }
 
+  Future<List<Affiliates>> getAffiliateEarningsFromLowToHigh(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse(
+        '$baseUrl/affiliates?sort={"wallet.totalMade": 1}&limit=$limit&skip=$skipNumber');
+
+    try {
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      final data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Affiliates> affiliates =
+        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+        return affiliates;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await getAffiliateEarningsFromLowToHigh(skipNumber);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  Future<List<Affiliates>> getAffiliateEarningsFromHighToLow(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse(
+        '$baseUrl/affiliates?sort={"wallet.totalMade": -1}&limit=$limit&skip=$skipNumber');
+
+    try {
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      final data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Affiliates> affiliates =
+        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+        return affiliates;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await getAffiliateEarningsFromHighToLow(skipNumber);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  Future<List<Affiliates>> getMostParentAffiliate(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse(
+        '$baseUrl/affiliates?sort={"childrenCount":-1}&limit=$limit&skip=$skipNumber');
+
+    try {
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      final data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Affiliates> affiliates =
+        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+        return affiliates;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await getAffiliateEarningsFromHighToLow(skipNumber);
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      throw Exception();
+    }
+  }
 }

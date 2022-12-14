@@ -52,4 +52,30 @@ class AffiliatesRepository {
     }
   }
 
+  Future<List<Affiliates>> getAffiliatesFromLowToHigh(int skipNumber) async {
+    try{
+      final affiliates = await affiliatesDataSource.getAffiliateEarningsFromLowToHigh(skipNumber);
+      return affiliates;
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Affiliates>> getAffiliatesFromHighToLow(int skipNumber) async {
+    try{
+      final affiliates = await affiliatesDataSource.getAffiliateEarningsFromHighToLow(skipNumber);
+      return affiliates;
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Affiliates>> getMostParentAffiliate(int skipNumber) async {
+    try{
+      final affiliates = await affiliatesDataSource.getMostParentAffiliate(skipNumber);
+      return affiliates;
+    } catch(e){
+      throw Exception();
+    }
+  }
 }

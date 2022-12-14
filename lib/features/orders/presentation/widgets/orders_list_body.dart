@@ -39,12 +39,10 @@ class _OrdersBodyState extends State<OrdersBody> {
   int _skip = 9;
 
   String? value;
-  List<String> filter = ["Latest", "Old"];
+  List<String> filter = ["Pending", "Accepted", "Rejected"];
   final orderSearchController = TextEditingController();
 
   void loadMore() async {
-    print("The fetched Orders");
-    print(fetchedOrders.length);
     if (_hasNextPage == true &&
         _isLoadMoreRunning == false &&
         _allOrdersController.position.extentAfter < 300
@@ -55,12 +53,20 @@ class _OrdersBodyState extends State<OrdersBody> {
 
       _allOrdersIndex += 1;
       final skipNumber = _allOrdersIndex * _skip;
-      final orders =
-      BlocProvider.of<OrdersBloc>(context);
-      orders.add(GetMoreOrdersEvent(skipNumber));
+      if(value == "Pending"){
+        final orders = BlocProvider.of<OrdersBloc>(context);
+        orders.add(MoreFilterPendingEvent(skipNumber));
+      } else if(value == "Accepted"){
+        final orders = BlocProvider.of<OrdersBloc>(context);
+        orders.add(MoreFilterAcceptedEvent(skipNumber));
+      } else if(value == "Rejected"){
+        final orders = BlocProvider.of<OrdersBloc>(context);
+        orders.add(MoreFilterRejectedEvent(skipNumber));
+      } else{
+        final orders = BlocProvider.of<OrdersBloc>(context);
+        orders.add(GetMoreOrdersEvent(skipNumber));
+      }
       if (fetchedOrders.isNotEmpty) {
-        print("adfGHJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJjjj");
-        print(_allOrdersIndex);
         setState(() {
 
         });
@@ -154,23 +160,32 @@ class _OrdersBodyState extends State<OrdersBody> {
                     ),
                   ),
                 ),
-                // Container(
-                //   width: 40,
-                //   margin: EdgeInsets.only(right: 10),
-                //   child: DropdownButtonHideUnderline(
-                //     child: DropdownButton<String>(
-                //       icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                //       // value: values,
-                //       isExpanded: true,
-                //       hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                //       items: filter.map(buildMenuLocation).toList(),
-                //       onChanged: (value) => setState(() {
-                //         this.value = value;
-                //         print(value);
-                //       }),
-                //     ),
-                //   ),
-                // ),
+                SizedBox(
+                  width: 100,
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
+                      // value: values,
+                      isExpanded: true,
+                      hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
+                      items: filter.map(buildMenuLocation).toList(),
+                      onChanged: (value) => setState(() {
+                        _allOrders = [];
+                        if(value == "Pending"){
+                          final orders = BlocProvider.of<OrdersBloc>(context);
+                          orders.add(FilterPendingEvent(0));
+                        } else if(value == "Accepted"){
+                          final orders = BlocProvider.of<OrdersBloc>(context);
+                          orders.add(FilterAcceptedEvent(0));
+                        } else if(value == "Rejected"){
+                          final orders = BlocProvider.of<OrdersBloc>(context);
+                          orders.add(FilterRejectedEvent(0));
+                        }
+                        this.value = value;
+                      }),
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 10,),

@@ -38,13 +38,11 @@ class OrdersDataSource {
     var data = json.decode(resBody);
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
-      print(data);
       await authService.setAccessToken(accessToken: data["newAccessToken"]);
     } else if(data["message"] == "Invalid_Refresh_Token") {
       _prefs.removeCache();
       authService.logOut();
     } else {
-      print(data);
       throw Exception();
     }
   }
@@ -69,24 +67,122 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(data);
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
         return orders;
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await getOrders(skipNumber);
       }
       else {
-        print(data);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
 
+  }
+
+  Future<List<Orders>> filterPendingOrders(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse('$baseUrl/orders?filter={"status": "Pending"}&limit=$limit&skip=$skipNumber');
+
+    try{
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      var data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
+        return orders;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await filterPendingOrders(skipNumber);
+      }
+      else {
+        throw Exception();
+      }
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Orders>> filterAcceptedOrders(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse('$baseUrl/orders?filter={"status": "Accepted"}&limit=$limit&skip=$skipNumber');
+
+    try{
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      var data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
+        return orders;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await filterAcceptedOrders(skipNumber);
+      }
+      else {
+        throw Exception();
+      }
+    } catch(e){
+      throw Exception();
+    }
+  }
+
+  Future<List<Orders>> filterRejectedOrders(int skipNumber) async {
+    await getAccessTokens().then((value) {
+      accessToken = value;
+    });
+
+    var headersList = {
+      'Accept': '*/*',
+      'Api-Key': apiKey,
+      'Authorization': 'Bearer $accessToken'
+    };
+    var url = Uri.parse('$baseUrl/orders?filter={"status": "Rejected"}&limit=$limit&skip=$skipNumber');
+
+    try{
+      var res = await http.get(url, headers: headersList);
+      final resBody = res.body;
+
+      var data = json.decode(resBody);
+
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        List content = json.decode(resBody);
+        final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
+        return orders;
+      } else if (data["message"] == "Not_Authorized") {
+        await getNewAccessToken();
+        return await filterRejectedOrders(skipNumber);
+      }
+      else {
+        throw Exception();
+      }
+    } catch(e){
+      throw Exception();
+    }
   }
 
   Future<List<Orders>> searchOrders(String fullName, String companyName) async {
@@ -109,21 +205,17 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(data);
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
         return orders;
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await searchOrders(fullName, companyName);
       }
       else {
-        print(data);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
 
@@ -149,20 +241,16 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(data);
         final order = Orders.fromJson(data);
         return order;
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await getSingleOrder(orderId);
       }
       else {
-        print(data);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
@@ -187,18 +275,14 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(resBody);
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await acceptOrder(orderId);
       }
       else {
-        print(res.reasonPhrase);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
@@ -223,18 +307,14 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(resBody);
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await rejectOrder(orderId);
       }
       else {
-        print(res.reasonPhrase);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
@@ -259,18 +339,14 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(data);
       } else if (data["message"] == "Not_Authorized") {
-        print("ON 401 : $data");
         await getNewAccessToken();
         return await deleteOrder(orderId);
       }
       else {
-        print(data);
         throw Exception();
       }
     } catch(e){
-      print(e);
       throw Exception();
     }
   }
