@@ -106,7 +106,7 @@ class CustomizeDataSource {
 
   }
 
-  Future<LogoImage> getLogoImage() async {
+  Future getLogoImage() async {
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey
@@ -123,13 +123,12 @@ class CustomizeDataSource {
         print(data);
         final logoImage = LogoImage.fromJson(data);
         return logoImage;
-      }
-      else {
+      } else {
         print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      return "Socket Error";
     }
   }
 
@@ -545,7 +544,7 @@ class CustomizeDataSource {
     }
   }
 
-  Future<HomeContent> getHomeContent() async {
+  Future getHomeContent() async {
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey
@@ -562,14 +561,12 @@ class CustomizeDataSource {
         final homeContent = HomeContent.fromJson(data);
         print(data);
         return homeContent;
-      }
-      else {
+      } else {
         print(data);
         throw Exception();
       }
-    } catch(e){
-      print(e);
-      throw Exception();
+    } on SocketException {
+      return "Socket Error";
     }
   }
 
@@ -759,7 +756,7 @@ class CustomizeDataSource {
     }
   }
 
-  Future<AboutUsContent> getAboutUsContent() async{
+  Future getAboutUsContent() async{
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey
@@ -776,14 +773,12 @@ class CustomizeDataSource {
         print(data);
         final aboutUsContent = AboutUsContent.fromJson(data);
         return aboutUsContent;
-      }
-      else {
+      } else {
         print(data);
         throw Exception();
       }
-    } catch(e){
-      print(e);
-      throw Exception();
+    } on SocketException {
+      return "Socket Error";
     }
   }
 }

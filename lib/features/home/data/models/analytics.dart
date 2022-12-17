@@ -21,4 +21,13 @@ class Analytics {
       totalAffiliates: json["totalAffiliates"],
       totalEarned: json["totalEarned"],
       totalUnpaid: json["totalUnpaid"]);
+
+  Map<String, dynamic> toJson() => {
+    "totalProducts" : totalProducts,
+    "totalOrders" : totalOrders,
+    "acceptedOrders" : acceptedOrders,
+    "totalAffiliates" : totalAffiliates,
+    "totalEarned" : totalEarned,
+    "totalUnpaid" : totalUnpaid,
+  };
 }

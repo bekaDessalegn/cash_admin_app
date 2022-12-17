@@ -11,6 +11,7 @@ import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
 import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
 import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:cash_admin_app/features/products/data/models/selectedCategory.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/categories_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:cash_admin_app/features/products/presentation/blocs/categories/c
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_event.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_state.dart';
+import 'package:cash_admin_app/features/products/presentation/widgets/local_product_list_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -428,7 +430,7 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                   ? Center(child: noDataBox(text: "No Products!", description: "Products will appear here."))
                   : productListView();
             } else if(state is SocketErrorState){
-              return Center(child: Text("No internet", style: TextStyle(color: Colors.yellow),),);
+              return localProductListView(localProducts: state.localProducts);
             } else {
               return Center(child: Text(""),);
             }
@@ -458,6 +460,16 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
           ),
       ],
     );
+  }
+
+  Widget localProductListView({required List<LocalProducts> localProducts}) {
+    return ListView.builder(
+        itemCount: localProducts.length,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return localProductListBox(context: context, products: localProducts[index],);
+        });
   }
 
   Widget searchedProducts({required List<Products> products}) {

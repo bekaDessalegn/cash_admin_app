@@ -16,7 +16,11 @@ class SingleProductBloc extends Bloc<SingleProductEvent, SingleProductState>{
     emit(GetSingleProductLoading());
     try {
       final product = await productsRepository.getProduct(event.productId);
-      emit(GetSingleProductSuccessful(product));
+      if(product == "Socket Error"){
+        emit(GetSingleProductSocketError());
+      } else{
+        emit(GetSingleProductSuccessful(product));
+      }
     } on SocketException{
       emit(GetSingleProductFailed("Something went wrong please, try again"));
     } on Exception{

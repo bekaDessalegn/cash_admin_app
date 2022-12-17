@@ -163,7 +163,11 @@ class HomeContentBloc extends Bloc<HomeContentEvent, HomeContentState> {
     emit(GetHomeContentLoadingState());
     try {
       final homeContent = await customizeRepository.getHomeContent();
-      emit(GetHomeContentSuccessfulState(homeContent));
+      if(homeContent == "Socket Error"){
+        emit(GetHomeContentSocketErrorState());
+      } else{
+        emit(GetHomeContentSuccessfulState(homeContent));
+      }
     } catch(e){
       emit(GetHomeContentFailedState("Something went wrong fetching the home content"));
     }
@@ -181,7 +185,11 @@ class LogoImageBloc extends Bloc<LogoImageEvent, LogoImageState> {
     emit(GetLogoImageLoadingState());
     try {
       final logoImage = await customizeRepository.getLogoImage();
-      emit(GetLogoImageSuccessfulState(logoImage));
+      if(logoImage == "Socket Error"){
+        emit(GetLogoImageSocketErrorState());
+      } else{
+        emit(GetLogoImageSuccessfulState(logoImage));
+      }
     } catch(e){
       emit(GetLogoImageFailedState("Something went wrong fetching the home content"));
     }
@@ -199,7 +207,11 @@ class AboutUsContentBloc extends Bloc<AboutUsContentEvent, AboutUsContentState> 
     emit(GetAboutUsContentLoadingState());
     try {
       final aboutUsContent = await customizeRepository.getAboutUsContent();
-      emit(GetAboutUsContentSuccessfulState(aboutUsContent));
+      if(aboutUsContent == "Socket Error"){
+        emit(GetAboutUsContentSocketErrorState());
+      } else {
+        emit(GetAboutUsContentSuccessfulState(aboutUsContent));
+      }
     } catch(e){
       emit(GetAboutUsContentFailedState("Something went wrong fetching the AboutUs content"));
     }

@@ -1,3 +1,4 @@
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 
 abstract class ProductsState {}
@@ -25,7 +26,10 @@ class GetProductsFailed extends ProductsState {
   GetProductsFailed(this.errorType);
 }
 
-class SocketErrorState extends ProductsState {}
+class SocketErrorState extends ProductsState {
+  final List<LocalProducts> localProducts;
+  SocketErrorState(this.localProducts);
+}
 
 abstract class SearchState {}
 

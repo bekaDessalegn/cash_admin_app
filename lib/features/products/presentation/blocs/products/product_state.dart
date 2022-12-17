@@ -16,4 +16,6 @@ class GetSingleProductFailed extends SingleProductState {
 
 class GetSingleProductLoading extends SingleProductState {}
 
+class GetSingleProductSocketError extends SingleProductState {}
+
 class DeletedProductState extends SingleProductState {}

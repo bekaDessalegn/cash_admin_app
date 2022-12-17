@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
@@ -9,6 +11,7 @@ import 'package:cash_admin_app/features/products/data/datasources/local/products
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
@@ -182,35 +185,16 @@ class ProductsDataSource {
             content.map((product) => Products.fromJson(product)).toList();
 
         var data = json.decode(resBody);
-        var _imageBase64;
 
         for (var product in data) {
-          // print("This is the image");
-          // print(product["mainImage"]["path"]);
-          if(product["mainImage"] == null){
-            // await productLocalDb.addProduct(LocalProducts(
-            //     productId: product["productId"],
-            //     productName: product["productName"],
-            //     mainImage: Uint8List(8),
-            //     price: product["price"],
-            //     published: product["published"],
-            //     featured: product["featured"],
-            //     topSeller: product["topSeller"],
-            //     viewCount: product["viewCount"]));
-          } else {
-            // http.Response imageResponse = await http
-            //     .get(Uri.parse("$baseUrl${product["mainImage"]["path"]}"));
-            // _imageBase64 = base64Encode(imageResponse.bodyBytes);
-            // await productLocalDb.addProduct(LocalProducts(
-            //     productId: product["productId"],
-            //     productName: product["productName"],
-            //     mainImage: base64Decode(_imageBase64),
-            //     price: product["price"],
-            //     published: product["published"],
-            //     featured: product["featured"],
-            //     topSeller: product["topSeller"],
-            //     viewCount: product["viewCount"]));
-          }
+          await productLocalDb.addProduct(LocalProducts(
+              productId: product["productId"],
+              productName: product["productName"],
+              price: product["price"],
+              published: product["published"],
+              featured: product["featured"],
+              topSeller: product["topSeller"],
+              viewCount: product["viewCount"]));
           print("Has entered");
         }
         print(data);
@@ -229,11 +213,11 @@ class ProductsDataSource {
     } on SocketException {
       final localProduct = await productLocalDb.getListProducts();
       print(localProduct[0].productName);
-      return "Somesing";
+      return localProduct;
     }
   }
 
-  Future<Products> getProduct(String? productId) async {
+  Future getProduct(String? productId) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -270,7 +254,7 @@ class ProductsDataSource {
         throw Exception();
       }
     } on SocketException {
-      throw Exception();
+      return "Socket Error";
     }
   }
 

@@ -7,6 +7,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/require_field_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/youtube_link_textformfield.dart';
 import 'package:cash_admin_app/features/customize/data/model/about_content.dart';
 import 'package:cash_admin_app/features/customize/data/model/about_us_image.dart';
@@ -153,6 +154,11 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
         );
       } else if (state is GetAboutUsContentSuccessfulState) {
         return buildInitialInput(aboutUsContent: state.aboutUsContent);
+      } else if(state is GetAboutUsContentSocketErrorState){
+        return Center(child: socketErrorWidget(onPressed: (){
+          final aboutUsContent = BlocProvider.of<AboutUsContentBloc>(context);
+          aboutUsContent.add(GetAboutUsContentEvent());
+        }),);
       } else if (state is GetAboutUsContentFailedState) {
         return errorBox(onPressed: () {
           final aboutUsContent = BlocProvider.of<AboutUsContentBloc>(context);

@@ -29,7 +29,7 @@ class CustomizeRepository{
     }
   }
 
-  Future<LogoImage> getLogoImage() async{
+  Future getLogoImage() async{
     try{
       final logoImage = await customizeDataSource.getLogoImage();
       return logoImage;
@@ -135,7 +135,7 @@ class CustomizeRepository{
     }
   }
 
-  Future<HomeContent> getHomeContent() async{
+  Future getHomeContent() async{
     try{
       final homeContent = await customizeDataSource.getHomeContent();
       return homeContent;
@@ -187,7 +187,7 @@ class CustomizeRepository{
     }
   }
 
-  Future<AboutUsContent> getAboutUsContent() async{
+  Future getAboutUsContent() async{
     try{
       final aboutUsContent = await customizeDataSource.getAboutUsContent();
       return aboutUsContent;

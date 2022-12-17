@@ -9,6 +9,7 @@ import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_textformfield.dart';
 import 'package:cash_admin_app/features/common_widgets/require_field_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/customize/data/model/brands.dart';
 import 'package:cash_admin_app/features/customize/data/model/hero.dart';
 import 'package:cash_admin_app/features/customize/data/model/home_content.dart';
@@ -298,6 +299,11 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                       );
                     } else if (state is GetHomeContentSuccessfulState) {
                       return buildInitialInput(homeContent: state.homeContent);
+                    } else if(state is GetHomeContentSocketErrorState){
+                      return Center(child: socketErrorWidget(onPressed: (){
+                        final homeContent = BlocProvider.of<HomeContentBloc>(context);
+                        homeContent.add(GetHomeContentEvent());
+                      }),);
                     } else if (state is GetHomeContentFailedState) {
                       return errorBox(onPressed: () {
                         final homeContent =

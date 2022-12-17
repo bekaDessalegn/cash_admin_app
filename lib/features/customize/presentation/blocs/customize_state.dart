@@ -134,6 +134,8 @@ class GetHomeContentSuccessfulState extends HomeContentState {
 
 class GetHomeContentLoadingState extends HomeContentState {}
 
+class GetHomeContentSocketErrorState extends HomeContentState {}
+
 class GetHomeContentFailedState extends HomeContentState {
   String errorType;
   GetHomeContentFailedState(this.errorType);
@@ -150,6 +152,8 @@ class GetLogoImageSuccessfulState extends LogoImageState {
 
 class GetLogoImageLoadingState extends LogoImageState {}
 
+class GetLogoImageSocketErrorState extends LogoImageState {}
+
 class GetLogoImageFailedState extends LogoImageState {
   String errorType;
   GetLogoImageFailedState(this.errorType);
@@ -165,6 +169,8 @@ class GetAboutUsContentSuccessfulState extends AboutUsContentState {
 }
 
 class GetAboutUsContentLoadingState extends AboutUsContentState {}
+
+class GetAboutUsContentSocketErrorState extends AboutUsContentState {}
 
 class GetAboutUsContentFailedState extends AboutUsContentState {
   String errorType;

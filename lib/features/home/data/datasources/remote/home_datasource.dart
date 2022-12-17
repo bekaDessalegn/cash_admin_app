@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/home/data/datasources/local/analytics_local_datasource.dart';
 import 'package:cash_admin_app/features/home/data/models/analytics.dart';
 import 'package:cash_admin_app/features/home/data/models/video_links.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 class HomeDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  AnalyticsLocalDb analyticsLocalDb = AnalyticsLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -204,20 +206,24 @@ class HomeDataSource {
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         print(data);
+        await analyticsLocalDb.addAnalytics(Analytics.fromJson(data["counts"]));
+        final updated = await analyticsLocalDb.updateAnalytics(Analytics.fromJson(data["counts"]).toJson());
+
+        print("Is it updated");
+        print(updated);
+
         final analytics = Analytics.fromJson(data["counts"]);
         return analytics;
       } else if (data["message"] == "Not_Authorized") {
         print("ON 401 : $data");
         await getNewAccessToken();
         return await getAnalytics();
+      } else {
+        throw Exception("api");
       }
-      else {
-        print(data);
-        throw Exception();
-      }
-    } catch(e){
-      print(e);
-      throw Exception();
+    } on SocketException {
+      final analytics = await analyticsLocalDb.getAnalytics();
+      return analytics;
     }
   }
 

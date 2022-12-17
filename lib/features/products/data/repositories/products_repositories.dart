@@ -64,12 +64,12 @@ class ProductsRepository{
     }
   }
 
-  Future<Products> getProduct(String? productId) async {
+  Future getProduct(String? productId) async {
     try{
       final product = await productsDataSource.getProduct(productId);
       return product;
     } on SocketException {
-      throw SocketException("No Internet");
+      return "Socket Error";
     } on Exception {
       throw Exception();
     }

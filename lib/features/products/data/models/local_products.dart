@@ -3,7 +3,6 @@ import 'dart:typed_data';
 class LocalProducts {
   final String productId;
   final String productName;
-  final Uint8List mainImage;
   final num price;
   final bool published;
   final bool featured;
@@ -13,7 +12,6 @@ class LocalProducts {
   LocalProducts(
       { required this.productId,
         required this.productName,
-        required this.mainImage,
         required this.price,
         required this.published,
         required this.featured,
@@ -24,7 +22,6 @@ class LocalProducts {
   factory LocalProducts.fromJson(Map<String, dynamic> json) => LocalProducts(
       productId: json["productId"],
       productName: json["productName"],
-      mainImage: json["mainImage"],
       price: json["price"],
       published: json["published"] == 1 ? true : false,
       featured: json["featured"] == 1 ? true : false,
@@ -34,7 +31,6 @@ class LocalProducts {
   Map<String, dynamic> toJson() => {
     "productId" : productId,
     "productName" : productName,
-    "mainImage" : mainImage,
     "price" : price,
     "published" : published ? 1 : 0,
     "featured" : featured ? 1 : 0,

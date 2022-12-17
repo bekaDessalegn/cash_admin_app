@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/repositories/products_repositories.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_event.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/products_state.dart';
@@ -49,8 +50,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     emit(GetProductsLoading());
     try {
       final products = await productsRepository.getProductsForList(event.skipNumber);
-      if(products == "Somesing"){
-        emit(SocketErrorState());
+      if(products.runtimeType.toString() == "List<LocalProducts>"){
+        emit(SocketErrorState(products));
       } else{
         emit(GetProductsSuccessful(products));
       }

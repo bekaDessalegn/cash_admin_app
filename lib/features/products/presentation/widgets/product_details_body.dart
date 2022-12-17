@@ -8,6 +8,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/list_image.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/product_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/products/product_event.dart';
@@ -66,6 +67,11 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
         builder: (_, state) {
       if (state is GetSingleProductSuccessful) {
         return buildInitialInput(product: state.product);
+      } else if(state is GetSingleProductSocketError){
+        return Center(child: socketErrorWidget(onPressed: (){
+          final productDetails = BlocProvider.of<SingleProductBloc>(context);
+          productDetails.add(GetSingleProductEvent(productId!));
+        }),);
       } else if (state is GetSingleProductFailed) {
         return errorBox(onPressed: () {
           final productDetails = BlocProvider.of<SingleProductBloc>(context);
