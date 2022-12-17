@@ -22,7 +22,11 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
     emit(GetAffiliatesLoadingState());
     try{
       final affiliates = await affiliatesRepository.getAffiliates(event.skipNumber);
-      emit(GetAffiliatesSuccessfulState(affiliates));
+      if(affiliates.runtimeType.toString() == "List<LocalAffiliate>"){
+        emit(GetAffiliatesSocketErrorState(affiliates));
+      } else {
+        emit(GetAffiliatesSuccessfulState(affiliates));
+      }
     } catch(e){
       emit(GetAffiliatesFailedState("Something went wrong"));
     }
@@ -106,7 +110,11 @@ class SingleAffiliateBloc extends Bloc<SingleAffiliateEvent, SingleAffiliateStat
     emit(GetSingleAffiliateLoadingState());
     try{
       final affiliate = await affiliatesRepository.getAffiliate(event.userId);
-      emit(GetSingleAffiliateSuccessfulState(affiliate));
+      if(affiliate == "Socket Error"){
+        emit(GetSingleAffiliateSocketError());
+      } else {
+        emit(GetSingleAffiliateSuccessfulState(affiliate));
+      }
     } catch(e){
       emit(GetSingleAffiliateFailedState("Something went wrong"));
     }

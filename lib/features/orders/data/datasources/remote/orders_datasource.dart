@@ -1,14 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/orders/data/datasources/local/order_local_datasource.dart';
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
+import 'package:cash_admin_app/features/orders/data/models/ordered_affiliate.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 import 'package:http/http.dart' as http;
 
 class OrdersDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  OrderLocalDb orderLocalDb = OrderLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -47,7 +52,7 @@ class OrdersDataSource {
     }
   }
 
-  Future<List<Orders>> getOrders(int skipNumber) async {
+  Future getOrders(int skipNumber) async {
 
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -67,18 +72,31 @@ class OrdersDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
+        print(data);
+        for (var order in data) {
+          await orderLocalDb.addOrder(LocalOrder(
+              orderId : order["orderId"],
+              productName: order["product"]["productName"],
+              phone: order["orderedBy"]["phone"],
+              fullName: order["affiliate"] == null ? "None" : order["affiliate"]["fullName"],
+              orderedAt: order["orderedAt"]
+          ));
+          print("Has entered");
+        }
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
         return orders;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getOrders(skipNumber);
-      }
-      else {
+      } else {
+        print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      print(localOrder[0].productName);
+      return localOrder;
     }
 
   }
@@ -221,7 +239,7 @@ class OrdersDataSource {
 
   }
 
-  Future<Orders> getSingleOrder(String orderId) async {
+  Future getSingleOrder(String orderId) async {
 
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -246,12 +264,12 @@ class OrdersDataSource {
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getSingleOrder(orderId);
-      }
-      else {
+      } else {
+        print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      return "Socket Error";
     }
   }
 

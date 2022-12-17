@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:cash_admin_app/core/services/database_helper.dart';
 import 'package:cash_admin_app/features/products/data/models/local_products.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProductLocalDb {

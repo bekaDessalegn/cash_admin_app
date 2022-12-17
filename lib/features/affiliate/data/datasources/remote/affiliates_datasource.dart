@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/affiliate/data/datasources/local/affiliate_local_datasource.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/children.dart';
+import 'package:cash_admin_app/features/affiliate/data/models/local_affiliate.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/parent_affiliate.dart';
 import 'package:http/http.dart' as http;
 
 class AffiliatesDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  AffiliateLocalDb affiliateLocalDb = AffiliateLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -50,7 +53,7 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<List<Affiliates>> getAffiliates(int skipNumber) async {
+  Future getAffiliates(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -71,16 +74,32 @@ class AffiliatesDataSource {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates =
-        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+            content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+
+        var data = json.decode(resBody);
+
+        for (var affiliate in data) {
+          print(affiliate);
+          await affiliateLocalDb.addAffiliate(LocalAffiliate(
+              userId: affiliate["userId"],
+              fullName: affiliate["fullName"],
+              phone: affiliate["phone"],
+              totalMade: affiliate["wallet"]["totalMade"]));
+          print("Has entered");
+        }
+
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await getAffiliates(skipNumber);
       } else {
+        print(data);
         throw Exception();
       }
-    } catch (e) {
-      throw Exception();
+    } on SocketException {
+      final localAffiliate = await affiliateLocalDb.getListAffiliates();
+      print(localAffiliate[0].fullName);
+      return localAffiliate;
     }
   }
 
@@ -129,7 +148,7 @@ class AffiliatesDataSource {
       'Authorization': 'Bearer $accessToken'
     };
     var url =
-    Uri.parse('$baseUrl/affiliates?search={"fullName":"$affiliateName"}');
+        Uri.parse('$baseUrl/affiliates?search={"fullName":"$affiliateName"}');
 
     try {
       var res = await http.get(url, headers: headersList);
@@ -140,7 +159,7 @@ class AffiliatesDataSource {
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
         final List<Affiliates> affiliates =
-        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+            content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
@@ -155,7 +174,7 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<Affiliates> getAffiliate(String userId) async {
+  Future getAffiliate(String userId) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -180,10 +199,11 @@ class AffiliatesDataSource {
         await getNewAccessToken();
         return await getAffiliate(userId);
       } else {
+        print(data);
         throw Exception();
       }
-    } catch (e) {
-      throw Exception();
+    } on SocketException {
+      return "Socket Error";
     }
   }
 
@@ -208,7 +228,7 @@ class AffiliatesDataSource {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         List<Children> children =
-        content.map((child) => Children.fromJson(child)).toList();
+            content.map((child) => Children.fromJson(child)).toList();
         return children;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
@@ -221,7 +241,8 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<List<Affiliates>> getAffiliateEarningsFromLowToHigh(int skipNumber) async {
+  Future<List<Affiliates>> getAffiliateEarningsFromLowToHigh(
+      int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -243,7 +264,7 @@ class AffiliatesDataSource {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates =
-        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+            content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
@@ -256,7 +277,8 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<List<Affiliates>> getAffiliateEarningsFromHighToLow(int skipNumber) async {
+  Future<List<Affiliates>> getAffiliateEarningsFromHighToLow(
+      int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -278,7 +300,7 @@ class AffiliatesDataSource {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates =
-        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+            content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
@@ -313,7 +335,7 @@ class AffiliatesDataSource {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates =
-        content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+            content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();

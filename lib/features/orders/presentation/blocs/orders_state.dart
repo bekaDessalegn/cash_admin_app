@@ -1,3 +1,4 @@
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 
 abstract class OrdersState {}
@@ -7,6 +8,11 @@ class InitialOrdersState extends OrdersState {}
 class GetOrdersSuccessfulState extends OrdersState {
   final List<Orders> orders;
   GetOrdersSuccessfulState(this.orders);
+}
+
+class GetOrderSocketErrorState extends OrdersState {
+  final List<LocalOrder> localOrder;
+  GetOrderSocketErrorState(this.localOrder);
 }
 
 class GetOrdersFailedState extends OrdersState {
@@ -33,6 +39,8 @@ class GetSingleOrderFailed extends SingleOrderState {
 class DeletedOrderState extends SingleOrderState{}
 
 class GetSingleOrderLoading extends SingleOrderState {}
+
+class GetSingleOrderSocketError extends SingleOrderState {}
 
 abstract class PatchOrderState {}
 

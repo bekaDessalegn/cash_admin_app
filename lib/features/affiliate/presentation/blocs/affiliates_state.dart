@@ -1,5 +1,6 @@
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/children.dart';
+import 'package:cash_admin_app/features/affiliate/data/models/local_affiliate.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/parent_affiliate.dart';
 
 abstract class AffiliatesState {}
@@ -12,6 +13,11 @@ class GetAffiliatesSuccessfulState extends AffiliatesState {
 }
 
 class GetAffiliatesLoadingState extends AffiliatesState {}
+
+class GetAffiliatesSocketErrorState extends AffiliatesState {
+  final List<LocalAffiliate> localAffiliate;
+  GetAffiliatesSocketErrorState(this.localAffiliate);
+}
 
 class GetAffiliatesFailedState extends AffiliatesState {
   String errorType;
@@ -28,6 +34,8 @@ class GetSingleAffiliateSuccessfulState extends SingleAffiliateState {
 }
 
 class GetSingleAffiliateLoadingState extends SingleAffiliateState {}
+
+class GetSingleAffiliateSocketError extends SingleAffiliateState {}
 
 class GetSingleAffiliateFailedState extends SingleAffiliateState {
   String errorType;

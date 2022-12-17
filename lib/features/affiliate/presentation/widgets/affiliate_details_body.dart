@@ -8,11 +8,10 @@ import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_event.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_state.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/widgets/children_widget.dart';
-import 'package:cash_admin_app/features/common_widgets/bold_text.dart';
 import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/list_image.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
-import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -50,6 +49,13 @@ class _AffiliateDetailsBodyState extends State<AffiliateDetailsBody> {
             return SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Center(child: loadingBox()));
+          } else if(state is GetSingleAffiliateSocketError){
+            return Center(child: socketErrorWidget(onPressed: (){
+              final affiliate_details = BlocProvider.of<SingleAffiliateBloc>(context);
+              affiliate_details.add(GetSingleAffiliateEvent(widget.userId));
+              final children = BlocProvider.of<ChildrenBloc>(context);
+              children.add(GetChildrenEvent(widget.userId));
+            }),);
           } else if(state is GetSingleAffiliateFailedState){
             return errorBox(onPressed: (){
               final affiliate_details = BlocProvider.of<SingleAffiliateBloc>(context);

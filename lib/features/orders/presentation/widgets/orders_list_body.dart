@@ -8,10 +8,12 @@ import 'package:cash_admin_app/features/common_widgets/orders_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
 import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_bloc.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_event.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_state.dart';
+import 'package:cash_admin_app/features/orders/presentation/widgets/local_orders_list_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -241,6 +243,8 @@ class _OrdersBodyState extends State<OrdersBody> {
           return _allOrders.isEmpty
               ? Center(child: noDataBox(text: "No Orders!", description: "Orders will appear here."))
               : ordersListView();
+        } else if (state is GetOrderSocketErrorState){
+          return localOrdersView(localOrder: state.localOrder);
         } else {
           return Center(child: Text(""),);
         }
@@ -268,6 +272,16 @@ class _OrdersBodyState extends State<OrdersBody> {
           ),
       ],
     );
+  }
+
+  Widget localOrdersView({required List<LocalOrder> localOrder}){
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: localOrder.length,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return localOrdersListBox(context: context, order: localOrder[index]);
+        });
   }
 
   Widget searchedOrders({required List<Orders> orders}){

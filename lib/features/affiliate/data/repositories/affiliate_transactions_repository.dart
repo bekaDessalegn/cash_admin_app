@@ -1,4 +1,4 @@
-import 'package:cash_admin_app/features/affiliate/data/datasources/transactions_datasource.dart';
+import 'package:cash_admin_app/features/affiliate/data/datasources/remote/transactions_datasource.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/transactions.dart';
 
 class TransactionsRepository {

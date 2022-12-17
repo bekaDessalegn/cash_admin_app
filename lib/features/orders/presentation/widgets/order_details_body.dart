@@ -5,6 +5,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_bloc.dart';
 import 'package:cash_admin_app/features/orders/presentation/blocs/orders_event.dart';
@@ -48,6 +49,11 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
           final orderDetails = BlocProvider.of<SingleOrderBloc>(context);
           orderDetails.add(GetSingleOrderEvent(widget.orderId));
         });
+      } else if(state is GetSingleOrderSocketError){
+        return Center(child: socketErrorWidget(onPressed: (){
+          final orderDetails = BlocProvider.of<SingleOrderBloc>(context);
+          orderDetails.add(GetSingleOrderEvent(widget.orderId));
+        }),);
       } else if (state is GetSingleOrderLoading) {
         return SizedBox(
             height: MediaQuery.of(context).size.height,

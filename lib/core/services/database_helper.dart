@@ -43,6 +43,23 @@ class DatabaseHelper{
           viewCount INTEGER
           )"""
           );
+          await db.execute("""
+          CREATE TABLE Localorder(
+          orderId TEXT PRIMARY KEY,
+          productName TEXT,
+          phone TEXT,
+          fullName TEXT,
+          orderedAt TEXT
+          )"""
+          );
+          await db.execute("""
+          CREATE TABLE Affiliate(
+          userId TEXT PRIMARY KEY,
+          fullName TEXT,
+          phone TEXT,
+          totalMade REAL
+          )"""
+          );
         },
     );
   }

@@ -1,8 +1,10 @@
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
+import 'package:cash_admin_app/features/affiliate/data/models/local_affiliate.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_bloc.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_event.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_state.dart';
+import 'package:cash_admin_app/features/affiliate/presentation/widgets/local_affiliate_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/affiliate_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
@@ -218,6 +220,8 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
         return _allAffiliates.isEmpty
             ? Center(child: noDataBox(text: "No Affiliates!", description: "Affiliates will appear here."))
             : buildAffiliateLists();
+      } else if(state is GetAffiliatesSocketErrorState) {
+        return localAffiliateLists(localAffiliate: state.localAffiliate);
       } else if(state is GetAffiliatesLoadingState){
         return Center(child: loadingBox(),);
       } else if(state is GetAffiliatesFailedState) {
@@ -259,6 +263,16 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
           ),
       ],
     );
+  }
+
+  Widget localAffiliateLists({required List<LocalAffiliate> localAffiliate}){
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: localAffiliate.length,
+        itemBuilder: (context, index) {
+          return localAffiliateListBox(context: context, affiliate: localAffiliate[index]);
+        });
   }
 
   Widget searchedAffiliates({required List<Affiliates> affiliates}){

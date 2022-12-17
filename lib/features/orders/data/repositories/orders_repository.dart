@@ -1,11 +1,11 @@
-import 'package:cash_admin_app/features/orders/data/datasources/orders_datasource.dart';
+import 'package:cash_admin_app/features/orders/data/datasources/remote/orders_datasource.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 
 class OrdersRepository {
   OrdersDataSource ordersDataSource;
   OrdersRepository(this.ordersDataSource);
 
-  Future<List<Orders>> getOrders(int skipNumber) async{
+  Future getOrders(int skipNumber) async{
     try{
       final orders = await ordersDataSource.getOrders(skipNumber);
       return orders;
@@ -50,7 +50,7 @@ class OrdersRepository {
     }
   }
 
-  Future<Orders> getSingleOrder(String orderId) async{
+  Future getSingleOrder(String orderId) async{
     try{
       final order = await ordersDataSource.getSingleOrder(orderId);
       return order;

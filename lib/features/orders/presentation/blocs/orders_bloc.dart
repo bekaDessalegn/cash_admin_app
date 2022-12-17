@@ -22,7 +22,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(GetOrdersLoadingState());
     try{
       final orders = await ordersRepository.getOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(GetOrderSocketErrorState(orders));
+      } else{
+        emit(GetOrdersSuccessfulState(orders));
+      }
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }
@@ -107,7 +111,11 @@ class SingleOrderBloc extends Bloc<SingleOrderEvent, SingleOrderState>{
     emit(GetSingleOrderLoading());
     try {
       final order = await ordersRepository.getSingleOrder(event.orderId);
-      emit(GetSingleOrderSuccessful(order));
+      if(order == "Socket Error"){
+        emit(GetSingleOrderSocketError());
+      } else{
+        emit(GetSingleOrderSuccessful(order));
+      }
     } on SocketException{
       emit(GetSingleOrderFailed("Something went wrong please, try again"));
     } on Exception{

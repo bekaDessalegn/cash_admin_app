@@ -25,4 +25,12 @@ class Orders {
       affiliate: json["affiliate"].toString() == "null" ? OrderedAffiliate(userId: "123", fullName: "None") : OrderedAffiliate.fromJson(json["affiliate"]),
       orderedAt: json["orderedAt"],
       status: json["status"]);
+
+  Map<String, dynamic> toJson() => {
+    "orderId" : orderId,
+    "productName" : product.productName,
+    "phone" : orderedBy.phone,
+    "fullName" : affiliate!.fullName,
+    "orderedAt" : orderedAt,
+  };
 }
