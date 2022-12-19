@@ -7,7 +7,11 @@ import 'package:cash_admin_app/core/services/shared_preference_service.dart';
 import 'package:cash_admin_app/features/home/data/datasources/local/analytics_local_datasource.dart';
 import 'package:cash_admin_app/features/home/data/models/analytics.dart';
 import 'package:cash_admin_app/features/home/data/models/video_links.dart';
+import 'package:cash_admin_app/features/orders/data/datasources/local/order_local_datasource.dart';
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
+import 'package:cash_admin_app/features/products/data/datasources/local/products_local_datasource.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,6 +19,8 @@ class HomeDataSource {
   AuthService authService = AuthService();
   final _prefs = PrefService();
   AnalyticsLocalDb analyticsLocalDb = AnalyticsLocalDb();
+  OrderLocalDb orderLocalDb = OrderLocalDb();
+  ProductLocalDb productLocalDb = ProductLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -55,7 +61,7 @@ class HomeDataSource {
     }
   }
 
-  Future<List<Products>> filterFeaturedProducts() async {
+  Future filterFeaturedProducts() async {
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey,
@@ -87,19 +93,20 @@ class HomeDataSource {
       } else if(res.statusCode == 429){
         print("Too many requests");
         throw Exception();
-      }
-      else {
+      } else {
         print(data);
-        print("Something Something hard");
         throw Exception();
       }
     } on SocketException {
-      print("Socket Socket");
-      throw Exception();
+      final localProduct = await productLocalDb.getListProducts();
+      var featuredProducts = localProduct.map((json) => LocalProducts.fromJson(json.toJson())).where((element) {
+        return element.featured == true;
+      }).toList();
+      return featuredProducts;
     }
   }
 
-  Future<List<Products>> filterTopSellerProducts() async {
+  Future filterTopSellerProducts() async {
     var headersList = {
       'Accept': '*/*',
       'Api-Key': apiKey,
@@ -131,19 +138,20 @@ class HomeDataSource {
       } else if(res.statusCode == 429){
         print("Too many requests");
         throw Exception();
-      }
-      else {
+      } else {
         print(data);
-        print("Something Something hard");
         throw Exception();
       }
     } on SocketException {
-      print("Socket Socket");
-      throw Exception();
+      final localProduct = await productLocalDb.getListProducts();
+      var topSellerProducts = localProduct.map((json) => LocalProducts.fromJson(json.toJson())).where((element) {
+        return element.topSeller == true;
+      }).toList();
+      return topSellerProducts;
     }
   }
 
-  Future<List<Orders>> filterUnAnsweredProducts() async {
+  Future filterUnAnsweredProducts() async {
 
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -178,9 +186,12 @@ class HomeDataSource {
         print(data);
         throw Exception();
       }
-    } catch(e){
-      print(e);
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      var unAnsweredOrder = localOrder.map((json) => LocalOrder.fromJson(json.toJson())).where((element) {
+        return element.status == "Pending";
+      }).toList();
+      return unAnsweredOrder;
     }
 
   }

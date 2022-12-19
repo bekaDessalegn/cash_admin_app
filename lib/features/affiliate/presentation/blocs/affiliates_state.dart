@@ -67,6 +67,11 @@ class SearchAffiliateSuccessful extends SearchState {
   SearchAffiliateSuccessful(this.affiliate);
 }
 
+class SearchAffiliateSocketErrorState extends SearchState {
+  final List<LocalAffiliate> affiliate;
+  SearchAffiliateSocketErrorState(this.affiliate);
+}
+
 class SearchAffiliateFailed extends SearchState {
   final String errorType;
   SearchAffiliateFailed(this.errorType);

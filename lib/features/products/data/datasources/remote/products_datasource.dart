@@ -354,7 +354,7 @@ class ProductsDataSource {
     }
   }
 
-  Future<List<Products>> searchProducts(String productName) async {
+  Future searchProducts(String productName) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -390,7 +390,13 @@ class ProductsDataSource {
         throw Exception();
       }
     } on SocketException {
-      throw Exception();
+      final localProduct = await productLocalDb.getListProducts();
+      var searchedProducts = localProduct.map((json) => LocalProducts.fromJson(json.toJson())).where((element) {
+        final productNameLowerCase = element.productName.toLowerCase();
+        final valueLowerCase = productName.toLowerCase();
+        return productNameLowerCase.contains(valueLowerCase);
+      }).toList();
+      return searchedProducts;
     }
   }
 
@@ -484,7 +490,7 @@ class ProductsDataSource {
     }
   }
 
-  Future<List<Categories>> getCategories() async {
+  Future getCategories() async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -519,7 +525,7 @@ class ProductsDataSource {
         throw Exception();
       }
     } on SocketException {
-      throw Exception();
+      return "Socket Error";
     }
   }
 

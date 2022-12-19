@@ -10,7 +10,7 @@ class HomeRepository{
   HomeDataSource homeDataSource;
   HomeRepository(this.homeDataSource);
 
-  Future<List<Products>> filterFeaturedProducts() async{
+  Future filterFeaturedProducts() async{
     try{
       print("Filter Published Products Success");
       final products = await homeDataSource.filterFeaturedProducts();
@@ -24,7 +24,7 @@ class HomeRepository{
     }
   }
 
-  Future<List<Products>> filterTopSellerProducts() async{
+  Future filterTopSellerProducts() async{
     try{
       print("Filter Top Seller Products Success");
       final products = await homeDataSource.filterTopSellerProducts();
@@ -38,7 +38,7 @@ class HomeRepository{
     }
   }
 
-  Future<List<Orders>> filterUnAnsweredProducts() async{
+  Future filterUnAnsweredProducts() async{
     try{
       final unAnsweredProducts = await homeDataSource.filterUnAnsweredProducts();
       return unAnsweredProducts;

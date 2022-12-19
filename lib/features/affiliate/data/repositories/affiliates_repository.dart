@@ -16,7 +16,7 @@ class AffiliatesRepository {
     }
   }
 
-  Future<List<Affiliates>> searchAffiliates(String affiliateName) async{
+  Future searchAffiliates(String affiliateName) async{
     try{
       final affiliates = await affiliatesDataSource.searchAffiliates(affiliateName);
       return affiliates;

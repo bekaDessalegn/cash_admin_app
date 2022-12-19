@@ -14,7 +14,7 @@ class OrdersRepository {
     }
   }
 
-  Future<List<Orders>> filterPendingOrders(int skipNumber) async{
+  Future filterPendingOrders(int skipNumber) async{
     try{
       final orders = await ordersDataSource.filterPendingOrders(skipNumber);
       return orders;
@@ -23,7 +23,7 @@ class OrdersRepository {
     }
   }
 
-  Future<List<Orders>> filterAcceptedOrders(int skipNumber) async{
+  Future filterAcceptedOrders(int skipNumber) async{
     try{
       final orders = await ordersDataSource.filterAcceptedOrders(skipNumber);
       return orders;
@@ -32,7 +32,7 @@ class OrdersRepository {
     }
   }
 
-  Future<List<Orders>> filterRejectedOrders(int skipNumber) async{
+  Future filterRejectedOrders(int skipNumber) async{
     try{
       final orders = await ordersDataSource.filterRejectedOrders(skipNumber);
       return orders;
@@ -41,7 +41,7 @@ class OrdersRepository {
     }
   }
 
-  Future<List<Orders>> searchOrders(String fullName, String companyName) async{
+  Future searchOrders(String fullName, String companyName) async{
     try{
       final orders = await ordersDataSource.searchOrders(fullName, companyName);
       return orders;

@@ -45,7 +45,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(GetOrdersLoadingState());
     try{
       final orders = await ordersRepository.filterPendingOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(GetOrderSocketErrorState(orders));
+      } else{
+        emit(GetOrdersSuccessfulState(orders));
+      }
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }
@@ -64,7 +68,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(GetOrdersLoadingState());
     try{
       final orders = await ordersRepository.filterAcceptedOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(GetOrderSocketErrorState(orders));
+      } else{
+        emit(GetOrdersSuccessfulState(orders));
+      }
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }
@@ -83,7 +91,11 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(GetOrdersLoadingState());
     try{
       final orders = await ordersRepository.filterRejectedOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(GetOrderSocketErrorState(orders));
+      } else{
+        emit(GetOrdersSuccessfulState(orders));
+      }
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }
@@ -185,7 +197,11 @@ class SearchOrderBloc extends Bloc<SearchEvent, SearchState>{
     emit(SearchOrderLoading());
     try {
       final orders = await ordersRepository.searchOrders(event.fullName, event.companyName);
-      emit(SearchOrderSuccessful(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(SearchOrderSocketErrorState(orders));
+      } else{
+        emit(SearchOrderSuccessful(orders));
+      }
     } on SocketException{
       emit(SearchOrderFailed("Something went wrong please, try again"));
     } on Exception{

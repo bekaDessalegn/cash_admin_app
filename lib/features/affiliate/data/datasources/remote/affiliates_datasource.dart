@@ -137,7 +137,7 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<List<Affiliates>> searchAffiliates(String affiliateName) async {
+  Future searchAffiliates(String affiliateName) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -167,10 +167,17 @@ class AffiliatesDataSource {
       } else if (res.statusCode == 429) {
         throw Exception();
       } else {
+        print(data);
         throw Exception();
       }
     } on SocketException {
-      throw Exception();
+      final localAffiliate = await affiliateLocalDb.getListAffiliates();
+      var searchedAffiliate = localAffiliate.map((json) => LocalAffiliate.fromJson(json.toJson())).where((element) {
+        final affiliateNameLowerCase = element.fullName.toLowerCase();
+        final valueLowerCase = affiliateName.toLowerCase();
+        return affiliateNameLowerCase.contains(valueLowerCase);
+      }).toList();
+      return searchedAffiliate;
     }
   }
 

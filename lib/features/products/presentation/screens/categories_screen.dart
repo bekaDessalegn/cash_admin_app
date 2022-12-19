@@ -4,6 +4,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/no_data_box.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/categories_bloc.dart';
 import 'package:cash_admin_app/features/products/presentation/blocs/categories/categories_event.dart';
@@ -49,6 +50,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 });
               } else if (state is GetCategoriesSuccessful) {
                 return buildInitialInput(categories: state.categories);
+              } else if(state is GetCategoriesSocketErrorState){
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(child: socketErrorWidget(onPressed: (){
+                    final categories = BlocProvider.of<CategoriesBloc>(context);
+                    categories.add(GetCategoriesEvent());
+                  }),),
+                );
               } else if (state is GetCategoriesLoading) {
                 return SizedBox(
                     height: MediaQuery.of(context).size.height,

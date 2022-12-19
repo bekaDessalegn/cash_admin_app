@@ -13,9 +13,13 @@ import 'package:cash_admin_app/features/home/presentation/blocs/home_bloc.dart';
 import 'package:cash_admin_app/features/home/presentation/blocs/home_event.dart';
 import 'package:cash_admin_app/features/home/presentation/blocs/home_state.dart';
 import 'package:cash_admin_app/features/home/presentation/widgets/featured_products_box.dart';
+import 'package:cash_admin_app/features/home/presentation/widgets/local_featured_products_box.dart';
+import 'package:cash_admin_app/features/home/presentation/widgets/local_unanswered_order_box.dart';
 import 'package:cash_admin_app/features/home/presentation/widgets/mobile_dashboard_box.dart';
 import 'package:cash_admin_app/features/home/presentation/widgets/unanswered_orders_box.dart';
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,6 +141,8 @@ class _HomeBodyState extends State<HomeBody> {
                       child: noDataWidget(message: "Unanswered orders will appear here", icon: Majesticons.clipboard_list_line),
                     ) :
                     unAnsweredListView(orders: state.orders);
+                  } else if (state is FilterUnAnsweredSocketErrorState){
+                    return localUnAnsweredListView(orders: state.localOrder);
                   } else if(state is FilterUnAnsweredLoading){
                     return loadingUnAnswered();
                   } else if(state is FilterUnAnsweredFailed){
@@ -162,6 +168,8 @@ class _HomeBodyState extends State<HomeBody> {
                       padding: const EdgeInsets.only(right: 30),
                       child: noDataWidget(message: "Featured products will appear here", icon: Bi.pin_angle),
                     ) : featuredListView(products: state.products);
+                  } else if (state is FilterFeaturedSocketErrorState){
+                    return localFeaturedListView(products: state.localProducts);
                   } else if(state is FilterFeaturedLoading){
                     return loadingFeatured();
                   } else if(state is FilterFeaturedFailed){
@@ -187,6 +195,8 @@ class _HomeBodyState extends State<HomeBody> {
                       padding: const EdgeInsets.only(right: 30),
                       child: noDataWidget(message: "Top seller products will appear here", icon: Ph.package),
                     ) : topSellerListView(products: state.products);
+                  } else if (state is FilterTopSellerSocketErrorState){
+                    return localTopSellerListView(products: state.localProducts);
                   } else if(state is FilterTopSellerLoading){
                     return loadingFeatured();
                   } else if(state is FilterTopSellerFailed){
@@ -222,6 +232,19 @@ class _HomeBodyState extends State<HomeBody> {
     );
   }
 
+  Widget localFeaturedListView({required List<LocalProducts> products}){
+    return SizedBox(
+      height: 255,
+      child: ListView.builder(
+          itemCount: products.length,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return localFeaturedProductsBox(context: context, product: products[index]);
+          }),
+    );
+  }
+
   Widget topSellerListView({required List<Products> products}){
     return SizedBox(
       height: 255,
@@ -235,6 +258,19 @@ class _HomeBodyState extends State<HomeBody> {
     );
   }
 
+  Widget localTopSellerListView({required List<LocalProducts> products}){
+    return SizedBox(
+      height: 255,
+      child: ListView.builder(
+          itemCount: products.length,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return localFeaturedProductsBox(context: context, product: products[index]);
+          }),
+    );
+  }
+
   Widget unAnsweredListView({required List<Orders> orders}){
     return SizedBox(
       height: 285,
@@ -244,6 +280,19 @@ class _HomeBodyState extends State<HomeBody> {
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return unAnsweredOrdersBox(context: context, order: orders[index]);
+          }),
+    );
+  }
+
+  Widget localUnAnsweredListView({required List<LocalOrder> orders}){
+    return SizedBox(
+      height: 285,
+      child: ListView.builder(
+          itemCount: orders.length,
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return localUnAnsweredOrdersBox(context: context, order: orders[index]);
           }),
     );
   }

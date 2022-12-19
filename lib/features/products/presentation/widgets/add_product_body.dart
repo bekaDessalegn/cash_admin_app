@@ -240,6 +240,17 @@ class _AddProductBodyState extends State<AddProductBody> {
                                   ),
                                 ),
                               );
+                            } else if(state is GetCategoriesSocketErrorState){
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("couldn't load categories, no internet"),
+                                  TextButton(onPressed: (){
+                                    final categories = BlocProvider.of<CategoriesBloc>(context);
+                                    categories.add(GetCategoriesEvent());
+                                  }, child: Text("Retry"))
+                                ],
+                              );
                             } else if (state is GetCategoriesLoading) {
                               return Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10),

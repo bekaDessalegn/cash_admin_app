@@ -194,6 +194,8 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
                   return buildInitialInput();
                 }
                 return searchedAffiliates(affiliates: state.affiliate);
+              } else if(state is SearchAffiliateSocketErrorState){
+                return localSearchedAffiliates(affiliates: state.affiliate);
               } else if (state is SearchAffiliateLoading) {
                 return Center(
                   child: CircularProgressIndicator(
@@ -282,6 +284,16 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
         itemCount: affiliates.length,
         itemBuilder: (context, index) {
           return affiliateListBox(context: context, affiliate: affiliates[index]);
+        });
+  }
+
+  Widget localSearchedAffiliates({required List<LocalAffiliate> affiliates}){
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: affiliates.length,
+        itemBuilder: (context, index) {
+          return localAffiliateListBox(context: context, affiliate: affiliates[index]);
         });
   }
 

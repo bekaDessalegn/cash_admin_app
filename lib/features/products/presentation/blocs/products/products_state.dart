@@ -47,6 +47,11 @@ class SearchProductFailed extends SearchState {
 
 class SearchProductLoading extends SearchState {}
 
+class SearchProductSocketErrorState extends SearchState {
+  final List<LocalProducts> localProducts;
+  SearchProductSocketErrorState(this.localProducts);
+}
+
 // class GetProductSuccessful extends ProductsState {
 //   final Products product;
 //   GetProductSuccessful(this.product);

@@ -11,6 +11,8 @@ class GetCategoriesSuccessful extends CategoriesState {
 
 class GetCategoriesLoading extends CategoriesState {}
 
+class GetCategoriesSocketErrorState extends CategoriesState {}
+
 class GetCategoriesFailed extends CategoriesState {
   final String errorType;
   GetCategoriesFailed(this.errorType);

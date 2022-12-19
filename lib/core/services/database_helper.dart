@@ -49,7 +49,8 @@ class DatabaseHelper{
           productName TEXT,
           phone TEXT,
           fullName TEXT,
-          orderedAt TEXT
+          orderedAt TEXT,
+          status TEXT
           )"""
           );
           await db.execute("""

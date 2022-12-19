@@ -1,6 +1,8 @@
 import 'package:cash_admin_app/features/home/data/models/analytics.dart';
 import 'package:cash_admin_app/features/home/data/models/video_links.dart';
+import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
+import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 
 abstract class FilterFeaturedState {}
@@ -10,6 +12,11 @@ class InitialFilterFeaturedState extends FilterFeaturedState {}
 class FilterFeaturedSuccessful extends FilterFeaturedState {
   final List<Products> products;
   FilterFeaturedSuccessful(this.products);
+}
+
+class FilterFeaturedSocketErrorState extends FilterFeaturedState {
+  final List<LocalProducts> localProducts;
+  FilterFeaturedSocketErrorState(this.localProducts);
 }
 
 class FilterFeaturedLoading extends FilterFeaturedState {}
@@ -28,6 +35,11 @@ class FilterTopSellerSuccessful extends FilterTopSellerState {
   FilterTopSellerSuccessful(this.products);
 }
 
+class FilterTopSellerSocketErrorState extends FilterTopSellerState {
+  final List<LocalProducts> localProducts;
+  FilterTopSellerSocketErrorState(this.localProducts);
+}
+
 class FilterTopSellerLoading extends FilterTopSellerState {}
 
 class FilterTopSellerFailed extends FilterTopSellerState {
@@ -42,6 +54,11 @@ class InitialFilterUnAnsweredState extends FilterUnAnsweredState {}
 class FilterUnAnsweredSuccessful extends FilterUnAnsweredState {
   final List<Orders> orders;
   FilterUnAnsweredSuccessful(this.orders);
+}
+
+class FilterUnAnsweredSocketErrorState extends FilterUnAnsweredState {
+  final List<LocalOrder> localOrder;
+  FilterUnAnsweredSocketErrorState(this.localOrder);
 }
 
 class FilterUnAnsweredLoading extends FilterUnAnsweredState {}

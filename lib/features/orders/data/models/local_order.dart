@@ -4,20 +4,25 @@ class LocalOrder {
   final String phone;
   final String fullName;
   final String orderedAt;
+  final String status;
 
   LocalOrder(
       {required this.orderId,
       required this.productName,
       required this.phone,
       required this.fullName,
-      required this.orderedAt});
+      required this.orderedAt,
+      required this.status
+      });
 
   factory LocalOrder.fromJson(Map<String, dynamic> json) => LocalOrder(
       orderId: json["orderId"],
       productName: json["productName"],
       phone: json["phone"],
       fullName: json["fullName"],
-      orderedAt: json["orderedAt"]);
+      orderedAt: json["orderedAt"],
+      status: json["status"]
+  );
 
   Map<String, dynamic> toJson() => {
     "orderId" : orderId,
@@ -25,5 +30,6 @@ class LocalOrder {
     "phone" : phone,
     "fullName" : fullName,
     "orderedAt" : orderedAt,
+    "status" : status
   };
 }

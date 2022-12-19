@@ -200,6 +200,8 @@ class _OrdersBodyState extends State<OrdersBody> {
                   return buildInitialInput();
                 }
                 return searchedOrders(orders: state.order);
+              } else if(state is SearchOrderSocketErrorState){
+                return localSearchedOrders(orders: state.localOrder);
               } else if (state is SearchOrderLoading) {
                 return Center(
                   child: CircularProgressIndicator(
@@ -291,6 +293,16 @@ class _OrdersBodyState extends State<OrdersBody> {
         itemCount: orders.length,
         itemBuilder: (context, index) {
             return ordersListBox(context: context, order: orders[index]);
+        });
+  }
+
+  Widget localSearchedOrders({required List<LocalOrder> orders}){
+    return orders.isEmpty ? Center(child: noDataBox(text: "No Orders!", description: "There are no orders based on your search")) : ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          return localOrdersListBox(context: context, order: orders[index]);
         });
   }
 

@@ -192,7 +192,7 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                         onTap: (){
-                          context.go(APP_PAGE.categories.toPath);
+                          context.push(APP_PAGE.categories.toPath);
                         },
                         child: Text("Categories", style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),)),
                   ),
@@ -304,6 +304,8 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                   return buildInitialInput();
                 }
                 return searchedProducts(products: state.product);
+              } else if(state is SearchProductSocketErrorState){
+                return localSearchedProducts(products: state.localProducts);
               } else if (state is SearchProductLoading) {
                 return Center(
                   child: CircularProgressIndicator(
@@ -479,6 +481,16 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
             return productListBox(context: context, products: products[index],);
+        });
+  }
+
+  Widget localSearchedProducts({required List<LocalProducts> products}) {
+    return products.isEmpty ? Center(child: noDataBox(text: "No result found!", description: "please try another name.")) : ListView.builder(
+        itemCount: products.length,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return localProductListBox(context: context, products: products[index],);
         });
   }
 

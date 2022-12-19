@@ -79,6 +79,11 @@ class SearchOrderSuccessful extends SearchState {
   SearchOrderSuccessful(this.order);
 }
 
+class SearchOrderSocketErrorState extends SearchState {
+  final List<LocalOrder> localOrder;
+  SearchOrderSocketErrorState(this.localOrder);
+}
+
 class SearchOrderFailed extends SearchState {
   final String errorType;
   SearchOrderFailed(this.errorType);

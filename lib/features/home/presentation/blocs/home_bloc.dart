@@ -15,7 +15,11 @@ class FilterFeaturedBloc extends Bloc<FilterFeaturedEvent, FilterFeaturedState> 
     emit(FilterFeaturedLoading());
     try {
       final products = await homeRepository.filterFeaturedProducts();
-      emit(FilterFeaturedSuccessful(products));
+      if(products.runtimeType.toString() == "List<LocalProducts>"){
+        emit(FilterFeaturedSocketErrorState(products));
+      } else {
+        emit(FilterFeaturedSuccessful(products));
+      }
     } on SocketException{
       emit(FilterFeaturedFailed("Something went wrong please, try again"));
     } on Exception{
@@ -35,7 +39,11 @@ class FilterTopSellerBloc extends Bloc<FilterTopSellerEvent, FilterTopSellerStat
     emit(FilterTopSellerLoading());
     try {
       final products = await homeRepository.filterTopSellerProducts();
-      emit(FilterTopSellerSuccessful(products));
+      if(products.runtimeType.toString() == "List<LocalProducts>"){
+        emit(FilterTopSellerSocketErrorState(products));
+      } else {
+        emit(FilterTopSellerSuccessful(products));
+      }
     } on SocketException{
       emit(FilterTopSellerFailed("Something went wrong please, try again"));
     } on Exception{
@@ -55,7 +63,11 @@ class FilterUnAnsweredBloc extends Bloc<FilterUnAnsweredEvent, FilterUnAnsweredS
     emit(FilterUnAnsweredLoading());
     try {
       final orders = await homeRepository.filterUnAnsweredProducts();
-      emit(FilterUnAnsweredSuccessful(orders));
+      if(orders.runtimeType.toString() == "List<LocalOrder>"){
+        emit(FilterUnAnsweredSocketErrorState(orders));
+      } else {
+        emit(FilterUnAnsweredSuccessful(orders));
+      }
     } on SocketException{
       emit(FilterUnAnsweredFailed("Something went wrong please, try again"));
     } on Exception{

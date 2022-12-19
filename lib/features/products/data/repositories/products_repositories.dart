@@ -42,7 +42,7 @@ class ProductsRepository{
     }
   }
 
-  Future<List<Products>> searchProducts(String productName) async{
+  Future searchProducts(String productName) async{
     try{
       final products = await productsDataSource.searchProducts(productName);
       return products;
@@ -114,7 +114,7 @@ class ProductsRepository{
     }
   }
 
-  Future<List<Categories>> getCategories() async{
+  Future getCategories() async{
     try{
       final categories = await productsDataSource.getCategories();
       return categories;

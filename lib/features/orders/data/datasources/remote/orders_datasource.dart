@@ -79,7 +79,8 @@ class OrdersDataSource {
               productName: order["product"]["productName"],
               phone: order["orderedBy"]["phone"],
               fullName: order["affiliate"] == null ? "None" : order["affiliate"]["fullName"],
-              orderedAt: order["orderedAt"]
+              orderedAt: order["orderedAt"],
+              status: order["status"]
           ));
           print("Has entered");
         }
@@ -101,7 +102,7 @@ class OrdersDataSource {
 
   }
 
-  Future<List<Orders>> filterPendingOrders(int skipNumber) async {
+  Future filterPendingOrders(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -130,12 +131,16 @@ class OrdersDataSource {
       else {
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      var pendingOrder = localOrder.map((json) => LocalOrder.fromJson(json.toJson())).where((element) {
+        return element.status == "Pending";
+      }).toList();
+      return pendingOrder;
     }
   }
 
-  Future<List<Orders>> filterAcceptedOrders(int skipNumber) async {
+  Future filterAcceptedOrders(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -160,16 +165,20 @@ class OrdersDataSource {
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await filterAcceptedOrders(skipNumber);
-      }
-      else {
+      } else {
+        print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      var acceptedOrder = localOrder.map((json) => LocalOrder.fromJson(json.toJson())).where((element) {
+        return element.status == "Accepted";
+      }).toList();
+      return acceptedOrder;
     }
   }
 
-  Future<List<Orders>> filterRejectedOrders(int skipNumber) async {
+  Future filterRejectedOrders(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -194,16 +203,20 @@ class OrdersDataSource {
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await filterRejectedOrders(skipNumber);
-      }
-      else {
+      } else {
+        print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      var rejectedOrder = localOrder.map((json) => LocalOrder.fromJson(json.toJson())).where((element) {
+        return element.status == "Rejected";
+      }).toList();
+      return rejectedOrder;
     }
   }
 
-  Future<List<Orders>> searchOrders(String fullName, String companyName) async {
+  Future searchOrders(String fullName, String companyName) async {
 
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -229,12 +242,18 @@ class OrdersDataSource {
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();
         return await searchOrders(fullName, companyName);
-      }
-      else {
+      } else {
+        print(data);
         throw Exception();
       }
-    } catch(e){
-      throw Exception();
+    } on SocketException {
+      final localOrder = await orderLocalDb.getListOrders();
+      var searchedOrder = localOrder.map((json) => LocalOrder.fromJson(json.toJson())).where((element) {
+        final orderNameLowerCase = element.productName.toLowerCase();
+        final valueLowerCase = fullName.toLowerCase();
+        return orderNameLowerCase.contains(valueLowerCase);
+      }).toList();
+      return searchedOrder;
     }
 
   }

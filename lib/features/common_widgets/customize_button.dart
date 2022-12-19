@@ -13,7 +13,7 @@ class CustomizeButton extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
         iconSize: 30,
         onPressed: () {
-          context.go(APP_PAGE.customize.toPath);
+          context.push(APP_PAGE.customize.toPath);
         },
         icon: Iconify(
           Bx.edit,

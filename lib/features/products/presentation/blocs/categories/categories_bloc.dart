@@ -16,7 +16,11 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     emit(GetCategoriesLoading());
     try {
       final categories = await productsRepository.getCategories();
-      emit(GetCategoriesSuccessful(categories));
+      if(categories == "Socket Error"){
+        emit(GetCategoriesSocketErrorState());
+      } else {
+        emit(GetCategoriesSuccessful(categories));
+      }
     } on SocketException{
       emit(GetCategoriesFailed("Something went wrong please, try again"));
     } on Exception{

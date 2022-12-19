@@ -148,7 +148,11 @@ class SearchAffiliateBloc extends Bloc<SearchEvent, SearchState>{
     emit(SearchAffiliateLoading());
     try {
       final affiliates = await affiliatesRepository.searchAffiliates(event.fullName);
-      emit(SearchAffiliateSuccessful(affiliates));
+      if(affiliates.runtimeType.toString() == "List<LocalAffiliate>"){
+        emit(SearchAffiliateSocketErrorState(affiliates));
+      } else{
+        emit(SearchAffiliateSuccessful(affiliates));
+      }
     } on SocketException{
       emit(SearchAffiliateFailed("Something went wrong please, try again"));
     } on Exception{
