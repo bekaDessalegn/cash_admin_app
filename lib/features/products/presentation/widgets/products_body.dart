@@ -5,6 +5,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/no_data_box.dart';
+import 'package:cash_admin_app/features/common_widgets/not_connected.dart';
 import 'package:cash_admin_app/features/common_widgets/product_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mi.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -171,158 +173,169 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: scrollController,
-      physics: const ClampingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                semiBoldText(
-                    value: "Products",
-                    size: mobileHeaderFontSize,
-                    color: onBackgroundColor),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                        onTap: (){
-                          context.push(APP_PAGE.categories.toPath);
-                        },
-                        child: Text("Categories", style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),)),
-                  ),
-                ),
-                // ElevatedButton(
-                //     onPressed: () {
-                //       context.go(APP_PAGE.categories.toPath);
-                //     },
-                //     child: Text("Categories"))
-              ],
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: productSearchController,
-                    onChanged: (value) {
-                      final searchProducts =
-                      BlocProvider.of<SearchProductBloc>(context);
-                      searchProducts.add(SearchProductEvent(value));
-                    },
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(color: onBackgroundColor),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      filled: true,
-                      fillColor: surfaceColor,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none
-                      ),
-                      hintText: "Search....",
-                      hintStyle: TextStyle(
-                          color: textInputPlaceholderColor
-                      ),
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: textInputPlaceholderColor,
-                    ),
-                  ),
-                ),
-                // Container(
-                //   width: 40,
-                //   margin: EdgeInsets.only(right: 10),
-                //   child: DropdownButtonHideUnderline(
-                //     child: DropdownButton<String>(
-                //       icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                //       // value: values,
-                //       isExpanded: true,
-                //       hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                //       items: filter.map(buildMenuLocation).toList(),
-                //       onChanged: (value) => setState(() {
-                //         this.value = value;
-                //         print(value);
-                //       }),
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-            SizedBox(
-              height: 22,
-            ),
-            // Container(
-            //   child: Row(
-            //     children: [
-            //       IconButton(
-            //         icon: Icon(Icons.arrow_back_ios),
-            //         onPressed: () {
-            //           if (_tabController.index > 0) {
-            //             _tabController.animateTo(_tabController.index - 1);
-            //           } else {
-            //             // Scaffold.of(context).showSnackBar(SnackBar(
-            //             //   content: Text("Can't go back"),
-            //             // ));
-            //           }
-            //         },
-            //       ),
-            //       Expanded(
-            //         child: TabBar(
-            //             isScrollable: true,
-            //             controller: _tabController,
-            //             labelStyle: TextStyle(color: Colors.black),
-            //             unselectedLabelColor: Colors.black,
-            //             labelColor: Colors.blue,
-            //             tabs: tabs
-            //         ),
-            //       ),
-            //       IconButton(
-            //         icon: Icon(Icons.arrow_forward_ios),
-            //         onPressed: () {
-            //           if (_tabController.index + 1 < tabs.length) {
-            //             _tabController.animateTo(_tabController.index + 1);
-            //           } else {
-            //             // Scaffold.of(context).showSnackBar(SnackBar(
-            //             //   content: Text("Can't move forward"),
-            //             // ));
-            //           }
-            //         },
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            BlocConsumer<SearchProductBloc, SearchState>(builder: (_, state) {
-              if (state is SearchProductSuccessful) {
-                if (productSearchController.text.isEmpty) {
-                  return buildInitialInput();
-                }
-                return searchedProducts(products: state.product);
-              } else if(state is SearchProductSocketErrorState){
-                return localSearchedProducts(products: state.localProducts);
-              } else if (state is SearchProductLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
-                  ),
-                );
-              } else {
-                return buildInitialInput();
-              }
-            }, listener: (_, state) {
-              if (state is SearchProductFailed) {
-                buildErrorLayout(context: context, message: state.errorType);
-              }
-            }),
-          ],
+    return Column(
+      children: [
+        Visibility(
+          visible: Provider.of<InternetConnectionStatus>(context) ==
+              InternetConnectionStatus.disconnected,
+          child: internetNotAvailable(context: context, message: "No Internet Connection!!!"),
         ),
-      ),
+        Expanded(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      semiBoldText(
+                          value: "Products",
+                          size: mobileHeaderFontSize,
+                          color: onBackgroundColor),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                              onTap: (){
+                                context.push(APP_PAGE.categories.toPath);
+                              },
+                              child: Text("Categories", style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),)),
+                        ),
+                      ),
+                      // ElevatedButton(
+                      //     onPressed: () {
+                      //       context.go(APP_PAGE.categories.toPath);
+                      //     },
+                      //     child: Text("Categories"))
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: productSearchController,
+                          onChanged: (value) {
+                            final searchProducts =
+                            BlocProvider.of<SearchProductBloc>(context);
+                            searchProducts.add(SearchProductEvent(value));
+                          },
+                          textAlignVertical: TextAlignVertical.center,
+                          style: TextStyle(color: onBackgroundColor),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(0),
+                            filled: true,
+                            fillColor: surfaceColor,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none
+                            ),
+                            hintText: "Search....",
+                            hintStyle: TextStyle(
+                                color: textInputPlaceholderColor
+                            ),
+                            prefixIcon: Icon(Icons.search),
+                            prefixIconColor: textInputPlaceholderColor,
+                          ),
+                        ),
+                      ),
+                      // Container(
+                      //   width: 40,
+                      //   margin: EdgeInsets.only(right: 10),
+                      //   child: DropdownButtonHideUnderline(
+                      //     child: DropdownButton<String>(
+                      //       icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
+                      //       // value: values,
+                      //       isExpanded: true,
+                      //       hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
+                      //       items: filter.map(buildMenuLocation).toList(),
+                      //       onChanged: (value) => setState(() {
+                      //         this.value = value;
+                      //         print(value);
+                      //       }),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 22,
+                  ),
+                  // Container(
+                  //   child: Row(
+                  //     children: [
+                  //       IconButton(
+                  //         icon: Icon(Icons.arrow_back_ios),
+                  //         onPressed: () {
+                  //           if (_tabController.index > 0) {
+                  //             _tabController.animateTo(_tabController.index - 1);
+                  //           } else {
+                  //             // Scaffold.of(context).showSnackBar(SnackBar(
+                  //             //   content: Text("Can't go back"),
+                  //             // ));
+                  //           }
+                  //         },
+                  //       ),
+                  //       Expanded(
+                  //         child: TabBar(
+                  //             isScrollable: true,
+                  //             controller: _tabController,
+                  //             labelStyle: TextStyle(color: Colors.black),
+                  //             unselectedLabelColor: Colors.black,
+                  //             labelColor: Colors.blue,
+                  //             tabs: tabs
+                  //         ),
+                  //       ),
+                  //       IconButton(
+                  //         icon: Icon(Icons.arrow_forward_ios),
+                  //         onPressed: () {
+                  //           if (_tabController.index + 1 < tabs.length) {
+                  //             _tabController.animateTo(_tabController.index + 1);
+                  //           } else {
+                  //             // Scaffold.of(context).showSnackBar(SnackBar(
+                  //             //   content: Text("Can't move forward"),
+                  //             // ));
+                  //           }
+                  //         },
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  BlocConsumer<SearchProductBloc, SearchState>(builder: (_, state) {
+                    if (state is SearchProductSuccessful) {
+                      if (productSearchController.text.isEmpty) {
+                        return buildInitialInput();
+                      }
+                      return searchedProducts(products: state.product);
+                    } else if(state is SearchProductSocketErrorState){
+                      return localSearchedProducts(products: state.localProducts);
+                    } else if (state is SearchProductLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
+                        ),
+                      );
+                    } else {
+                      return buildInitialInput();
+                    }
+                  }, listener: (_, state) {
+                    if (state is SearchProductFailed) {
+                      buildErrorLayout(context: context, message: state.errorType);
+                    }
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

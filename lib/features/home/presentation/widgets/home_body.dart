@@ -7,6 +7,7 @@ import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/no_data_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_button.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
+import 'package:cash_admin_app/features/common_widgets/not_connected.dart';
 import 'package:cash_admin_app/features/common_widgets/success_flashbar.dart';
 import 'package:cash_admin_app/features/home/data/models/analytics.dart';
 import 'package:cash_admin_app/features/home/presentation/blocs/home_bloc.dart';
@@ -29,6 +30,8 @@ import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/majesticons.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/teenyicons.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:provider/provider.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -72,150 +75,161 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          email == "Null"
-              ? Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            color: surfaceColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      children: [
+        Visibility(
+          visible: Provider.of<InternetConnectionStatus>(context) ==
+              InternetConnectionStatus.disconnected,
+          child: internetNotAvailable(context: context, message: "No Internet Connection!!!"),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                Text(
-                  "Email has not been set",
-                  style: TextStyle(color: onBackgroundColor),
-                ),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      context.go(APP_PAGE.addEmail.toPath);
-                    },
-                    child: Text(
-                      "Add Email",
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: primaryColor),
-                    ),
+                email == "Null"
+                    ? Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  color: surfaceColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Email has not been set",
+                        style: TextStyle(color: onBackgroundColor),
+                      ),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            context.go(APP_PAGE.addEmail.toPath);
+                          },
+                          child: Text(
+                            "Add Email",
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: primaryColor),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 )
-              ],
-            ),
-          )
-              : SizedBox(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 30, 0, 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BlocConsumer<AnalyticsBloc, AnalyticsState>(builder: (_, state){
-                  if(state is GetAnalyticsSuccessfulState){
-                    return analytics(analytics: state.analytics);
-                  } else if(state is GetAnalyticsLoadingState){
-                    return loadingAnalytics();
-                  } else if(state is GetAnalyticsFailedState){
-                    return errorBox(onPressed: (){
-                      final analytics = BlocProvider.of<AnalyticsBloc>(context);
-                      analytics.add(GetAnalyticsEvent());
-                    });
-                  } else{
-                    return Center(child: Text(""),);
-                  }
-                }, listener: (_, state){
+                    : SizedBox(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 30, 0, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocConsumer<AnalyticsBloc, AnalyticsState>(builder: (_, state){
+                        if(state is GetAnalyticsSuccessfulState){
+                          return analytics(analytics: state.analytics);
+                        } else if(state is GetAnalyticsLoadingState){
+                          return loadingAnalytics();
+                        } else if(state is GetAnalyticsFailedState){
+                          return errorBox(onPressed: (){
+                            final analytics = BlocProvider.of<AnalyticsBloc>(context);
+                            analytics.add(GetAnalyticsEvent());
+                          });
+                        } else{
+                          return Center(child: Text(""),);
+                        }
+                      }, listener: (_, state){
 
-                }),
-                SizedBox(
-                  height: 40,
-                ),
-                boldText(
-                    value: "Unanswered orders",
-                    size: mobileh1,
-                    color: onBackgroundColor),
-                SizedBox(height: 10,),
-                BlocBuilder<FilterUnAnsweredBloc, FilterUnAnsweredState>(builder: (_, state){
-                  if(state is FilterUnAnsweredSuccessful){
-                    return state.orders.isEmpty ?
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: noDataWidget(message: "Unanswered orders will appear here", icon: Majesticons.clipboard_list_line),
-                    ) :
-                    unAnsweredListView(orders: state.orders);
-                  } else if (state is FilterUnAnsweredSocketErrorState){
-                    return localUnAnsweredListView(orders: state.localOrder);
-                  } else if(state is FilterUnAnsweredLoading){
-                    return loadingUnAnswered();
-                  } else if(state is FilterUnAnsweredFailed){
-                    return errorBox(onPressed: (){
-                      final unAnswered = BlocProvider.of<FilterUnAnsweredBloc>(context);
-                      unAnswered.add(FilterUnAnsweredProductsEvent());
-                    });
-                  } else{
-                    return SizedBox();
-                  }
-                }),
-                SizedBox(
-                  height: 20,
-                ),
-                boldText(
-                    value: "Featured products",
-                    size: mobileh1,
-                    color: onBackgroundColor),
-                SizedBox(height: 10,),
-                BlocBuilder<FilterFeaturedBloc, FilterFeaturedState>(builder: (_, state){
-                  if(state is FilterFeaturedSuccessful){
-                    return state.products.isEmpty ? Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: noDataWidget(message: "Featured products will appear here", icon: Bi.pin_angle),
-                    ) : featuredListView(products: state.products);
-                  } else if (state is FilterFeaturedSocketErrorState){
-                    return localFeaturedListView(products: state.localProducts);
-                  } else if(state is FilterFeaturedLoading){
-                    return loadingFeatured();
-                  } else if(state is FilterFeaturedFailed){
-                    return errorBox(onPressed: (){
-                      final topSeller = BlocProvider.of<FilterFeaturedBloc>(context);
-                      topSeller.add(FilterFeaturedProductsEvent());
-                    });
-                  } else{
-                    return SizedBox();
-                  }
-                }),
-                SizedBox(
-                  height: 20,
-                ),
-                boldText(
-                    value: "Top Sellers",
-                    size: mobileh1,
-                    color: onBackgroundColor),
-                SizedBox(height: 10,),
-                BlocBuilder<FilterTopSellerBloc, FilterTopSellerState>(builder: (_, state){
-                  if(state is FilterTopSellerSuccessful){
-                    return state.products.isEmpty ? Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: noDataWidget(message: "Top seller products will appear here", icon: Ph.package),
-                    ) : topSellerListView(products: state.products);
-                  } else if (state is FilterTopSellerSocketErrorState){
-                    return localTopSellerListView(products: state.localProducts);
-                  } else if(state is FilterTopSellerLoading){
-                    return loadingFeatured();
-                  } else if(state is FilterTopSellerFailed){
-                    return errorBox(onPressed: (){
-                      final topSeller = BlocProvider.of<FilterTopSellerBloc>(context);
-                      topSeller.add(FilterTopSellerProductsEvent());
-                    });
-                  } else{
-                    return SizedBox();
-                  }
-                }),
-                SizedBox(
-                  height: 30,
+                      }),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      boldText(
+                          value: "Unanswered orders",
+                          size: mobileh1,
+                          color: onBackgroundColor),
+                      SizedBox(height: 10,),
+                      BlocBuilder<FilterUnAnsweredBloc, FilterUnAnsweredState>(builder: (_, state){
+                        if(state is FilterUnAnsweredSuccessful){
+                          return state.orders.isEmpty ?
+                          Padding(
+                            padding: const EdgeInsets.only(right: 30),
+                            child: noDataWidget(message: "Unanswered orders will appear here", icon: Majesticons.clipboard_list_line),
+                          ) :
+                          unAnsweredListView(orders: state.orders);
+                        } else if (state is FilterUnAnsweredSocketErrorState){
+                          return localUnAnsweredListView(orders: state.localOrder);
+                        } else if(state is FilterUnAnsweredLoading){
+                          return loadingUnAnswered();
+                        } else if(state is FilterUnAnsweredFailed){
+                          return errorBox(onPressed: (){
+                            final unAnswered = BlocProvider.of<FilterUnAnsweredBloc>(context);
+                            unAnswered.add(FilterUnAnsweredProductsEvent());
+                          });
+                        } else{
+                          return SizedBox();
+                        }
+                      }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      boldText(
+                          value: "Featured products",
+                          size: mobileh1,
+                          color: onBackgroundColor),
+                      SizedBox(height: 10,),
+                      BlocBuilder<FilterFeaturedBloc, FilterFeaturedState>(builder: (_, state){
+                        if(state is FilterFeaturedSuccessful){
+                          return state.products.isEmpty ? Padding(
+                            padding: const EdgeInsets.only(right: 30),
+                            child: noDataWidget(message: "Featured products will appear here", icon: Bi.pin_angle),
+                          ) : featuredListView(products: state.products);
+                        } else if (state is FilterFeaturedSocketErrorState){
+                          return localFeaturedListView(products: state.localProducts);
+                        } else if(state is FilterFeaturedLoading){
+                          return loadingFeatured();
+                        } else if(state is FilterFeaturedFailed){
+                          return errorBox(onPressed: (){
+                            final topSeller = BlocProvider.of<FilterFeaturedBloc>(context);
+                            topSeller.add(FilterFeaturedProductsEvent());
+                          });
+                        } else{
+                          return SizedBox();
+                        }
+                      }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      boldText(
+                          value: "Top Sellers",
+                          size: mobileh1,
+                          color: onBackgroundColor),
+                      SizedBox(height: 10,),
+                      BlocBuilder<FilterTopSellerBloc, FilterTopSellerState>(builder: (_, state){
+                        if(state is FilterTopSellerSuccessful){
+                          return state.products.isEmpty ? Padding(
+                            padding: const EdgeInsets.only(right: 30),
+                            child: noDataWidget(message: "Top seller products will appear here", icon: Ph.package),
+                          ) : topSellerListView(products: state.products);
+                        } else if (state is FilterTopSellerSocketErrorState){
+                          return localTopSellerListView(products: state.localProducts);
+                        } else if(state is FilterTopSellerLoading){
+                          return loadingFeatured();
+                        } else if(state is FilterTopSellerFailed){
+                          return errorBox(onPressed: (){
+                            final topSeller = BlocProvider.of<FilterTopSellerBloc>(context);
+                            topSeller.add(FilterTopSellerProductsEvent());
+                          });
+                        } else{
+                          return SizedBox();
+                        }
+                      }),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

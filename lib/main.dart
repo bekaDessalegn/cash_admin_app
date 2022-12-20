@@ -44,6 +44,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -162,27 +163,33 @@ class _MyAppState extends State<MyApp> {
               800: const Color.fromRGBO(136, 14, 79, .9),
               900: const Color.fromRGBO(136, 14, 79, 1),
             };
-            return MaterialApp.router(
-              routeInformationProvider: goRouter.routeInformationProvider,
-              routerDelegate: goRouter.routerDelegate,
-              routeInformationParser: goRouter.routeInformationParser,
-              debugShowCheckedModeBanner: false,
-              title: 'Cash Admin',
-              theme: ThemeData(
-                primarySwatch: MaterialColor(0xFFF57721, color),
-                scaffoldBackgroundColor: backgroundColor,
-                textTheme: GoogleFonts.quicksandTextTheme(
-                  Theme.of(context).textTheme,
+            return StreamProvider<InternetConnectionStatus>(
+              initialData: InternetConnectionStatus.connected,
+              create: (_) {
+                return InternetConnectionChecker().onStatusChange;
+              },
+              child: MaterialApp.router(
+                routeInformationProvider: goRouter.routeInformationProvider,
+                routerDelegate: goRouter.routerDelegate,
+                routeInformationParser: goRouter.routeInformationParser,
+                debugShowCheckedModeBanner: false,
+                title: 'Cash Admin',
+                theme: ThemeData(
+                  primarySwatch: MaterialColor(0xFFF57721, color),
+                  scaffoldBackgroundColor: backgroundColor,
+                  textTheme: GoogleFonts.quicksandTextTheme(
+                    Theme.of(context).textTheme,
+                  ),
                 ),
+                locale: provider.locale,
+                supportedLocales: L10n.all,
+                localizationsDelegates: [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
               ),
-              locale: provider.locale,
-              supportedLocales: L10n.all,
-              localizationsDelegates: [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
             );
           },
         ),

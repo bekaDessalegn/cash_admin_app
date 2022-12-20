@@ -3,6 +3,7 @@ import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/local_affiliate.dart';
+import 'package:cash_admin_app/features/common_widgets/blink_container.dart';
 import 'package:cash_admin_app/features/common_widgets/small_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -26,15 +27,7 @@ Widget localAffiliateListBox({required BuildContext context, required LocalAffil
             SizedBox(height: 5,),
             Row(
               children: [
-                Container(
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      image: DecorationImage(
-                          image: AssetImage("images/account.jpg"),
-                          fit: BoxFit.cover)),
-                ),
+                BlinkContainer(width: 70, height: 70, borderRadius: 100,),
                 Expanded(
                   child: Container(
                     height: 84,

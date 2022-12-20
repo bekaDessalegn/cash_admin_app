@@ -57,6 +57,7 @@ dependencies:
   sqflite: ^2.2.0+3
   flutter_quill: ^6.1.6
   mime: ^1.0.3
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

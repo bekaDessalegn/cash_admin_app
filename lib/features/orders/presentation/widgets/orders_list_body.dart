@@ -4,6 +4,7 @@ import 'package:cash_admin_app/features/common_widgets/error_box.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/loading_box.dart';
 import 'package:cash_admin_app/features/common_widgets/no_data_box.dart';
+import 'package:cash_admin_app/features/common_widgets/not_connected.dart';
 import 'package:cash_admin_app/features/common_widgets/orders_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
@@ -19,6 +20,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mi.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:provider/provider.dart';
 
 class OrdersBody extends StatefulWidget {
   const OrdersBody({Key? key}) : super(key: key);
@@ -119,106 +122,117 @@ class _OrdersBodyState extends State<OrdersBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: scrollController,
-      physics: const ClampingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            semiBoldText(
-                value: "Orders",
-                size: mobileHeaderFontSize,
-                color: onBackgroundColor),
-            SizedBox(
-              height: 12,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: orderSearchController,
-                    onChanged: (value) {
-                      final searchOrders = BlocProvider.of<SearchOrderBloc>(context);
-                      searchOrders.add(SearchOrdersEvent(value, value));
-                    },
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(color: onBackgroundColor),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      filled: true,
-                      fillColor: surfaceColor,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none
-                      ),
-                      hintText: "Search....",
-                      hintStyle: TextStyle(
-                          color: textInputPlaceholderColor
-                      ),
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: textInputPlaceholderColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 100,
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                      // value: values,
-                      isExpanded: true,
-                      hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                      items: filter.map(buildMenuLocation).toList(),
-                      onChanged: (value) => setState(() {
-                        _allOrders = [];
-                        if(value == "Pending"){
-                          final orders = BlocProvider.of<OrdersBloc>(context);
-                          orders.add(FilterPendingEvent(0));
-                        } else if(value == "Accepted"){
-                          final orders = BlocProvider.of<OrdersBloc>(context);
-                          orders.add(FilterAcceptedEvent(0));
-                        } else if(value == "Rejected"){
-                          final orders = BlocProvider.of<OrdersBloc>(context);
-                          orders.add(FilterRejectedEvent(0));
-                        }
-                        this.value = value;
-                      }),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10,),
-            Divider(
-              color: surfaceColor, thickness: 1.0,
-            ),
-            BlocConsumer<SearchOrderBloc, SearchState>(builder: (_, state) {
-              if (state is SearchOrderSuccessful) {
-                if (orderSearchController.text.isEmpty) {
-                  return buildInitialInput();
-                }
-                return searchedOrders(orders: state.order);
-              } else if(state is SearchOrderSocketErrorState){
-                return localSearchedOrders(orders: state.localOrder);
-              } else if (state is SearchOrderLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
-                  ),
-                );
-              } else {
-                return buildInitialInput();
-              }
-            }, listener: (_, state) {
-              if (state is SearchOrderFailed) {
-                buildErrorLayout(context: context, message: state.errorType);
-              }
-            }),
-          ],
+    return Column(
+      children: [
+        Visibility(
+          visible: Provider.of<InternetConnectionStatus>(context) ==
+              InternetConnectionStatus.disconnected,
+          child: internetNotAvailable(context: context, message: "No Internet Connection!!!"),
         ),
-      ),
+        Expanded(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  semiBoldText(
+                      value: "Orders",
+                      size: mobileHeaderFontSize,
+                      color: onBackgroundColor),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: orderSearchController,
+                          onChanged: (value) {
+                            final searchOrders = BlocProvider.of<SearchOrderBloc>(context);
+                            searchOrders.add(SearchOrdersEvent(value, value));
+                          },
+                          textAlignVertical: TextAlignVertical.center,
+                          style: TextStyle(color: onBackgroundColor),
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(0),
+                            filled: true,
+                            fillColor: surfaceColor,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none
+                            ),
+                            hintText: "Search....",
+                            hintStyle: TextStyle(
+                                color: textInputPlaceholderColor
+                            ),
+                            prefixIcon: Icon(Icons.search),
+                            prefixIconColor: textInputPlaceholderColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 100,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
+                            // value: values,
+                            isExpanded: true,
+                            hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
+                            items: filter.map(buildMenuLocation).toList(),
+                            onChanged: (value) => setState(() {
+                              _allOrders = [];
+                              if(value == "Pending"){
+                                final orders = BlocProvider.of<OrdersBloc>(context);
+                                orders.add(FilterPendingEvent(0));
+                              } else if(value == "Accepted"){
+                                final orders = BlocProvider.of<OrdersBloc>(context);
+                                orders.add(FilterAcceptedEvent(0));
+                              } else if(value == "Rejected"){
+                                final orders = BlocProvider.of<OrdersBloc>(context);
+                                orders.add(FilterRejectedEvent(0));
+                              }
+                              this.value = value;
+                            }),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Divider(
+                    color: surfaceColor, thickness: 1.0,
+                  ),
+                  BlocConsumer<SearchOrderBloc, SearchState>(builder: (_, state) {
+                    if (state is SearchOrderSuccessful) {
+                      if (orderSearchController.text.isEmpty) {
+                        return buildInitialInput();
+                      }
+                      return searchedOrders(orders: state.order);
+                    } else if(state is SearchOrderSocketErrorState){
+                      return localSearchedOrders(orders: state.localOrder);
+                    } else if (state is SearchOrderLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
+                        ),
+                      );
+                    } else {
+                      return buildInitialInput();
+                    }
+                  }, listener: (_, state) {
+                    if (state is SearchOrderFailed) {
+                      buildErrorLayout(context: context, message: state.errorType);
+                    }
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
   Widget buildInitialInput(){

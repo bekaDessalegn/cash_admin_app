@@ -2,6 +2,7 @@ import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:cash_admin_app/features/common_widgets/big_image.dart';
+import 'package:cash_admin_app/features/common_widgets/blink_container.dart';
 import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
 import 'package:flutter/material.dart';
@@ -30,16 +31,7 @@ Widget localFeaturedProductsBox({required BuildContext context, required LocalPr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 139,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              image: DecorationImage(
-                  image: AssetImage("images/default.png"),
-                  fit: BoxFit.cover),
-            ),
-          ),
+          BlinkContainer(width: double.infinity, height: 139, borderRadius: 3,),
           SizedBox(
             height: 15,
           ),

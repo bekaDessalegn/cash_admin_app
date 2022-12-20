@@ -1,6 +1,7 @@
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
+import 'package:cash_admin_app/features/common_widgets/blink_container.dart';
 import 'package:cash_admin_app/features/common_widgets/medium_image.dart';
 import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
@@ -26,16 +27,7 @@ Widget localOrdersListBox({required BuildContext context, required LocalOrder or
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                height: 84,
-                width: 84,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(3),
-                  image: DecorationImage(
-                      image: AssetImage("images/default.png"),
-                      fit: BoxFit.cover),
-                ),
-              ),
+              BlinkContainer(width: 84, height: 84, borderRadius: 3,),
               Expanded(
                 child: Container(
                   height: 84,

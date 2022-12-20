@@ -2,6 +2,7 @@ import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:cash_admin_app/features/common_widgets/big_image.dart';
+import 'package:cash_admin_app/features/common_widgets/blink_container.dart';
 import 'package:cash_admin_app/features/orders/data/models/local_order.dart';
 import 'package:cash_admin_app/features/orders/data/models/orders.dart';
 import 'package:flutter/material.dart';
@@ -31,16 +32,7 @@ Widget localUnAnsweredOrdersBox({required BuildContext context, required LocalOr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 139,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/default.png"),
-                    fit: BoxFit.cover),
-                borderRadius:
-                BorderRadius.vertical(top: Radius.circular(10))),
-          ),
+          BlinkContainer(width: double.infinity, height: 139, borderRadius: 3,),
           SizedBox(
             height: 15,
           ),
