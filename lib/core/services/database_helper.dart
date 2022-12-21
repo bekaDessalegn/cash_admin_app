@@ -58,7 +58,8 @@ class DatabaseHelper{
           userId TEXT PRIMARY KEY,
           fullName TEXT,
           phone TEXT,
-          totalMade REAL
+          totalMade REAL,
+          childrenCount REAL
           )"""
           );
         },

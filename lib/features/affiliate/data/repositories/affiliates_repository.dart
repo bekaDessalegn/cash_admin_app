@@ -52,7 +52,7 @@ class AffiliatesRepository {
     }
   }
 
-  Future<List<Affiliates>> getAffiliatesFromLowToHigh(int skipNumber) async {
+  Future getAffiliatesFromLowToHigh(int skipNumber) async {
     try{
       final affiliates = await affiliatesDataSource.getAffiliateEarningsFromLowToHigh(skipNumber);
       return affiliates;
@@ -61,7 +61,7 @@ class AffiliatesRepository {
     }
   }
 
-  Future<List<Affiliates>> getAffiliatesFromHighToLow(int skipNumber) async {
+  Future getAffiliatesFromHighToLow(int skipNumber) async {
     try{
       final affiliates = await affiliatesDataSource.getAffiliateEarningsFromHighToLow(skipNumber);
       return affiliates;
@@ -70,7 +70,7 @@ class AffiliatesRepository {
     }
   }
 
-  Future<List<Affiliates>> getMostParentAffiliate(int skipNumber) async {
+  Future getMostParentAffiliate(int skipNumber) async {
     try{
       final affiliates = await affiliatesDataSource.getMostParentAffiliate(skipNumber);
       return affiliates;

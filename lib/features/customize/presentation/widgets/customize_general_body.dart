@@ -4,6 +4,7 @@ import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/logo_image.dart';
 import 'package:cash_admin_app/features/common_widgets/require_field_flashbar.dart';
+import 'package:cash_admin_app/features/common_widgets/socket_error_widget.dart';
 import 'package:cash_admin_app/features/customize/data/model/image.dart';
 import 'package:cash_admin_app/features/customize/data/model/logo_image.dart';
 import 'package:cash_admin_app/features/customize/presentation/blocs/customize_bloc.dart';
@@ -16,7 +17,9 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mime/mime.dart';
+import 'package:provider/provider.dart';
 
 class CustomizeGeneralBody extends StatefulWidget {
   const CustomizeGeneralBody({Key? key}) : super(key: key);
@@ -82,7 +85,11 @@ class _CustomizeGeneralBodyState extends State<CustomizeGeneralBody> {
   }
 
   Widget buildInitialInput({required bool isLoading}) {
-    return SingleChildScrollView(
+    return Provider.of<InternetConnectionStatus>(context) ==
+        InternetConnectionStatus.disconnected ? Center(child: socketErrorWidget(onPressed: (){
+      final logoImage = BlocProvider.of<LogoImageBloc>(context);
+      logoImage.add(GetLogoImageEvent());
+    }),) : SingleChildScrollView(
       child: SizedBox(
         width: 450,
         child: Align(

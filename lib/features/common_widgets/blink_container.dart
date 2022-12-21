@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,42 +9,51 @@ class BlinkContainer extends StatefulWidget {
   State<BlinkContainer> createState() => _BlinkContainerState();
 }
 
-class _BlinkContainerState extends State<BlinkContainer> {
+class _BlinkContainerState extends State<BlinkContainer> with TickerProviderStateMixin{
 
-  bool _show = true;
-  Timer? _timer;
+  late AnimationController _colorAnimationController;
+  late Animation _containerAnimationColor;
 
   @override
   void initState() {
-    _timer = Timer.periodic(Duration(milliseconds: 600), (timer) {
+    _colorAnimationController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 600)
+    );
+
+    _containerAnimationColor = ColorTween(
+        begin: surfaceColor.withOpacity(0.4),
+        end: surfaceColor
+    ).animate(_colorAnimationController)..addListener(() {
       setState(() {
-        _show = !_show;
+
       });
+    })..addStatusListener((status) {
+      if(status == AnimationStatus.completed){
+        _colorAnimationController.reverse();
+      } else if(status == AnimationStatus.dismissed){
+        _colorAnimationController.forward();
+      }
     });
+
+    _colorAnimationController.forward();
     super.initState();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _colorAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _show ? Container(
+    return Container(
       height: widget.height,
       width: widget.width,
       decoration: BoxDecoration(
-          color: surfaceColor.withOpacity(0.6),
+          color: _containerAnimationColor.value,
         borderRadius: BorderRadius.circular(widget.borderRadius)
-      ),
-    ) : Container(
-      height: widget.height,
-      width: widget.width,
-      decoration: BoxDecoration(
-          color: surfaceColor,
-          borderRadius: BorderRadius.circular(widget.borderRadius)
       ),
     );
   }

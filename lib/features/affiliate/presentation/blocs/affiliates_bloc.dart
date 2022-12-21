@@ -45,7 +45,11 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
     emit(GetAffiliatesLoadingState());
     try{
       final affiliates = await affiliatesRepository.getAffiliatesFromLowToHigh(event.skipNumber);
-      emit(GetAffiliatesSuccessfulState(affiliates));
+      if(affiliates.runtimeType.toString() == "List<LocalAffiliate>"){
+        emit(GetAffiliatesSocketErrorState(affiliates));
+      } else {
+        emit(GetAffiliatesSuccessfulState(affiliates));
+      }
     } catch(e){
       emit(GetAffiliatesFailedState("Something went wrong"));
     }
@@ -64,7 +68,11 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
     emit(GetAffiliatesLoadingState());
     try{
       final affiliates = await affiliatesRepository.getAffiliatesFromHighToLow(event.skipNumber);
-      emit(GetAffiliatesSuccessfulState(affiliates));
+      if(affiliates.runtimeType.toString() == "List<LocalAffiliate>"){
+        emit(GetAffiliatesSocketErrorState(affiliates));
+      } else {
+        emit(GetAffiliatesSuccessfulState(affiliates));
+      }
     } catch(e){
       emit(GetAffiliatesFailedState("Something went wrong"));
     }
@@ -83,7 +91,11 @@ class AffiliatesBloc extends Bloc<AffiliatesEvent, AffiliatesState> {
     emit(GetAffiliatesLoadingState());
     try{
       final affiliates = await affiliatesRepository.getMostParentAffiliate(event.skipNumber);
-      emit(GetAffiliatesSuccessfulState(affiliates));
+      if(affiliates.runtimeType.toString() == "List<LocalAffiliate>"){
+        emit(GetAffiliatesSocketErrorState(affiliates));
+      } else {
+        emit(GetAffiliatesSuccessfulState(affiliates));
+      }
     } catch(e){
       emit(GetAffiliatesFailedState("Something went wrong"));
     }

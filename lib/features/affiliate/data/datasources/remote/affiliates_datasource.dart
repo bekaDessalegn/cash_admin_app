@@ -84,7 +84,9 @@ class AffiliatesDataSource {
               userId: affiliate["userId"],
               fullName: affiliate["fullName"],
               phone: affiliate["phone"],
-              totalMade: affiliate["wallet"]["totalMade"]));
+              totalMade: affiliate["wallet"]["totalMade"],
+          childrenCount: affiliate["childrenCount"]
+          ));
           print("Has entered");
         }
 
@@ -248,7 +250,7 @@ class AffiliatesDataSource {
     }
   }
 
-  Future<List<Affiliates>> getAffiliateEarningsFromLowToHigh(
+  Future getAffiliateEarningsFromLowToHigh(
       int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -277,14 +279,17 @@ class AffiliatesDataSource {
         await getNewAccessToken();
         return await getAffiliateEarningsFromLowToHigh(skipNumber);
       } else {
+        print(data);
         throw Exception();
       }
-    } catch (e) {
-      throw Exception();
+    } on SocketException {
+      final localAffiliate = await affiliateLocalDb.getListAffiliates();
+      localAffiliate.sort((a, b) => a.totalMade.compareTo(b.totalMade));
+      return localAffiliate;
     }
   }
 
-  Future<List<Affiliates>> getAffiliateEarningsFromHighToLow(
+  Future getAffiliateEarningsFromHighToLow(
       int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
@@ -313,14 +318,17 @@ class AffiliatesDataSource {
         await getNewAccessToken();
         return await getAffiliateEarningsFromHighToLow(skipNumber);
       } else {
+        print(data);
         throw Exception();
       }
-    } catch (e) {
-      throw Exception();
+    } on SocketException {
+      final localAffiliate = await affiliateLocalDb.getListAffiliates();
+      localAffiliate.sort((b, a) => a.totalMade.compareTo(b.totalMade));
+      return localAffiliate;
     }
   }
 
-  Future<List<Affiliates>> getMostParentAffiliate(int skipNumber) async {
+  Future getMostParentAffiliate(int skipNumber) async {
     await getAccessTokens().then((value) {
       accessToken = value;
     });
@@ -348,10 +356,13 @@ class AffiliatesDataSource {
         await getNewAccessToken();
         return await getAffiliateEarningsFromHighToLow(skipNumber);
       } else {
+        print(data);
         throw Exception();
       }
-    } catch (e) {
-      throw Exception();
+    } on SocketException {
+      final localAffiliate = await affiliateLocalDb.getListAffiliates();
+      localAffiliate.sort((b, a) => a.childrenCount.compareTo(b.childrenCount));
+      return localAffiliate;
     }
   }
 }
