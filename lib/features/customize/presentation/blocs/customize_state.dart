@@ -152,8 +152,6 @@ class GetLogoImageSuccessfulState extends LogoImageState {
 
 class GetLogoImageLoadingState extends LogoImageState {}
 
-class GetLogoImageSocketErrorState extends LogoImageState {}
-
 class GetLogoImageFailedState extends LogoImageState {
   String errorType;
   GetLogoImageFailedState(this.errorType);

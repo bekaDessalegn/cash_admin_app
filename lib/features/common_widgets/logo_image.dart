@@ -44,8 +44,8 @@ class _PlatformLogoImageState extends State<PlatformLogoImage> {
             borderRadius: BorderRadius.circular(widget.logoBorderRadius),
             child: ProgressiveImage(
               placeholder: AssetImage('images/loading.png'),
-              thumbnail: NetworkImage("$baseUrl${state.logoImage.logoImage.path}"),
-              image: NetworkImage("$baseUrl${state.logoImage.logoImage.path}"),
+              thumbnail: MemoryImage(state.logoImage.logoImage),
+              image: MemoryImage(state.logoImage.logoImage),
               width: widget.logoWidth,
               height: widget.logoHeight,
               fit: BoxFit.fitHeight,

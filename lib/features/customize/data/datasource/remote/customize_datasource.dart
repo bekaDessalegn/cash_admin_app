@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
 import 'package:cash_admin_app/core/services/shared_preference_service.dart';
+import 'package:cash_admin_app/features/customize/data/datasource/local/cutomize_local_datasource.dart';
 import 'package:cash_admin_app/features/customize/data/model/about_content.dart';
 import 'package:cash_admin_app/features/customize/data/model/about_us_image.dart';
 import 'package:cash_admin_app/features/customize/data/model/brands.dart';
@@ -22,6 +23,7 @@ class CustomizeDataSource {
 
   AuthService authService = AuthService();
   final _prefs = PrefService();
+  LogoImageLocalDb logoImageLocalDb = LogoImageLocalDb();
 
   var refreshToken;
   var accessToken;
@@ -80,9 +82,9 @@ class CustomizeDataSource {
       var req = http.MultipartRequest('PUT', url);
       req.headers.addAll(headersList);
 
-      if (logoImage.logoImage.path != "[0, 0, 0, 0, 0, 0, 0, 0]") {
+      if (logoImage.logoImage != "[0, 0, 0, 0, 0, 0, 0, 0]") {
         req.files.add(await http.MultipartFile.fromBytes(
-            'logoImage', json.decode(logoImage.logoImage.path).cast<int>(), contentType: MediaType("${imageType[0]}", "${imageType[1]}"), filename: "Any_name"));
+            'logoImage', logoImage.logoImage, contentType: MediaType("${imageType[0]}", "${imageType[1]}"), filename: "Any_name"));
       }
 
       var res = await req.send();
@@ -120,15 +122,25 @@ class CustomizeDataSource {
       var data = json.decode(resBody);
 
       if (res.statusCode >= 200 && res.statusCode < 300) {
-        print(data);
-        final logoImage = LogoImage.fromJson(data);
-        return logoImage;
+        var data = json.decode(resBody);
+        var _imageBase64;
+
+        http.Response imageResponse = await http.get(Uri.parse("$baseUrl${data["logoImage"]["path"]}"));
+        _imageBase64 = base64Encode(imageResponse.bodyBytes);
+
+        await logoImageLocalDb.addLogoImage(LogoImage(logoImage: base64Decode(_imageBase64)));
+
+        final localLogoImage = await logoImageLocalDb.getLogoImage();
+
+        // final logoImage = LogoImage.fromJson(data);
+        return localLogoImage;
       } else {
         print(data);
         throw Exception();
       }
     } on SocketException {
-      return "Socket Error";
+      final localLogoImage = await logoImageLocalDb.getLogoImage();
+      return localLogoImage;
     }
   }
 

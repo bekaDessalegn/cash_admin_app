@@ -1,10 +1,14 @@
-import 'package:cash_admin_app/features/customize/data/model/image.dart';
+import 'dart:typed_data';
 
 class LogoImage {
-  final ImageContent logoImage;
+  final Uint8List logoImage;
 
   LogoImage({required this.logoImage});
 
   factory LogoImage.fromJson(Map<String, dynamic> json) =>
-      LogoImage(logoImage: ImageContent.fromJson(json["logoImage"]));
+      LogoImage(logoImage: json["logoImage"]);
+
+  Map<String, dynamic> toJson() => {
+    "logoImage" : logoImage
+  };
 }

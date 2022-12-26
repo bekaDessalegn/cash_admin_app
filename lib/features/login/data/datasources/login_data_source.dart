@@ -44,8 +44,8 @@ class LoginDataSource{
       } else{
         throw Exception();
       }
-    } on SocketException{
-      throw Exception();
+    } catch(e){
+      print(e);
     }
   }
 

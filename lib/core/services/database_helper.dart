@@ -62,6 +62,12 @@ class DatabaseHelper{
           childrenCount REAL
           )"""
           );
+          await db.execute("""
+          CREATE TABLE LogoImage(
+          id TEXT PRIMARY KEY,
+          logoImage BLOB
+          )"""
+          );
         },
     );
   }

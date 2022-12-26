@@ -185,11 +185,7 @@ class LogoImageBloc extends Bloc<LogoImageEvent, LogoImageState> {
     emit(GetLogoImageLoadingState());
     try {
       final logoImage = await customizeRepository.getLogoImage();
-      if(logoImage == "Socket Error"){
-        emit(GetLogoImageSocketErrorState());
-      } else{
-        emit(GetLogoImageSuccessfulState(logoImage));
-      }
+      emit(GetLogoImageSuccessfulState(logoImage));
     } catch(e){
       emit(GetLogoImageFailedState("Something went wrong fetching the home content"));
     }

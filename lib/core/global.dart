@@ -10,9 +10,10 @@ final howToEarnWithUsController = TextEditingController();
 final carouselController = CarouselController();
 
 const String apiKey = "2S9f4e2D886aGa231caH2H44f2R25Jf487cDfaa3G";
-// const String baseUrl = "https://cash-mart.onrender.com";
+// const String baseUrl = "https://dev-api.cash.et";
+// const String baseUrl = "https://api.cash.et";
 // const String baseUrl = "http://localhost:5000";
-const String baseUrl = "http://10.4.99.75:5000";
+const String baseUrl = "http://192.168.1.7:5000";
 
 Future getAccessTokens() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
