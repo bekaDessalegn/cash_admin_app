@@ -2,6 +2,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
+import 'package:cash_admin_app/features/common_widgets/app_bar_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/main_logo.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
@@ -43,6 +44,7 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appbar,
       body: SafeArea(
         child: BlocConsumer<PutEmailBloc, PutEmailState>(
             listener: (_, state){
@@ -90,9 +92,6 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: mainLogo(),
-          ),
           semiBoldText(
               value: "Edit Email", size: 28, color: onBackgroundColor),
           Padding(

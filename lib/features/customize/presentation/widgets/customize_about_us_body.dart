@@ -289,7 +289,7 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
       children: [
         Text(
           "About us image",
-          style: TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+          style: TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
         ),
         SizedBox(
           height: 10,
@@ -325,8 +325,8 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: const Iconify(
                   Bi.upload,
                   color: onPrimaryColor,
@@ -360,8 +360,8 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
               style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(3)),
-                  padding: const EdgeInsets.symmetric(vertical: 19)),
+                      borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(vertical: 15)),
               child: isLoading
                   ? SizedBox(
                       height: defaultFontSize,
@@ -390,7 +390,7 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
           Text(
             "Who are we image",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -426,8 +426,8 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      padding: const EdgeInsets.symmetric(vertical: 19)),
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(vertical: 12)),
                   child: const Iconify(
                     Bi.upload,
                     color: onPrimaryColor,
@@ -509,8 +509,8 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: isLoading
                     ? SizedBox(
                         height: defaultFontSize,
@@ -641,8 +641,8 @@ class _CustomizeAboutUsBodyState extends State<CustomizeAboutUsBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: isLoading
                     ? SizedBox(
                         height: defaultFontSize,

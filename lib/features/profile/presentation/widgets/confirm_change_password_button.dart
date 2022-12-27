@@ -38,7 +38,7 @@ Widget confirmChangePasswordButton({
       },
       style: ElevatedButton.styleFrom(
         disabledBackgroundColor: disabledPrimaryColor,
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           backgroundColor: primaryColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),

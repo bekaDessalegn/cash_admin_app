@@ -16,11 +16,6 @@ class GetProductsForListEvent extends ProductsEvent {
   GetProductsForListEvent(this.skipNumber);
 }
 
-class GetMoreProductsForListEvent extends ProductsEvent {
-  int skipNumber;
-  GetMoreProductsForListEvent(this.skipNumber);
-}
-
 class GetProductEvent extends ProductsEvent {
   String? productId;
   GetProductEvent(this.productId);

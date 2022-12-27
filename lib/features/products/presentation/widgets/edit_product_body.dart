@@ -224,7 +224,7 @@ class _EditProductBodyState extends State<EditProductBody> {
         child: SingleChildScrollView(
           child: Padding(
             padding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -232,543 +232,540 @@ class _EditProductBodyState extends State<EditProductBody> {
                     value: "Edit Product",
                     size: 28,
                     color: onBackgroundColor),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      normalTextFormField(
-                          type: "Name",
-                          hint: "Product name",
-                          controller: nameController),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      semiBoldText(
-                          value: "Category",
-                          size: defaultFontSize,
-                          color: onBackgroundColor),
-                      const SizedBox(
-                        height: smallSpacing,
-                      ),
-                      BlocConsumer<CategoriesBloc, CategoriesState>(
-                          listener: (_, state) {
-                            if (state is GetCategoriesFailed) {
-                              buildErrorLayout(
-                                  context: context,
-                                  message:
-                                  "Couldn't load categories, Please try again");
-                            }
-                          }, builder: (_, state) {
-                        if (state is GetCategoriesSuccessful) {
-                          List<String> categories = [];
-                          for (var category in state.categories) {
-                            categories.add(category.categoryName);
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    normalTextFormField(
+                        type: "Name",
+                        hint: "Product name",
+                        controller: nameController),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    semiBoldText(
+                        value: "Category",
+                        size: defaultFontSize,
+                        color: onBackgroundColor),
+                    const SizedBox(
+                      height: smallSpacing,
+                    ),
+                    BlocConsumer<CategoriesBloc, CategoriesState>(
+                        listener: (_, state) {
+                          if (state is GetCategoriesFailed) {
+                            buildErrorLayout(
+                                context: context,
+                                message:
+                                "Couldn't load categories, Please try again");
                           }
-                          return DropDownMultiSelect(
-                            options: categories,
-                            whenEmpty: 'Select a category',
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCategories = value;
-                              });
-                            },
-                            selectedValues: selectedCategories,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          );
-                        } else if (state is GetCategoriesLoading) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            width: double.infinity,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: textInputBorderColor)),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: primaryColor,
-                                  )),
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: Text(""),
-                          );
+                        }, builder: (_, state) {
+                      if (state is GetCategoriesSuccessful) {
+                        List<String> categories = [];
+                        for (var category in state.categories) {
+                          categories.add(category.categoryName);
                         }
-                      }),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      semiBoldText(value: "Description", size: defaultFontSize, color: onBackgroundColor),
-                      SizedBox(
-                        height: 0,
-                        child: quill.QuillEditor.basic(
-                            controller: emptyController, readOnly: true),
-                      ),
-                      SizedBox(height: smallSpacing,),
-                      quill.QuillToolbar.basic(
-                        controller: descriptionController,
-                        toolbarIconSize: 17,
-                        showFontFamily: false,
-                        showSearchButton: false,
-                        showRedo: false,
-                        showUndo: false,
-                        showHeaderStyle: false,
-                        showDirection: false,
-                        showQuote: false,
-                        showCodeBlock: false,
-                        showIndent: true,
-                        showStrikeThrough: false,
-                        showListCheck: false,
-                        showBackgroundColorButton: false,
-                        showDividers: false,
-                        showInlineCode: false,
-                        showLink: false,
-                        showClearFormat: false,
-                      ),
-                      Container(
-                          height: 300,
-                          padding: EdgeInsets.all(8),
+                        return DropDownMultiSelect(
+                          options: categories,
+                          whenEmpty: 'Select a category',
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategories = value;
+                            });
+                          },
+                          selectedValues: selectedCategories,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      } else if (state is GetCategoriesLoading) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          width: double.infinity,
+                          height: 50,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(defaultRadius),
-                              border: Border.all(color: textInputBorderColor)
-                          ),
-                          child: quill.QuillEditor.basic(controller: descriptionController, readOnly: false)),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      Row(
-                        children: [
-                          // Expanded(
-                          //     child: numberTextFormField(
-                          //         type: "Price",
-                          //         hint: "Price",
-                          //         controller: priceController)),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                semiBoldText(value: "Price", size: defaultFontSize, color: onBackgroundColor),
-                                const SizedBox(height: smallSpacing,),
-                                TextFormField(
-                                  controller: priceController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  onChanged: (value){
-                                    print("The value is $value");
-                                    print(value.toString());
-                                    if(value.isNotEmpty){
-                                      int _commissionPrice = ((int.parse(value) * commissionRate)/100).floor();
-                                      setState(() {
-                                        commissionController.text = _commissionPrice.toString();
-                                      });
-                                    }
-                                  },
-                                  validator: (value){
-                                    if(value!.isEmpty){
-                                      return "Value can not be empty";
-                                    } else if(int.parse(value) < 0){
-                                      return "Value must be positive";
-                                    }
-                                    else{
-                                      return null;
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                    hintText: "Price",
-                                    hintStyle: TextStyle(color: textInputPlaceholderColor),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: textInputBorderColor),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(defaultRadius),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: primaryColor),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: dangerColor),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          // Expanded(
-                          //     child: commissionRateTextFormField(
-                          //         type: "Commission",
-                          //         hint: "Commission",
-                          //         controller: commissionController)),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                semiBoldText(value: "Commission", size: defaultFontSize, color: onBackgroundColor),
-                                const SizedBox(height: smallSpacing,),
-                                TextFormField(
-                                  controller: commissionController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  validator: (value){
-                                    if(value!.isEmpty){
-                                      return "Value can not be empty";
-                                    } else{
-                                      return null;
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                    hintText: "Commission",
-                                    hintStyle: TextStyle(color: textInputPlaceholderColor),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(color: textInputBorderColor),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(defaultRadius),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: primaryColor),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(color: dangerColor),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      semiBoldText(
-                          value: "Main Image",
-                          size: defaultFontSize,
-                          color: onBackgroundColor),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      selectedWebImage.toString() != "[0, 0, 0, 0, 0, 0, 0, 0]" ?
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: textInputBorderColor)),
+                          child: Align(
+                            alignment: Alignment.centerRight,
                             child: SizedBox(
-                              width: 120,
-                              height: 120,
-                              child: Stack(
-                                children: [
-                                  Image.memory(selectedWebImage, width: 120, height: 120, fit: BoxFit.cover,),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      width: 120,
-                                      padding: EdgeInsets.symmetric(vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.6),
-                                      ),
-                                      child: MouseRegion(
-                                        cursor: SystemMouseCursors.click,
-                                        child: GestureDetector(
-                                            onTap: (){
-                                              setState(() {
-                                                selectedWebImage = Uint8List(8);
-                                              });
-                                            },
-                                            child: Iconify(MaterialSymbols.delete_outline, color: dangerColor,)),
-                                      ),
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                )),
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Text(""),
+                        );
+                      }
+                    }),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    semiBoldText(value: "Description", size: defaultFontSize, color: onBackgroundColor),
+                    SizedBox(
+                      height: 0,
+                      child: quill.QuillEditor.basic(
+                          controller: emptyController, readOnly: true),
+                    ),
+                    SizedBox(height: smallSpacing,),
+                    quill.QuillToolbar.basic(
+                      controller: descriptionController,
+                      toolbarIconSize: 17,
+                      showFontFamily: false,
+                      showSearchButton: false,
+                      showRedo: false,
+                      showUndo: false,
+                      showHeaderStyle: false,
+                      showDirection: false,
+                      showQuote: false,
+                      showCodeBlock: false,
+                      showIndent: true,
+                      showStrikeThrough: false,
+                      showListCheck: false,
+                      showBackgroundColorButton: false,
+                      showDividers: false,
+                      showInlineCode: false,
+                      showLink: false,
+                      showClearFormat: false,
+                    ),
+                    Container(
+                        height: 300,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(defaultRadius),
+                            border: Border.all(color: textInputBorderColor)
+                        ),
+                        child: quill.QuillEditor.basic(controller: descriptionController, readOnly: false)),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    Row(
+                      children: [
+                        // Expanded(
+                        //     child: numberTextFormField(
+                        //         type: "Price",
+                        //         hint: "Price",
+                        //         controller: priceController)),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              semiBoldText(value: "Price", size: defaultFontSize, color: onBackgroundColor),
+                              const SizedBox(height: smallSpacing,),
+                              TextFormField(
+                                controller: priceController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                onChanged: (value){
+                                  print("The value is $value");
+                                  print(value.toString());
+                                  if(value.isNotEmpty){
+                                    int _commissionPrice = ((int.parse(value) * commissionRate)/100).floor();
+                                    setState(() {
+                                      commissionController.text = _commissionPrice.toString();
+                                    });
+                                  }
+                                },
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return "Value can not be empty";
+                                  } else if(int.parse(value) < 0){
+                                    return "Value must be positive";
+                                  }
+                                  else{
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Price",
+                                  hintStyle: TextStyle(color: textInputPlaceholderColor),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: textInputBorderColor),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(defaultRadius),
                                     ),
                                   ),
-                                ],
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: dangerColor),
+                                  ),
+                                ),
                               ),
-                            )),
-                      )
-                          : product.mainImage?.path == "null" ? SizedBox() : Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Image.network("$baseUrl${product.mainImage!.path}", width: 120, height: 120, fit: BoxFit.cover,),
+                            ],
                           ),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                _pickImage();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(10)),
-                                  padding:
-                                  EdgeInsets.symmetric(vertical: 15)),
-                              child: Iconify(
-                                Bi.upload,
-                                color: onPrimaryColor,
-                                size: 25,
-                              ))),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      semiBoldText(
-                          value: "More Images",
-                          size: defaultFontSize,
-                          color: onBackgroundColor),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      selectedListImages.isNotEmpty ?
-                      GridView.builder(
-                          itemCount: selectedListImages.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, mainAxisExtent: 120),
-                          itemBuilder: (context, index){
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0, bottom: 10),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Stack(
-                                    children: [
-                                      Image.memory(selectedListImages[index], width: double.infinity, height: 120, fit: BoxFit.cover,),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.symmetric(vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(0.6),
-                                          ),
-                                          child: MouseRegion(
-                                            cursor: SystemMouseCursors.click,
-                                            child: GestureDetector(
-                                                onTap: (){
-                                                  setState(() {
-                                                    setState(() {
-                                                      selectedListImages.removeAt(index);
-                                                    });
-                                                  });
-                                                },
-                                                child: Iconify(MaterialSymbols.delete_outline, color: dangerColor,)),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            );
-                          })
-                          : product.moreImages!.isEmpty ? SizedBox() : GridView.builder(
-                          itemCount: product.moreImages!.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, mainAxisExtent: 120),
-                          itemBuilder: (context, index){
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10.0, bottom: 10),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network("$baseUrl${product.moreImages![index]["path"]}", width: double.infinity, height: 120, fit: BoxFit.cover,)),
-                            );
-                          }),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                _pickListImages();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(10)),
-                                  padding:
-                                  EdgeInsets.symmetric(vertical: 15)),
-                              child: Iconify(
-                                Bi.upload,
-                                color: onPrimaryColor,
-                                size: 25,
-                              ))),
-                      SizedBox(
-                        height: addProductVerticalSpacing,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Published",
-                            style: TextStyle(
-                                color: onBackgroundColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        // Expanded(
+                        //     child: commissionRateTextFormField(
+                        //         type: "Commission",
+                        //         hint: "Commission",
+                        //         controller: commissionController)),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              semiBoldText(value: "Commission", size: defaultFontSize, color: onBackgroundColor),
+                              const SizedBox(height: smallSpacing,),
+                              TextFormField(
+                                controller: commissionController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                validator: (value){
+                                  if(value!.isEmpty){
+                                    return "Value can not be empty";
+                                  } else{
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  hintText: "Commission",
+                                  hintStyle: TextStyle(color: textInputPlaceholderColor),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: textInputBorderColor),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(defaultRadius),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: primaryColor),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: dangerColor),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 18,
-                            child: RadioListTile(
-                                value: 1,
-                                groupValue: publishedSelectedValue,
-                                activeColor: primaryColor,
-                                toggleable: true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    publishedSelectedValue = value;
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Featured",
-                            style: TextStyle(
-                                color: onBackgroundColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 18,
-                            child: RadioListTile(
-                                value: 1,
-                                groupValue: featuredSelectedValue,
-                                activeColor: primaryColor,
-                                toggleable: true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    featuredSelectedValue = value;
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Top Sellers",
-                            style: TextStyle(
-                                color: onBackgroundColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 18,
-                            child: RadioListTile(
-                                value: 1,
-                                groupValue: topSellerSelectedValue,
-                                activeColor: primaryColor,
-                                toggleable: true,
-                                onChanged: (value) {
-                                  setState(() {
-                                    topSellerSelectedValue = value;
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 45,
-                      ),
-                      SizedBox(
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    semiBoldText(
+                        value: "Main Image",
+                        size: defaultFontSize,
+                        color: onBackgroundColor),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    selectedWebImage.toString() != "[0, 0, 0, 0, 0, 0, 0, 0]" ?
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: 120,
+                            height: 120,
+                            child: Stack(
+                              children: [
+                                Image.memory(selectedWebImage, width: 120, height: 120, fit: BoxFit.cover,),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    width: 120,
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.6),
+                                    ),
+                                    child: MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                              selectedWebImage = Uint8List(8);
+                                            });
+                                          },
+                                          child: Iconify(MaterialSymbols.delete_outline, color: dangerColor,)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                    )
+                        : product.mainImage?.path == "null" ? SizedBox() : Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Image.network("$baseUrl${product.mainImage!.path}", width: 120, height: 120, fit: BoxFit.cover,),
+                        ),
+                    SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: isLoading ? null : () async {
-                            if (_addProductFormKey.currentState!
-                                .validate()) {
-                              // print("File");
-                              // print(_pickedImage!.path);
-                              // print("Somesing");
-                              // print(_pickedImage);
-                              // print(
-                              //     "Main WEB Image : ${selectedWebImage}");
-                              // print(
-                              //     "More LIST OF WEB Images : ${selectedListImages}");
-                              // print("Main Mobile Images : ${_pickedImage}");
-                              // print(
-                              //     "More LIST OF Mobile Images : ${imageFileList!.length}");
-                              // print(nameController.text);
-                              // print(categoryController.text);
-                              // print(descriptionController.text);
-                              // print(priceController.text);
-                              // print(commissionController.text);
-                              // print(selectedWebImage.toString());
-                              // print(json.encode(descriptionController.text));
-                              // descriptionController.text.isEmpty
-                              //     ? print("It is null")
-                              //     : print("It is not null");
-                              // print(contentType);
-                              if(contentType.toString() != "null"){
-                                List type = contentType!.split("/");
-                                imageType = type;
-                              }
-                              print(imageType);
-                              final productDesc = jsonEncode(descriptionController.document.toDelta().toJson());
-                              final products =
-                              BlocProvider.of<ProductsBloc>(context);
-                              products.add(PatchProductEvent(Products(
-                                productId: product.productId,
-                                  productName: nameController.text,
-                                  description: productDesc,
-                                  mainImage: ProductImage(path: selectedWebImage.toString()),
-                                  moreImages: selectedListImages,
-                                  price: double.parse(priceController.text),
-                                  categories: selectedCategories,
-                                  commission:
-                                  double.parse(commissionController.text),
-                                  published: publishedSelectedValue == 1
-                                      ? true
-                                      : false,
-                                  featured: featuredSelectedValue == 1
-                                      ? true
-                                      : false,
-                                  topSeller: topSellerSelectedValue == 1
-                                      ? true
-                                      : false), imageType, listImageType));
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              disabledBackgroundColor: disabledPrimaryColor,
-                              backgroundColor: primaryColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                          child: isLoading
-                              ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
+                            onPressed: () {
+                              _pickImage();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(10)),
+                                padding:
+                                EdgeInsets.symmetric(vertical: 10)),
+                            child: Iconify(
+                              Bi.upload,
                               color: onPrimaryColor,
-                            ),
-                          )
-                              : normalText(
-                              value: "Save",
                               size: 20,
-                              color: onPrimaryColor),
+                            ))),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    semiBoldText(
+                        value: "More Images",
+                        size: defaultFontSize,
+                        color: onBackgroundColor),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    selectedListImages.isNotEmpty ?
+                    GridView.builder(
+                        itemCount: selectedListImages.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, mainAxisExtent: 120),
+                        itemBuilder: (context, index){
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Stack(
+                                  children: [
+                                    Image.memory(selectedListImages[index], width: double.infinity, height: 120, fit: BoxFit.cover,),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.symmetric(vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.6),
+                                        ),
+                                        child: MouseRegion(
+                                          cursor: SystemMouseCursors.click,
+                                          child: GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  setState(() {
+                                                    selectedListImages.removeAt(index);
+                                                  });
+                                                });
+                                              },
+                                              child: Iconify(MaterialSymbols.delete_outline, color: dangerColor,)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          );
+                        })
+                        : product.moreImages!.isEmpty ? SizedBox() : GridView.builder(
+                        itemCount: product.moreImages!.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, mainAxisExtent: 120),
+                        itemBuilder: (context, index){
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 10.0, bottom: 10),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network("$baseUrl${product.moreImages![index]["path"]}", width: double.infinity, height: 120, fit: BoxFit.cover,)),
+                          );
+                        }),
+                    SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              _pickListImages();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(10)),
+                                padding:
+                                EdgeInsets.symmetric(vertical: 10)),
+                            child: Iconify(
+                              Bi.upload,
+                              color: onPrimaryColor,
+                              size: 20,
+                            ))),
+                    SizedBox(
+                      height: addProductVerticalSpacing,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Published",
+                          style: TextStyle(
+                              color: onBackgroundColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                         ),
-                      )
-                    ],
-                  ),
+                        SizedBox(
+                          width: 18,
+                          child: RadioListTile(
+                              value: 1,
+                              groupValue: publishedSelectedValue,
+                              activeColor: primaryColor,
+                              toggleable: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  publishedSelectedValue = value;
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Featured",
+                          style: TextStyle(
+                              color: onBackgroundColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: 18,
+                          child: RadioListTile(
+                              value: 1,
+                              groupValue: featuredSelectedValue,
+                              activeColor: primaryColor,
+                              toggleable: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  featuredSelectedValue = value;
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Top Sellers",
+                          style: TextStyle(
+                              color: onBackgroundColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: 18,
+                          child: RadioListTile(
+                              value: 1,
+                              groupValue: topSellerSelectedValue,
+                              activeColor: primaryColor,
+                              toggleable: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  topSellerSelectedValue = value;
+                                });
+                              }),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 45,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : () async {
+                          if (_addProductFormKey.currentState!
+                              .validate()) {
+                            // print("File");
+                            // print(_pickedImage!.path);
+                            // print("Somesing");
+                            // print(_pickedImage);
+                            // print(
+                            //     "Main WEB Image : ${selectedWebImage}");
+                            // print(
+                            //     "More LIST OF WEB Images : ${selectedListImages}");
+                            // print("Main Mobile Images : ${_pickedImage}");
+                            // print(
+                            //     "More LIST OF Mobile Images : ${imageFileList!.length}");
+                            // print(nameController.text);
+                            // print(categoryController.text);
+                            // print(descriptionController.text);
+                            // print(priceController.text);
+                            // print(commissionController.text);
+                            // print(selectedWebImage.toString());
+                            // print(json.encode(descriptionController.text));
+                            // descriptionController.text.isEmpty
+                            //     ? print("It is null")
+                            //     : print("It is not null");
+                            // print(contentType);
+                            if(contentType.toString() != "null"){
+                              List type = contentType!.split("/");
+                              imageType = type;
+                            }
+                            print(imageType);
+                            final productDesc = jsonEncode(descriptionController.document.toDelta().toJson());
+                            final products =
+                            BlocProvider.of<ProductsBloc>(context);
+                            products.add(PatchProductEvent(Products(
+                              productId: product.productId,
+                                productName: nameController.text,
+                                description: productDesc,
+                                mainImage: ProductImage(path: selectedWebImage.toString()),
+                                moreImages: selectedListImages,
+                                price: double.parse(priceController.text),
+                                categories: selectedCategories,
+                                commission:
+                                double.parse(commissionController.text),
+                                published: publishedSelectedValue == 1
+                                    ? true
+                                    : false,
+                                featured: featuredSelectedValue == 1
+                                    ? true
+                                    : false,
+                                topSeller: topSellerSelectedValue == 1
+                                    ? true
+                                    : false), imageType, listImageType));
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            disabledBackgroundColor: disabledPrimaryColor,
+                            backgroundColor: primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        child: isLoading
+                            ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: onPrimaryColor,
+                          ),
+                        )
+                            : normalText(
+                            value: "Save",
+                            size: 20,
+                            color: onPrimaryColor),
+                      ),
+                    )
+                  ],
                 )
               ],
             ),

@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 Widget changePasswordButton({required BuildContext context}){
   return GestureDetector(
     onTap: (){
-      context.go('/edit_profile');
+      context.push('/edit_profile');
     },
     child: normalText(value: "Change password", size: 17, color: linkColor),
   );

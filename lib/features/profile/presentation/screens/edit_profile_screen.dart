@@ -1,5 +1,6 @@
 import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
+import 'package:cash_admin_app/features/common_widgets/app_bar_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/main_logo.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
@@ -38,6 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appbar,
       body: SafeArea(
         child: SingleChildScrollView(
           child: BlocConsumer<EditPasswordBloc, EditPasswordState>(listener: (_, state) {
@@ -63,9 +65,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: mainLogo(),
-        ),
         semiBoldText(
             value: "Changing your password",
             size: 26,

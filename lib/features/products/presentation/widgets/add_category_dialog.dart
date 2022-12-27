@@ -38,7 +38,7 @@ Widget addCategoryDialog({required BuildContext context}){
 
 Widget _buildInitialInput({required BuildContext context, required bool isLoading}){
   return SizedBox(
-    height: 180,
+    height: 220,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 450,
     child: Form(
       key: _categoryFormKey,
@@ -46,11 +46,12 @@ Widget _buildInitialInput({required BuildContext context, required bool isLoadin
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
+            SizedBox(height: 20,),
             normalTextFormField(
                 type: "Category",
                 hint: "Product category",
                 controller: _categoryController),
-            SizedBox(height: 30,),
+            SizedBox(height: 35,),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(onPressed: (){

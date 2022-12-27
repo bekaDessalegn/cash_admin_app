@@ -19,7 +19,10 @@ class GetProductsSuccessful extends ProductsState {
   GetProductsSuccessful(this.products);
 }
 
-class GetProductsLoading extends ProductsState {}
+class GetProductsLoading extends ProductsState {
+  final String message;
+  GetProductsLoading({required this.message});
+}
 
 class GetProductsFailed extends ProductsState {
   final String errorType;

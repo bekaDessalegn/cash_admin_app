@@ -57,10 +57,15 @@ class _AffiliateDetailsBodyState extends State<AffiliateDetailsBody> {
               children.add(GetChildrenEvent(widget.userId));
             }),);
           } else if(state is GetSingleAffiliateFailedState){
-            return errorBox(onPressed: (){
-              final affiliate_details = BlocProvider.of<SingleAffiliateBloc>(context);
-              affiliate_details.add(GetSingleAffiliateEvent(widget.userId));
-            });
+            return Center(
+              child: SizedBox(
+                height: 250,
+                child: errorBox(onPressed: (){
+                  final affiliate_details = BlocProvider.of<SingleAffiliateBloc>(context);
+                  affiliate_details.add(GetSingleAffiliateEvent(widget.userId));
+                }),
+              ),
+            );
           } else{
             return Center(child: Text(""),);
           }
@@ -253,7 +258,7 @@ class _AffiliateDetailsBodyState extends State<AffiliateDetailsBody> {
             ),
             SizedBox(height: 10,),
             TextButton(onPressed: (){
-              context.goNamed(
+              context.pushNamed(
                 APP_PAGE.transactionBy.toName,
                 params: {'user_id': affiliate.userId!},
               );

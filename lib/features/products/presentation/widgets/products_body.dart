@@ -9,8 +9,6 @@ import 'package:cash_admin_app/features/common_widgets/not_connected.dart';
 import 'package:cash_admin_app/features/common_widgets/product_list_box.dart';
 import 'package:cash_admin_app/features/common_widgets/search_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
-import 'package:cash_admin_app/features/common_widgets/something_went_wrong_error_widget.dart';
-import 'package:cash_admin_app/features/products/data/datasources/remote/products_datasource.dart';
 import 'package:cash_admin_app/features/products/data/models/categories.dart';
 import 'package:cash_admin_app/features/products/data/models/local_products.dart';
 import 'package:cash_admin_app/features/products/data/models/products.dart';
@@ -90,7 +88,7 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
       final moreProducts = BlocProvider.of<ProductsBloc>(context);
 
       if (categoryList[selectedCategoryIndex].categoryName == "All products") {
-        moreProducts.add(GetMoreProductsForListEvent(skipNumber));
+        moreProducts.add(GetProductsForListEvent(skipNumber));
       } else {
         moreProducts.add(FilterMoreProductsByCategoryEvent(
             categoryList[selectedCategoryIndex].categoryName, skipNumber));
@@ -421,11 +419,17 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
               // _allProducts.addAll(productsList[selectedCategoryIndex]!);
               fetchedProducts = state.products;
               isCategoryLoading = false;
-            }
-            else if(state is GetProductsLoading){
+              setState(() {
+                _isLoadMoreRunning = false;
+              });
+            } else if(state is GetProductsLoading){
               isCategoryLoading = true;
-              if(_allProductsIndex == 0){
-
+              print(productsList.toString() == "[[]]");
+              print(productsList);
+              if(productsList.toString() != "[[]]"){
+                setState(() {
+                  _isLoadMoreRunning = true;
+                });
               }
             }
           },
@@ -441,7 +445,11 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                 }),
               );
             } else if(state is GetProductsLoading){
-              return Center(child: loadingBox(),);
+              if(productsList.toString() == "[[]]"){
+                return Center(child: loadingBox(),);
+              } else {
+                return productListView();
+              }
             }
             else if (state is GetProductsSuccessful) {
               return productsList[selectedCategoryIndex].isEmpty

@@ -9,13 +9,9 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersRepository ordersRepository;
   OrdersBloc(this.ordersRepository) : super(InitialOrdersState()){
     on<GetOrdersEvent>(_onGetOrdersEvent);
-    on<GetMoreOrdersEvent>(_onGetMoreOrdersEvent);
     on<FilterPendingEvent>(_onFilterPendingEvent);
-    on<MoreFilterPendingEvent>(_onMoreFilterPendingEvent);
     on<FilterAcceptedEvent>(_onFilterAcceptedEvent);
-    on<MoreFilterAcceptedEvent>(_onMoreFilterAcceptedEvent);
     on<FilterRejectedEvent>(_onFilterRejectedEvent);
-    on<MoreFilterRejectedEvent>(_onMoreFilterRejectedEvent);
   }
 
   void _onGetOrdersEvent(GetOrdersEvent event, Emitter emit) async {
@@ -27,15 +23,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       } else{
         emit(GetOrdersSuccessfulState(orders));
       }
-    } catch(e){
-      emit(GetOrdersFailedState("Something went wrong"));
-    }
-  }
-
-  void _onGetMoreOrdersEvent(GetMoreOrdersEvent event, Emitter emit) async {
-    try{
-      final orders = await ordersRepository.getOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }
@@ -55,15 +42,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  void _onMoreFilterPendingEvent(MoreFilterPendingEvent event, Emitter emit) async {
-    try{
-      final orders = await ordersRepository.filterPendingOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
-    } catch(e){
-      emit(GetOrdersFailedState("Something went wrong"));
-    }
-  }
-
   void _onFilterAcceptedEvent(FilterAcceptedEvent event, Emitter emit) async {
     emit(GetOrdersLoadingState());
     try{
@@ -78,15 +56,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  void _onMoreFilterAcceptedEvent(MoreFilterAcceptedEvent event, Emitter emit) async {
-    try{
-      final orders = await ordersRepository.filterAcceptedOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
-    } catch(e){
-      emit(GetOrdersFailedState("Something went wrong"));
-    }
-  }
-
   void _onFilterRejectedEvent(FilterRejectedEvent event, Emitter emit) async {
     emit(GetOrdersLoadingState());
     try{
@@ -96,15 +65,6 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       } else{
         emit(GetOrdersSuccessfulState(orders));
       }
-    } catch(e){
-      emit(GetOrdersFailedState("Something went wrong"));
-    }
-  }
-
-  void _onMoreFilterRejectedEvent(MoreFilterRejectedEvent event, Emitter emit) async {
-    try{
-      final orders = await ordersRepository.filterRejectedOrders(event.skipNumber);
-      emit(GetOrdersSuccessfulState(orders));
     } catch(e){
       emit(GetOrdersFailedState("Something went wrong"));
     }

@@ -465,7 +465,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           Text(
             "Hero image",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -501,8 +501,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      padding: const EdgeInsets.symmetric(vertical: 19)),
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(vertical: 10)),
                   child: const Iconify(
                     Bi.upload,
                     color: onPrimaryColor,
@@ -588,8 +588,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 10)),
                 child: isLoading
                     ? SizedBox(
                         height: defaultFontSize,
@@ -618,7 +618,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           Text(
             "Why us image",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -654,8 +654,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      padding: const EdgeInsets.symmetric(vertical: 19)),
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(vertical: 10)),
                   child: const Iconify(
                     Bi.upload,
                     color: onPrimaryColor,
@@ -733,8 +733,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 10)),
                 child: isLoading
                     ? SizedBox(
                         height: defaultFontSize,
@@ -764,7 +764,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           Text(
             "What makes us unique image",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -801,8 +801,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3)),
-                      padding: const EdgeInsets.symmetric(vertical: 19)),
+                          borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(vertical: 10)),
                   child: const Iconify(
                     Bi.upload,
                     color: onPrimaryColor,
@@ -893,8 +893,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: Text(
                   "Add What Makes Us Unique Content",
                   style: TextStyle(
@@ -927,8 +927,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 15)),
                 child: isLoading
                     ? SizedBox(
                         height: defaultFontSize,
@@ -957,7 +957,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           Text(
             "Brands",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -978,9 +978,9 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                                 placeholder: AssetImage('images/loading.png'),
                                 thumbnail: NetworkImage("$baseUrl${selectedBrandList[index].logoImage.path}",),
                                 image: NetworkImage("$baseUrl${selectedBrandList[index].logoImage.path}",),
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.fill,
+                                width: 150,
+                                height: 50,
+                                fit: BoxFit.fitHeight,
                               )),
                           SizedBox(
                             width: 10,
@@ -1072,8 +1072,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: const Iconify(
                   Bi.upload,
                   color: onPrimaryColor,
@@ -1125,7 +1125,9 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 19)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: EdgeInsets.symmetric(vertical: 12)),
                 child: isLoading
                     ? SizedBox(
                         width: defaultFontSize,
@@ -1153,7 +1155,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           Text(
             "Socials",
             style:
-                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize),
+                TextStyle(color: onBackgroundColor, fontSize: defaultFontSize, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -1189,8 +1191,8 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                    padding: const EdgeInsets.symmetric(vertical: 19)),
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 12)),
                 child: const Iconify(
                   Bi.upload,
                   color: onPrimaryColor,
@@ -1210,7 +1212,7 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
           rankTextFormField(
               type: "Rank", hint: "Rank", controller: socialLinkRankController),
           SizedBox(
-            height: 10,
+            height: 15,
           ),
           SizedBox(
             width: double.infinity,
@@ -1243,7 +1245,9 @@ class _CustomizeHomeBodyState extends State<CustomizeHomeBody> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 19)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: EdgeInsets.symmetric(vertical: 15)),
                 child: isLoading
                     ? SizedBox(
                         width: defaultFontSize,

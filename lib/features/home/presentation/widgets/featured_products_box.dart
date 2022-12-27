@@ -14,7 +14,7 @@ Widget featuredProductsBox({required BuildContext context, required Products pro
     child: Container(
       width: 249,
       height: 255,
-      margin: EdgeInsets.fromLTRB(0, 10, 30, 10),
+      margin: EdgeInsets.fromLTRB(2, 10, 30, 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.all(Radius.circular(10)),

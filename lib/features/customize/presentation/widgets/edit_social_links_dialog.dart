@@ -145,9 +145,9 @@ class _EditSocialLinksDialogState extends State<EditSocialLinksDialog> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3)),
+                              borderRadius: BorderRadius.circular(10)),
                           padding:
-                          const EdgeInsets.symmetric(vertical: 13)),
+                          const EdgeInsets.symmetric(vertical: 10)),
                       child: const Iconify(
                         Bi.upload,
                         color: onPrimaryColor,
@@ -187,7 +187,7 @@ class _EditSocialLinksDialogState extends State<EditSocialLinksDialog> {
                       }
                   },
                     style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 15),
+                        padding: EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         )

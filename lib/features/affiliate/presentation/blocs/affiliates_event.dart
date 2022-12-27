@@ -5,19 +5,9 @@ class GetAffiliatesEvent extends AffiliatesEvent {
   GetAffiliatesEvent(this.skipNumber);
 }
 
-class GetMoreAffiliatesEvent extends AffiliatesEvent {
-  int skipNumber;
-  GetMoreAffiliatesEvent(this.skipNumber);
-}
-
 class GetAffiliatesEarningFromLowToHighEvent extends AffiliatesEvent {
   int skipNumber;
   GetAffiliatesEarningFromLowToHighEvent(this.skipNumber);
-}
-
-class GetMoreAffiliatesEarningFromLowToHighEvent extends AffiliatesEvent {
-  int skipNumber;
-  GetMoreAffiliatesEarningFromLowToHighEvent(this.skipNumber);
 }
 
 class GetAffiliatesEarningFromHighToLowEvent extends AffiliatesEvent {
@@ -25,19 +15,9 @@ class GetAffiliatesEarningFromHighToLowEvent extends AffiliatesEvent {
   GetAffiliatesEarningFromHighToLowEvent(this.skipNumber);
 }
 
-class GetMoreAffiliatesEarningFromHighToLowEvent extends AffiliatesEvent {
-  int skipNumber;
-  GetMoreAffiliatesEarningFromHighToLowEvent(this.skipNumber);
-}
-
 class GetMostParentAffiliateEvent extends AffiliatesEvent {
   int skipNumber;
   GetMostParentAffiliateEvent(this.skipNumber);
-}
-
-class GetMoreMostParentAffiliateEvent extends AffiliatesEvent {
-  int skipNumber;
-  GetMoreMostParentAffiliateEvent(this.skipNumber);
 }
 
 abstract class SingleAffiliateEvent {}

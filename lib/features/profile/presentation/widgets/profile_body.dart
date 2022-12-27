@@ -163,7 +163,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                   ),
                   IconButton(
                       onPressed: () {
-                        context.go(APP_PAGE.editEmail.toPath);
+                        context.push(APP_PAGE.editEmail.toPath);
                       },
                       icon: Iconify(
                         Eva.edit_2_outline,

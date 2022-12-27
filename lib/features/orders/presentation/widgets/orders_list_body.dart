@@ -60,16 +60,16 @@ class _OrdersBodyState extends State<OrdersBody> {
       final skipNumber = _allOrdersIndex * _skip;
       if(value == "Pending"){
         final orders = BlocProvider.of<OrdersBloc>(context);
-        orders.add(MoreFilterPendingEvent(skipNumber));
+        orders.add(FilterPendingEvent(skipNumber));
       } else if(value == "Accepted"){
         final orders = BlocProvider.of<OrdersBloc>(context);
-        orders.add(MoreFilterAcceptedEvent(skipNumber));
+        orders.add(FilterAcceptedEvent(skipNumber));
       } else if(value == "Rejected"){
         final orders = BlocProvider.of<OrdersBloc>(context);
-        orders.add(MoreFilterRejectedEvent(skipNumber));
+        orders.add(FilterRejectedEvent(skipNumber));
       } else{
         final orders = BlocProvider.of<OrdersBloc>(context);
-        orders.add(GetMoreOrdersEvent(skipNumber));
+        orders.add(GetOrdersEvent(skipNumber));
       }
       if (fetchedOrders.isNotEmpty) {
         setState(() {
@@ -241,6 +241,15 @@ class _OrdersBodyState extends State<OrdersBody> {
         if(state is GetOrdersSuccessfulState){
           _allOrders.addAll(state.orders);
           fetchedOrders = state.orders;
+          setState(() {
+            _isLoadMoreRunning = false;
+          });
+        } else if(state is GetOrdersLoadingState){
+          if(_allOrders.isNotEmpty){
+            setState(() {
+              _isLoadMoreRunning = true;
+            });
+          }
         }
       },
       builder: (_, state) {
@@ -253,7 +262,11 @@ class _OrdersBodyState extends State<OrdersBody> {
             }),
           );
         } else if(state is GetOrdersLoadingState){
-          return Center(child: loadingBox(),);
+          if(_allOrders.isEmpty){
+            return Center(child: loadingBox(),);
+          } else{
+            return ordersListView();
+          }
         }
         else if (state is GetOrdersSuccessfulState) {
           return _allOrders.isEmpty

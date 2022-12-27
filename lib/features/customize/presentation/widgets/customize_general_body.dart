@@ -115,9 +115,9 @@ class _CustomizeGeneralBodyState extends State<CustomizeGeneralBody> {
                           backgroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.circular(3)),
+                              BorderRadius.circular(10)),
                           padding:
-                          const EdgeInsets.symmetric(vertical: 19)),
+                          const EdgeInsets.symmetric(vertical: 12)),
                       child: const Iconify(
                         Bi.upload,
                         color: onPrimaryColor,
@@ -142,9 +142,9 @@ class _CustomizeGeneralBodyState extends State<CustomizeGeneralBody> {
                             backgroundColor: primaryColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
-                                BorderRadius.circular(3)),
+                                BorderRadius.circular(10)),
                             padding:
-                            const EdgeInsets.symmetric(vertical: 19)),
+                            const EdgeInsets.symmetric(vertical: 12)),
                         child: isLoading ? SizedBox(height: defaultFontSize, width: defaultFontSize, child: CircularProgressIndicator(color: onPrimaryColor,),) : Text("Update Logo", style: TextStyle(color: onPrimaryColor, fontSize: defaultFontSize),)),
                   )
                 ],

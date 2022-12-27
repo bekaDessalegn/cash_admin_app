@@ -45,10 +45,15 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
       if (state is GetSingleOrderSuccessful) {
         return buildInitialInput(order: state.order);
       } else if (state is GetSingleOrderFailed) {
-        return errorBox(onPressed: (){
-          final orderDetails = BlocProvider.of<SingleOrderBloc>(context);
-          orderDetails.add(GetSingleOrderEvent(widget.orderId));
-        });
+        return Center(
+          child: SizedBox(
+            height: 250,
+            child: errorBox(onPressed: (){
+              final orderDetails = BlocProvider.of<SingleOrderBloc>(context);
+              orderDetails.add(GetSingleOrderEvent(widget.orderId));
+            }),
+          ),
+        );
       } else if(state is GetSingleOrderSocketError){
         return Center(child: socketErrorWidget(onPressed: (){
           final orderDetails = BlocProvider.of<SingleOrderBloc>(context);
@@ -78,7 +83,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
               children: [
                 order.product.mainImage!.path == "null" ?
                 Container(
-                  height: 172,
+                  height: 220,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -93,7 +98,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
                     thumbnail:
                     NetworkImage("$baseUrl${order.product.mainImage!.path}"),
                     image: NetworkImage("$baseUrl${order.product.mainImage!.path}"),
-                    height: 172,
+                    height: 220,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -169,7 +174,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            context.goNamed(APP_PAGE.productDetails.toName, params: {'product_id': order.product.productId},);
+                            context.pushNamed(APP_PAGE.productDetails.toName, params: {'product_id': order.product.productId},);
                           },
                           child: Text(
                             "See product",
@@ -262,12 +267,17 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
                         color: onBackgroundColor,
                         fontSize: 16,),
                     ),
-                    Text(
-                      "${order.affiliate!.fullName}",
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: (){
+                        context.pushNamed(APP_PAGE.affiliateDetails.toName, params: {'user_id': order.affiliate!.userId},);
+                      },
+                      child: Text(
+                        "${order.affiliate!.fullName}",
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -332,7 +342,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
             });
           },
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 )
@@ -354,7 +364,7 @@ class _OrderDetailsBodyState extends State<OrderDetailsBody> {
             });
           },
             style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 backgroundColor: backgroundColor,
 
                 shape: RoundedRectangleBorder(

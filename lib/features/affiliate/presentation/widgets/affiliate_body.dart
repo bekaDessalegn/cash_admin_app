@@ -57,16 +57,16 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
       final skipNumber = _allAffiliatesIndex * _skip;
       if(value == "Earnings up"){
         final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-        affiliates.add(GetMoreAffiliatesEarningFromLowToHighEvent(skipNumber));
+        affiliates.add(GetAffiliatesEarningFromLowToHighEvent(skipNumber));
       } else if(value == "Earnings down"){
         final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-        affiliates.add(GetMoreAffiliatesEarningFromHighToLowEvent(skipNumber));
+        affiliates.add(GetAffiliatesEarningFromHighToLowEvent(skipNumber));
       } else if(value == "Most parents"){
         final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-        affiliates.add(GetMoreMostParentAffiliateEvent(skipNumber));
+        affiliates.add(GetMostParentAffiliateEvent(skipNumber));
       } else{
         final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-        affiliates.add(GetMoreAffiliatesEvent(skipNumber));
+        affiliates.add(GetAffiliatesEvent(skipNumber));
       }
       if (fetchedAffiliates.isNotEmpty) {
         setState(() {
@@ -239,7 +239,11 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
       } else if(state is GetAffiliatesSocketErrorState) {
         return localAffiliateLists(localAffiliate: state.localAffiliate);
       } else if(state is GetAffiliatesLoadingState){
-        return Center(child: loadingBox(),);
+        if(_allAffiliates.isEmpty){
+          return Center(child: loadingBox(),);
+        } else{
+          return buildAffiliateLists();
+        }
       } else if(state is GetAffiliatesFailedState) {
         return Center(
           child: errorBox(onPressed: (){
@@ -255,6 +259,15 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
       if(state is GetAffiliatesSuccessfulState){
         _allAffiliates.addAll(state.affiliates);
         fetchedAffiliates = state.affiliates;
+        setState(() {
+          _isLoadMoreRunning = false;
+        });
+      } else if(state is GetAffiliatesLoadingState){
+        if(_allAffiliates.isNotEmpty){
+          setState(() {
+            _isLoadMoreRunning = true;
+          });
+        }
       }
     });
   }

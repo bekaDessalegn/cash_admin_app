@@ -11,7 +11,7 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbar,
-      body: ProductDetailsBody(productId: productId, imageSize: 172,),
+      body: ProductDetailsBody(productId: productId, imageSize: 220,),
     );
   }
 }

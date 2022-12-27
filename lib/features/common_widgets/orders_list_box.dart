@@ -67,7 +67,7 @@ Widget ordersListBox({required BuildContext context, required Orders order}){
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: onBackgroundColor,
-                              fontSize: 12,
+                              fontSize: 14,
                             ),
                           ),
                         ],
@@ -84,7 +84,7 @@ Widget ordersListBox({required BuildContext context, required Orders order}){
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: onBackgroundColor,
-                                    fontSize: 12,
+                                    fontSize: 14,
                                   ),
                                 ),
                                 Flexible(
@@ -97,7 +97,7 @@ Widget ordersListBox({required BuildContext context, required Orders order}){
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: primaryColor,
-                                        fontSize: 12,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
@@ -112,7 +112,7 @@ Widget ordersListBox({required BuildContext context, required Orders order}){
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: onBackgroundColor,
-                              fontSize: 10,
+                              fontSize: 14,
                             ),
                           )
                         ],

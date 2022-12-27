@@ -73,10 +73,15 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
           productDetails.add(GetSingleProductEvent(productId!));
         }),);
       } else if (state is GetSingleProductFailed) {
-        return errorBox(onPressed: () {
-          final productDetails = BlocProvider.of<SingleProductBloc>(context);
-          productDetails.add(GetSingleProductEvent(productId!));
-        });
+        return Center(
+          child: SizedBox(
+            height: 250,
+            child: errorBox(onPressed: () {
+              final productDetails = BlocProvider.of<SingleProductBloc>(context);
+              productDetails.add(GetSingleProductEvent(productId!));
+            }),
+          ),
+        );
       } else if (state is GetSingleProductLoading) {
         return SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -128,7 +133,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
                       thumbnail:
                           NetworkImage("$baseUrl${product.mainImage!.path}"),
                       image: NetworkImage("$baseUrl${product.mainImage!.path}"),
-                      height: 172,
+                      height: 220,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),

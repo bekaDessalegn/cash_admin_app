@@ -15,7 +15,7 @@ Widget unAnsweredOrdersBox({required BuildContext context, required Orders order
     child: Container(
       width: 249,
       height: 283,
-      margin: EdgeInsets.fromLTRB(0, 10, 30, 10),
+      margin: EdgeInsets.fromLTRB(2, 10, 30, 10),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.all(Radius.circular(10)),

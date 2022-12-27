@@ -3,6 +3,7 @@ import 'package:cash_admin_app/core/constants.dart';
 import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:cash_admin_app/core/services/app_service.dart';
 import 'package:cash_admin_app/core/services/auth_service.dart';
+import 'package:cash_admin_app/features/common_widgets/app_bar_widget.dart';
 import 'package:cash_admin_app/features/common_widgets/error_flashbar.dart';
 import 'package:cash_admin_app/features/common_widgets/normal_text.dart';
 import 'package:cash_admin_app/features/common_widgets/semi_bold_text.dart';
@@ -42,6 +43,7 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appbar,
       body: BlocConsumer<PutEmailBloc, PutEmailState>(listener: (_, state) {
         if (state is PutEmailFailed) {
           buildErrorLayout(
@@ -81,16 +83,6 @@ class _AddEmailScreenState extends State<AddEmailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Container(
-              width: 120,
-              height: 40,
-              margin: const EdgeInsets.symmetric(vertical: 40),
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("images/cash_logo.png"))),
-            ),
-          ),
           semiBoldText(value: "Add Email", size: 28, color: onBackgroundColor),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
