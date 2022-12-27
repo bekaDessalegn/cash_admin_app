@@ -21,13 +21,25 @@ class OrderLocalDb {
     int result = await db.update(
         "Localorder",
         update,
-        where: "id = ?",
+        where: "orderId = ?",
         whereArgs: [id]
     );
     return result;
   }
 
-  Future deleteOrder() async {
+  Future<int> deleteOrder(String id) async{ // returns the number of rows updated
+
+    final db = await databaseHelper.init();
+
+    int result = await db.delete(
+        "Localorder",
+        where: "orderId = ?",
+        whereArgs: [id]
+    );
+    return result;
+  }
+
+  Future deleteAllOrder() async {
     final db = await databaseHelper.init();
     // return db.delete("delete from "+ TABLE_NAME);
     int deleted = await db.rawDelete("Delete from Localorder");

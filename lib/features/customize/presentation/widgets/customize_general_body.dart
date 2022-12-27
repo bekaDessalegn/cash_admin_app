@@ -102,7 +102,7 @@ class _CustomizeGeneralBodyState extends State<CustomizeGeneralBody> {
                   selectedLogoImage.toString() != "[0, 0, 0, 0, 0, 0, 0, 0]" ?
                   ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.memory(selectedLogoImage, width: 160, height: 51, fit: BoxFit.cover,))
+                      child: Image.memory(selectedLogoImage, width: 160, height: 51, fit: BoxFit.fitHeight,))
                       : PlatformLogoImage(logoBorderRadius: 10, logoHeight: 51, logoWidth: 160),
                   SizedBox(height: 10,),
                   SizedBox(

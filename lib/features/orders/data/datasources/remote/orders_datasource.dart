@@ -84,6 +84,35 @@ class OrdersDataSource {
           ));
           print("Has entered");
         }
+
+        for (var order in data) {
+          await orderLocalDb.updateOrder(order["orderId"], LocalOrder(
+              orderId : order["orderId"],
+              productName: order["product"]["productName"],
+              phone: order["orderedBy"]["phone"],
+              fullName: order["affiliate"] == null ? "None" : order["affiliate"]["fullName"],
+              orderedAt: order["orderedAt"],
+              status: order["status"]
+          ).toJson());
+          print("Has entered");
+        }
+
+        final localOrder = await orderLocalDb.getListOrders();
+        List orderIdList = [];
+        for (var order in data){
+          orderIdList.add(order["orderId"]);
+        }
+
+        for (var order in localOrder){
+          if(orderIdList.contains(order.orderId)){
+            continue;
+          }
+          var delete = await orderLocalDb.deleteOrder(order.orderId);
+          print(delete);
+        }
+
+        print(orderIdList);
+
         List content = json.decode(resBody);
         final List<Orders> orders = content.map((order) => Orders.fromJson(order)).toList();
         return orders;

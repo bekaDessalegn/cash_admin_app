@@ -14,15 +14,13 @@ class LogoImageLocalDb {
     );
   }
 
-  Future<int> updateLogoImage(String id, Map<String, dynamic> update) async{ // returns the number of rows updated
+  Future<int> updateLogoImage(Map<String, dynamic> update) async{ // returns the number of rows updated
 
     final db = await databaseHelper.init();
 
     int result = await db.update(
         "LogoImage",
-        update,
-        where: "id = ?",
-        whereArgs: [id]
+        update
     );
     return result;
   }

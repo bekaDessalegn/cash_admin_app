@@ -197,6 +197,33 @@ class ProductsDataSource {
               viewCount: product["viewCount"]));
           print("Has entered");
         }
+
+        for (var product in data) {
+          await productLocalDb.updateProduct(product["productId"], LocalProducts(
+              productId: product["productId"],
+              productName: product["productName"],
+              price: product["price"],
+              published: product["published"],
+              featured: product["featured"],
+              topSeller: product["topSeller"],
+              viewCount: product["viewCount"]).toJson());
+          print("Has entered");
+        }
+
+        final localProduct = await productLocalDb.getListProducts();
+        List productIdList = [];
+        for (var product in data){
+          productIdList.add(product["productId"]);
+        }
+
+        for (var order in localProduct){
+          if(productIdList.contains(order.productId)){
+            continue;
+          }
+          var delete = await productLocalDb.deleteProduct(order.productId);
+          print(delete);
+        }
+
         print(data);
         return products;
       } else if (data["message"] == "Not_Authorized") {
@@ -212,7 +239,6 @@ class ProductsDataSource {
       }
     } on SocketException {
       final localProduct = await productLocalDb.getListProducts();
-      print(localProduct[0].productName);
       return localProduct;
     }
   }

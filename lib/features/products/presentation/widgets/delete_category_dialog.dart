@@ -30,7 +30,7 @@ Widget deleteCategoryDialog({required BuildContext context, required String? cat
 
 Widget _buildInitialInput({required BuildContext context, required String? categoryId, required String categoryName, required bool isLoading}){
   return SizedBox(
-    height: 150,
+    height: 170,
     width: MediaQuery.of(context).size.width < 1100 ? double.infinity : 400,
     child: Padding(
       padding: const EdgeInsets.all(10.0),

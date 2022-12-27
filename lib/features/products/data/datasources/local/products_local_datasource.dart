@@ -21,13 +21,25 @@ class ProductLocalDb {
     int result = await db.update(
         "Product",
         update,
-        where: "id = ?",
+        where: "productId = ?",
         whereArgs: [id]
     );
     return result;
   }
 
-  Future deleteProduct() async {
+  Future<int> deleteProduct(String id) async{ // returns the number of rows updated
+
+    final db = await databaseHelper.init();
+
+    int result = await db.delete(
+        "Product",
+        where: "productId = ?",
+        whereArgs: [id]
+    );
+    return result;
+  }
+
+  Future deleteAllProduct() async {
     final db = await databaseHelper.init();
     // return db.delete("delete from "+ TABLE_NAME);
     int deleted = await db.rawDelete("Delete from Product");

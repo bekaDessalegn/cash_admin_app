@@ -14,6 +14,7 @@ import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_
 import 'package:cash_admin_app/features/customize/data/datasource/remote/customize_datasource.dart';
 import 'package:cash_admin_app/features/customize/data/repository/customize_repository.dart';
 import 'package:cash_admin_app/features/customize/presentation/blocs/customize_bloc.dart';
+import 'package:cash_admin_app/features/customize/presentation/blocs/customize_event.dart';
 import 'package:cash_admin_app/features/home/data/datasources/remote/home_datasource.dart';
 import 'package:cash_admin_app/features/home/data/repositories/home_repository.dart';
 import 'package:cash_admin_app/features/home/presentation/blocs/home_bloc.dart';
@@ -120,7 +121,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (_) => AnalyticsBloc(homeRepository)),
         BlocProvider(create: (_) => CustomizeBloc(customizeRepository)),
         BlocProvider(create: (_) => HomeContentBloc(customizeRepository)),
-        BlocProvider(create: (_) => LogoImageBloc(customizeRepository)),
+        BlocProvider(create: (_) => LogoImageBloc(customizeRepository)..add(GetLogoImageEvent())),
         BlocProvider(create: (_) => AboutUsContentBloc(customizeRepository)),
         BlocProvider(create: (_) => CategoriesBloc(productsRepository)),
         BlocProvider(create: (_) => PostCategoriesBloc(productsRepository)),

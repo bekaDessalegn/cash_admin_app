@@ -90,6 +90,31 @@ class AffiliatesDataSource {
           print("Has entered");
         }
 
+        for (var affiliate in data) {
+          print(affiliate);
+          await affiliateLocalDb.updateAffiliate(affiliate["userId"], LocalAffiliate(
+              userId: affiliate["userId"],
+              fullName: affiliate["fullName"],
+              phone: affiliate["phone"],
+              totalMade: affiliate["wallet"]["totalMade"],
+              childrenCount: affiliate["childrenCount"]
+          ).toJson());
+          print("Has entered");
+        }
+        final localAffiliate = await affiliateLocalDb.getListAffiliates();
+        List affiliateIdList = [];
+        for (var affiliate in data){
+          affiliateIdList.add(affiliate["userId"]);
+        }
+
+        for (var affiliate in localAffiliate){
+          if(affiliateIdList.contains(affiliate.userId)){
+            continue;
+          }
+          var delete = await affiliateLocalDb.deleteAffiliate(affiliate.userId);
+          print(delete);
+        }
+
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();

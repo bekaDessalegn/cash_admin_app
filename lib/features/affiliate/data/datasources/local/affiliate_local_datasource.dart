@@ -21,13 +21,25 @@ class AffiliateLocalDb {
     int result = await db.update(
         "Affiliate",
         update,
-        where: "id = ?",
+        where: "userId = ?",
         whereArgs: [id]
     );
     return result;
   }
 
-  Future deleteAffiliate() async {
+  Future<int> deleteAffiliate(String id) async{ // returns the number of rows updated
+
+    final db = await databaseHelper.init();
+
+    int result = await db.delete(
+        "Affiliate",
+        where: "userId = ?",
+        whereArgs: [id]
+    );
+    return result;
+  }
+
+  Future deleteAllAffiliate() async {
     final db = await databaseHelper.init();
     // return db.delete("delete from "+ TABLE_NAME);
     int deleted = await db.rawDelete("Delete from Affiliate");

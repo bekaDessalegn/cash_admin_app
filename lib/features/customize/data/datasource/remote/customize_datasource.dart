@@ -130,6 +130,8 @@ class CustomizeDataSource {
 
         await logoImageLocalDb.addLogoImage(LogoImage(logoImage: base64Decode(_imageBase64)));
 
+        await logoImageLocalDb.updateLogoImage(LogoImage(logoImage: base64Decode(_imageBase64)).toJson());
+
         final localLogoImage = await logoImageLocalDb.getLogoImage();
 
         // final logoImage = LogoImage.fromJson(data);

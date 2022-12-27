@@ -424,6 +424,9 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
             }
             else if(state is GetProductsLoading){
               isCategoryLoading = true;
+              if(_allProductsIndex == 0){
+
+              }
             }
           },
           builder: (_, state) {
