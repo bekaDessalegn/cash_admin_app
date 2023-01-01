@@ -173,32 +173,39 @@ class _OrdersBodyState extends State<OrdersBody> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 100,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                            // value: values,
-                            isExpanded: true,
-                            hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                            items: filter.map(buildMenuLocation).toList(),
-                            onChanged: (value) => setState(() {
-                              _allOrders = [];
-                              if(value == "Pending"){
-                                final orders = BlocProvider.of<OrdersBloc>(context);
-                                orders.add(FilterPendingEvent(0));
-                              } else if(value == "Accepted"){
-                                final orders = BlocProvider.of<OrdersBloc>(context);
-                                orders.add(FilterAcceptedEvent(0));
-                              } else if(value == "Rejected"){
-                                final orders = BlocProvider.of<OrdersBloc>(context);
-                                orders.add(FilterRejectedEvent(0));
-                              }
-                              this.value = value;
-                            }),
-                          ),
-                        ),
-                      ),
+                      PopupMenuButton(
+                        icon: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
+                          onSelected: (value){
+                            _hasNextPage = true;
+                            _allOrdersIndex = 0;
+                            _allOrders = [];
+                            if(value == OrderListItem.Pending){
+                              this.value = "Pending";
+                              final orders = BlocProvider.of<OrdersBloc>(context);
+                              orders.add(FilterPendingEvent(0));
+                            } else if(value == OrderListItem.Accepted){
+                              this.value = "Accepted";
+                              final orders = BlocProvider.of<OrdersBloc>(context);
+                              orders.add(FilterAcceptedEvent(0));
+                            } else if(value == OrderListItem.Rejected){
+                              this.value = "Rejected";
+                              final orders = BlocProvider.of<OrdersBloc>(context);
+                              orders.add(FilterRejectedEvent(0));
+                            } else{
+                              print("Something went wrong");
+                            }
+                          },
+                          itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: OrderListItem.Pending,
+                            child: Text("Pending")),
+                        PopupMenuItem(
+                            value: OrderListItem.Accepted,
+                            child: Text("Accepted")),
+                        PopupMenuItem(
+                            value: OrderListItem.Rejected,
+                            child: Text("Rejected")),
+                      ]),
                     ],
                   ),
                   SizedBox(height: 10,),
@@ -332,16 +339,5 @@ class _OrdersBodyState extends State<OrdersBody> {
           return localOrdersListBox(context: context, order: orders[index]);
         });
   }
-
-  DropdownMenuItem<String> buildMenuLocation(String filter) => DropdownMenuItem(
-    value: filter,
-    child: Text(
-      filter,
-      style: TextStyle(
-        color: onBackgroundColor,
-        fontSize: 14,
-      ),
-    ),
-  );
 
 }

@@ -596,7 +596,7 @@ class _HomeBodyState extends State<HomeBody> {
             return Container(
               width: 250,
               height: 295,
-              margin: EdgeInsets.fromLTRB(0, 10, 50, 10),
+              margin: EdgeInsets.fromLTRB(2, 10, 50, 10),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -625,7 +625,7 @@ class _HomeBodyState extends State<HomeBody> {
             return Container(
               width: 250,
               height: 295,
-              margin: EdgeInsets.fromLTRB(0, 10, 50, 10),
+              margin: EdgeInsets.fromLTRB(2, 10, 50, 10),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.all(Radius.circular(10)),

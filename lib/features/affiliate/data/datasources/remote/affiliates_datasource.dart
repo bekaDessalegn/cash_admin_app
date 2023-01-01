@@ -299,6 +299,7 @@ class AffiliatesDataSource {
         List content = json.decode(resBody);
         final List<Affiliates> affiliates =
             content.map((affiliate) => Affiliates.fromJson(affiliate)).toList();
+        print(data);
         return affiliates;
       } else if (data["message"] == "Not_Authorized") {
         await getNewAccessToken();

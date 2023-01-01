@@ -1,4 +1,5 @@
 import 'package:cash_admin_app/core/constants.dart';
+import 'package:cash_admin_app/core/global.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/affiliates.dart';
 import 'package:cash_admin_app/features/affiliate/data/models/local_affiliate.dart';
 import 'package:cash_admin_app/features/affiliate/presentation/blocs/affiliates_bloc.dart';
@@ -164,35 +165,50 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 100,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                            // value: values,
-                            isExpanded: true,
-                            hint: Center(child: Iconify(Mi.filter, size: 40, color: onBackgroundColor,)),
-                            items: filter.map(buildMenuLocation).toList(),
-                            onChanged: (value) => setState(() {
-                              _allAffiliates = [];
-                              this.value = value;
-                              if(value == "Earnings up"){
-                                final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-                                affiliates.add(GetAffiliatesEarningFromLowToHighEvent(0));
-                              } else if(value == "Earnings down"){
-                                final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-                                affiliates.add(GetAffiliatesEarningFromHighToLowEvent(0));
-                              } else if(value == "Most parents"){
-                                final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-                                affiliates.add(GetMostParentAffiliateEvent(0));
-                              } else if(value == "Date"){
-                                final affiliates = BlocProvider.of<AffiliatesBloc>(context);
-                                affiliates.add(GetAffiliatesEvent(0));
-                              }
-                            }),
-                          ),
-                        ),
-                      ),
+                      PopupMenuButton(
+                          icon: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
+                          onSelected: (value){
+                            _hasNextPage = true;
+                            _allAffiliatesIndex = 0;
+                            _allAffiliates = [];
+                            if(value == AffiliateListItem.Date){
+                              final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                              affiliates.add(GetAffiliatesEvent(0));
+                            } else if(value == AffiliateListItem.EarningUp){
+                              this.value = "Earnings up";
+                              final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                              affiliates.add(GetAffiliatesEarningFromLowToHighEvent(0));
+                            } else if(value == AffiliateListItem.EarningDown){
+                              print("down down down");
+                              this.value = "Earnings down";
+                              final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                              affiliates.add(GetAffiliatesEarningFromHighToLowEvent(0));
+                            } else if(value == AffiliateListItem.MostParents){
+                              this.value = "Most parents";
+                              final affiliates = BlocProvider.of<AffiliatesBloc>(context);
+                              affiliates.add(GetMostParentAffiliateEvent(0));
+                            }
+                          },
+                          itemBuilder: (context) => [
+                        PopupMenuItem(
+                            value: AffiliateListItem.Date,
+                            child: Text("Date")),
+                        PopupMenuItem(
+                            value: AffiliateListItem.EarningDown,
+                            child: Row(children: [
+                              Text("Earning"),
+                              Iconify(Ic.round_arrow_downward, size: 14, color: onBackgroundColor,)
+                            ],)),
+                        PopupMenuItem(
+                            value: AffiliateListItem.EarningUp,
+                            child: Row(children: [
+                              Text("Earning"),
+                              Iconify(Ic.round_arrow_upward, size: 14, color: onBackgroundColor,)
+                            ],)),
+                        PopupMenuItem(
+                            value: AffiliateListItem.MostParents,
+                            child: Text("Most parents")),
+                      ]),
                     ],
                   ),
                   SizedBox(height: 10,),
@@ -323,27 +339,5 @@ class _AffiliatesBodyState extends State<AffiliatesBody> {
           return localAffiliateListBox(context: context, affiliate: affiliates[index]);
         });
   }
-
-  DropdownMenuItem<String> buildMenuLocation(String filter) => DropdownMenuItem(
-    value: filter,
-    child: filter == "Earnings up" || filter == "Earnings down" ? Row(
-      children: [
-        Text(
-          "Earnings",
-          style: TextStyle(
-            color: onBackgroundColor,
-            fontSize: 14,
-          ),
-        ),
-        filter != "Earnings up" ? Iconify(Ic.round_arrow_downward, size: 14, color: onBackgroundColor,) : Iconify(Ic.round_arrow_upward, size: 14, color: onBackgroundColor,)
-      ],
-    ) : Text(
-      filter,
-      style: TextStyle(
-        color: onBackgroundColor,
-        fontSize: 14,
-      ),
-    ),
-  );
 
 }

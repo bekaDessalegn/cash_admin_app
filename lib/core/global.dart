@@ -15,6 +15,9 @@ const String apiKey = "2S9f4e2D886aGa231caH2H44f2R25Jf487cDfaa3G";
 // const String baseUrl = "http://localhost:5000";
 const String baseUrl = "http://192.168.43.166:5000";
 
+enum OrderListItem {Pending, Rejected, Accepted}
+enum AffiliateListItem {Date, EarningUp, EarningDown, MostParents}
+
 Future getAccessTokens() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   return sharedPreferences.getString("accessToken");

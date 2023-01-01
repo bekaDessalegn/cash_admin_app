@@ -244,68 +244,11 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                           ),
                         ),
                       ),
-                      // Container(
-                      //   width: 40,
-                      //   margin: EdgeInsets.only(right: 10),
-                      //   child: DropdownButtonHideUnderline(
-                      //     child: DropdownButton<String>(
-                      //       icon: Visibility(visible: false, child: Icon(Icons.arrow_downward)),
-                      //       // value: values,
-                      //       isExpanded: true,
-                      //       hint: Iconify(Mi.filter, size: 40, color: onBackgroundColor,),
-                      //       items: filter.map(buildMenuLocation).toList(),
-                      //       onChanged: (value) => setState(() {
-                      //         this.value = value;
-                      //         print(value);
-                      //       }),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                   SizedBox(
                     height: 22,
                   ),
-                  // Container(
-                  //   child: Row(
-                  //     children: [
-                  //       IconButton(
-                  //         icon: Icon(Icons.arrow_back_ios),
-                  //         onPressed: () {
-                  //           if (_tabController.index > 0) {
-                  //             _tabController.animateTo(_tabController.index - 1);
-                  //           } else {
-                  //             // Scaffold.of(context).showSnackBar(SnackBar(
-                  //             //   content: Text("Can't go back"),
-                  //             // ));
-                  //           }
-                  //         },
-                  //       ),
-                  //       Expanded(
-                  //         child: TabBar(
-                  //             isScrollable: true,
-                  //             controller: _tabController,
-                  //             labelStyle: TextStyle(color: Colors.black),
-                  //             unselectedLabelColor: Colors.black,
-                  //             labelColor: Colors.blue,
-                  //             tabs: tabs
-                  //         ),
-                  //       ),
-                  //       IconButton(
-                  //         icon: Icon(Icons.arrow_forward_ios),
-                  //         onPressed: () {
-                  //           if (_tabController.index + 1 < tabs.length) {
-                  //             _tabController.animateTo(_tabController.index + 1);
-                  //           } else {
-                  //             // Scaffold.of(context).showSnackBar(SnackBar(
-                  //             //   content: Text("Can't move forward"),
-                  //             // ));
-                  //           }
-                  //         },
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   BlocConsumer<SearchProductBloc, SearchState>(builder: (_, state) {
                     if (state is SearchProductSuccessful) {
                       if (productSearchController.text.isEmpty) {
