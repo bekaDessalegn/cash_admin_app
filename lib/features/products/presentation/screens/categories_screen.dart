@@ -179,6 +179,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           showDialog(
+                                            barrierDismissible: false,
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return deleteCategoryDialog(

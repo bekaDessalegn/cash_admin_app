@@ -90,7 +90,9 @@ Widget ordersListBox({required BuildContext context, required Orders order}){
                                 Flexible(
                                   child: GestureDetector(
                                     onTap: (){
-
+                                      if(order.affiliate!.userId != "123"){
+                                        context.pushNamed(APP_PAGE.affiliateDetails.toName, params: {'user_id': order.affiliate!.userId},);
+                                      }
                                     },
                                     child: Text(
                                       "${order.affiliate!.fullName}",

@@ -10,30 +10,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget deleteCategoryDialog({required BuildContext context, required String? categoryId, required String categoryName}){
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<CategoriesBloc, CategoriesState>(listener: (_, state) {
-      if (state is GetCategoriesFailed) {
-        buildErrorLayout(context: context, message: state.errorType);
-      } else if (state is GetCategoriesSuccessful) {
-        Navigator.pop(context);
-      }
-    }, builder: (_, state) {
-      if (state is GetCategoriesLoading) {
-        return _buildInitialInput(context: context, categoryId: categoryId, categoryName: categoryName, isLoading: true);
-      } else {
-        return _buildInitialInput(context: context, categoryId: categoryId, categoryName: categoryName, isLoading: false);
-      }
-    }),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<CategoriesBloc, CategoriesState>(listener: (_, state) {
+        if (state is GetCategoriesFailed) {
+          buildErrorLayout(context: context, message: state.errorType);
+        } else if (state is GetCategoriesSuccessful) {
+          Navigator.pop(context);
+        }
+      }, builder: (_, state) {
+        if (state is GetCategoriesLoading) {
+          return _buildInitialInput(context: context, categoryId: categoryId, categoryName: categoryName, isLoading: true);
+        } else {
+          return _buildInitialInput(context: context, categoryId: categoryId, categoryName: categoryName, isLoading: false);
+        }
+      }),
+    ),
   );
 }
 
 Widget _buildInitialInput({required BuildContext context, required String? categoryId, required String categoryName, required bool isLoading}){
   return SizedBox(
-    height: 170,
+    height: 186,
     width: MediaQuery.of(context).size.width < 1100 ? double.infinity : 400,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

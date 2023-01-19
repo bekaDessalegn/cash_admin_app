@@ -13,25 +13,30 @@ import 'package:provider/provider.dart';
 Widget signoutDialog({required BuildContext context}){
   final authService = Provider.of<AuthService>(context);
   final _prefs = PrefService();
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<ProfileBloc, ProfileState>(builder: (_, state){
-      if(state is SignOutLoading) {
-        return _buildSignoutInput(context: context, isLoading: true);
-      }
-      else {
-        return _buildSignoutInput(context: context, isLoading: false);
-      }
-    }, listener: (_, state){
-      if(state is SignOutSuccessful){
-        _prefs.removeCache();
-        authService.logOut();
-        context.go(APP_PAGE.login.toPath);
-      }
-      if(state is LoadAdminFailed){
-        Navigator.pop(context);
-      }
-    }),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<ProfileBloc, ProfileState>(builder: (_, state){
+        if(state is SignOutLoading) {
+          return _buildSignoutInput(context: context, isLoading: true);
+        }
+        else {
+          return _buildSignoutInput(context: context, isLoading: false);
+        }
+      }, listener: (_, state){
+        if(state is SignOutSuccessful){
+          _prefs.removeCache();
+          authService.logOut();
+          context.go(APP_PAGE.login.toPath);
+        }
+        if(state is LoadAdminFailed){
+          Navigator.pop(context);
+        }
+      }),
+    ),
   );
 }
 
@@ -40,7 +45,7 @@ Widget _buildSignoutInput({required BuildContext context, required bool isLoadin
     height: 190,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 300,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

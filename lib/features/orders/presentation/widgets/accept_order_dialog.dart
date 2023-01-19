@@ -9,33 +9,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 Widget acceptOrderDialog({required BuildContext context, required String orderId}){
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<PatchOrderBloc, PatchOrderState>(builder: (_, state){
-      if(state is AcceptOrderStateLoading){
-        return _buildAcceptOrderInput(context: context, orderId: orderId, isLoading: true);
-      } else{
-        return _buildAcceptOrderInput(context: context, orderId: orderId, isLoading: false);
-      }
-    }, listener: (_, state){
-      if(state is PatchOrderStateSuccessful){
-        final order_details = BlocProvider.of<SingleOrderBloc>(context);
-        order_details.add(GetSingleOrderEvent(orderId));
-        Navigator.pop(context);
-      }
-      if(state is PatchOrderStateFailed){
-        buildErrorLayout(context: context, message: state.errorType);
-      }
-    }),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<PatchOrderBloc, PatchOrderState>(builder: (_, state){
+        if(state is AcceptOrderStateLoading){
+          return _buildAcceptOrderInput(context: context, orderId: orderId, isLoading: true);
+        } else{
+          return _buildAcceptOrderInput(context: context, orderId: orderId, isLoading: false);
+        }
+      }, listener: (_, state){
+        if(state is PatchOrderStateSuccessful){
+          final order_details = BlocProvider.of<SingleOrderBloc>(context);
+          order_details.add(GetSingleOrderEvent(orderId));
+          Navigator.pop(context);
+        }
+        if(state is PatchOrderStateFailed){
+          buildErrorLayout(context: context, message: state.errorType);
+        }
+      }),
+    ),
   );
 }
 
 Widget _buildAcceptOrderInput({required BuildContext context, required String orderId, required bool isLoading}){
   return SizedBox(
-    height: 170,
+    height: 180,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 300,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -316,8 +316,8 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
                   },
                   listener: (_, state) {
                     if(state is GetCategoriesSuccessful){
-
                       setState(() {
+                        categoryList = [Categories(categoryName: "All products")];
                         categoryList.addAll(state.categories);
                         for(var productCategories in state.categories){
                           productsList.add([]);

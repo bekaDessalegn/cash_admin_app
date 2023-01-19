@@ -9,35 +9,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 Widget deleteOrderDialog({required BuildContext context, required String orderId}){
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<DeleteOrderBloc, DeleteOrderState>(builder: (_, state){
-      if(state is DeleteOrderLoadingState){
-        return _buildDeleteOrderInput(context: context, orderId: orderId, isLoading: true);
-      } else{
-        return _buildDeleteOrderInput(context: context, orderId: orderId, isLoading: false);
-      }
-    }, listener: (_, state){
-      if(state is DeleteOrderSuccessfulState){
-        Navigator.pop(context);
-        // final orders =
-        // BlocProvider.of<OrdersBloc>(context);
-        // orders.add(GetOrdersEvent(0));
-        MediaQuery.of(context).size.width < 1100 ? context.push(APP_PAGE.order.toPath) : context.go(APP_PAGE.home.toPath);
-      }
-      if(state is DeleteOrderFailedState){
-        buildErrorLayout(context: context, message: state.errorType);
-      }
-    }),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<DeleteOrderBloc, DeleteOrderState>(builder: (_, state){
+        if(state is DeleteOrderLoadingState){
+          return _buildDeleteOrderInput(context: context, orderId: orderId, isLoading: true);
+        } else{
+          return _buildDeleteOrderInput(context: context, orderId: orderId, isLoading: false);
+        }
+      }, listener: (_, state){
+        if(state is DeleteOrderSuccessfulState){
+          Navigator.pop(context);
+          // final orders =
+          // BlocProvider.of<OrdersBloc>(context);
+          // orders.add(GetOrdersEvent(0));
+          MediaQuery.of(context).size.width < 1100 ? context.push(APP_PAGE.order.toPath) : context.go(APP_PAGE.home.toPath);
+        }
+        if(state is DeleteOrderFailedState){
+          buildErrorLayout(context: context, message: state.errorType);
+        }
+      }),
+    ),
   );
 }
 
 Widget _buildDeleteOrderInput({required BuildContext context, required String orderId, required bool isLoading}){
   return SizedBox(
-    height: 170,
+    height: 180,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 300,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

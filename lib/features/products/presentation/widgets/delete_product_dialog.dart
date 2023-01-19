@@ -12,82 +12,87 @@ import 'package:go_router/go_router.dart';
 
 Widget deleteProductDialog(
     {required BuildContext context, required String? productId}) {
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<DeleteProductBloc, DeleteProductState>(
-        listener: (_, state) {
-      if (state is DeleteProductFailed) {
-        Navigator.pop(context);
-        if (state.errorType ==
-            "You can not delete this product, it has orders") {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                  child: SizedBox(
-                    height: 205,
-                    width: MediaQuery.of(context).size.width < 500
-                        ? double.infinity
-                        : 400,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Has orders",
-                            style: TextStyle(
-                                color: onBackgroundColor,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "This product can not be deleted because it has orders, please delete those orders first.",
-                            style: TextStyle(
-                                color: onBackgroundColor, fontSize: 16),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Ok",
-                                style: TextStyle(
-                                    color: onBackgroundColor, fontSize: 16),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<DeleteProductBloc, DeleteProductState>(
+          listener: (_, state) {
+        if (state is DeleteProductFailed) {
+          Navigator.pop(context);
+          if (state.errorType ==
+              "You can not delete this product, it has orders") {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    child: SizedBox(
+                      height: 215,
+                      width: MediaQuery.of(context).size.width < 500
+                          ? double.infinity
+                          : 400,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 20, 15, 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Has orders",
+                              style: TextStyle(
+                                  color: onBackgroundColor,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "This product can not be deleted because it has orders, please delete those orders first.",
+                              style: TextStyle(
+                                  color: onBackgroundColor, fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: onBackgroundColor, fontSize: 16),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              });
-        } else {
-          buildErrorLayout(context: context, message: state.errorType);
+                  );
+                });
+          } else {
+            buildErrorLayout(context: context, message: state.errorType);
+          }
+        } else if (state is DeleteProductSuccessful) {
+          final productDetails = BlocProvider.of<SingleProductBloc>(context);
+          productDetails.add(DeleteSingleProductEvent());
+          context.go(APP_PAGE.refreshProduct.toPath);
         }
-      } else if (state is DeleteProductSuccessful) {
-        final productDetails = BlocProvider.of<SingleProductBloc>(context);
-        productDetails.add(DeleteSingleProductEvent());
-        context.go(APP_PAGE.refreshProduct.toPath);
-      }
-    }, builder: (_, state) {
-      if (state is DeleteProductLoading) {
-        return _buildInitialInput(
-            context: context, productId: productId, isLoading: true);
-      } else {
-        return _buildInitialInput(
-            context: context, productId: productId, isLoading: false);
-      }
-    }),
+      }, builder: (_, state) {
+        if (state is DeleteProductLoading) {
+          return _buildInitialInput(
+              context: context, productId: productId, isLoading: true);
+        } else {
+          return _buildInitialInput(
+              context: context, productId: productId, isLoading: false);
+        }
+      }),
+    ),
   );
 }
 
@@ -96,10 +101,10 @@ Widget _buildInitialInput(
     required String? productId,
     required bool isLoading}) {
   return SizedBox(
-    height: 175,
+    height: 180,
     width: MediaQuery.of(context).size.width < 500 ? double.infinity : 400,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(15, 15, 15, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

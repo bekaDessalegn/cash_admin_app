@@ -276,6 +276,7 @@ class _EditProductBodyState extends State<EditProductBody> {
                           },
                           selectedValues: selectedCategories,
                           decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

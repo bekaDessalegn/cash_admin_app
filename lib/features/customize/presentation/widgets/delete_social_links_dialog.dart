@@ -7,32 +7,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget deleteSocialLinkDialog({required BuildContext context, required String id}){
-  return Dialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    child: BlocConsumer<CustomizeBloc, CustomizeState>(listener: (_, state) {
-      if (state is DeleteSocialLinkFailed) {
-        buildErrorLayout(context: context, message: state.errorType);
-      } else if (state is DeleteSocialLinkSuccessful) {
-        final homeContent = BlocProvider.of<HomeContentBloc>(context);
-        homeContent.add(GetHomeContentEvent());
-        Navigator.pop(context);
-      }
-    }, builder: (_, state) {
-      if (state is DeleteSocialLinkLoading) {
-        return buildInitialInput(context: context, isLoading: true, id: id);
-      } else {
-        return buildInitialInput(context: context, isLoading: false, id: id);
-      }
-    }),
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: BlocConsumer<CustomizeBloc, CustomizeState>(listener: (_, state) {
+        if (state is DeleteSocialLinkFailed) {
+          buildErrorLayout(context: context, message: state.errorType);
+        } else if (state is DeleteSocialLinkSuccessful) {
+          final homeContent = BlocProvider.of<HomeContentBloc>(context);
+          homeContent.add(GetHomeContentEvent());
+          Navigator.pop(context);
+        }
+      }, builder: (_, state) {
+        if (state is DeleteSocialLinkLoading) {
+          return buildInitialInput(context: context, isLoading: true, id: id);
+        } else {
+          return buildInitialInput(context: context, isLoading: false, id: id);
+        }
+      }),
+    ),
   );
 }
 
 Widget buildInitialInput({required BuildContext context, required bool isLoading, required String id}){
   return SizedBox(
-    height: 170,
+    height: 180,
     width: MediaQuery.of(context).size.width < 1100 ? double.infinity : 400,
     child: Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.fromLTRB(15, 20, 15, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
