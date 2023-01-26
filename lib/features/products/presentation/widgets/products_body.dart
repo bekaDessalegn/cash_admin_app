@@ -82,7 +82,6 @@ class _ProductsBodyState extends State<ProductsBody> with TickerProviderStateMix
       setState(() {
         _isLoadMoreRunning = true;
       });
-
       _allProductsIndex += 1;
       final skipNumber = _allProductsIndex * _skip;
       final moreProducts = BlocProvider.of<ProductsBloc>(context);

@@ -2,7 +2,7 @@ import 'package:cash_admin_app/core/router/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/bx.dart';
+import 'package:iconify_flutter/icons/la.dart';
 
 class CustomizeButton extends StatelessWidget {
   const CustomizeButton({Key? key}) : super(key: key);
@@ -11,13 +11,13 @@ class CustomizeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-        iconSize: 30,
+        iconSize: 28,
         onPressed: () {
           context.push(APP_PAGE.customize.toPath);
         },
         icon: Iconify(
-          Bx.edit,
-          size: 30,
+          La.edit,
+          size: 28,
         ));
   }
 }
